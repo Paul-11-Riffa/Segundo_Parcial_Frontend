@@ -116,16 +116,22 @@ export const authService = {
   },
 
   // Solicitar reset de contraseña
+  // POST /api/password-reset/
+  // Body: { "email": "usuario@example.com" }
+  // Response: { "detail": "If an account...", "reset_url": "http://..." }
   requestPasswordReset: async (email) => {
     try {
       const response = await api.post('/password-reset/', { email });
-      return response.data;
+      return response.data; // Retorna { detail, reset_url }
     } catch (error) {
       throw error.response?.data || { message: 'Error al solicitar reset de contraseña' };
     }
   },
 
   // Confirmar reset de contraseña
+  // POST /api/password-reset/confirm/
+  // Body: { "uidb64": "MjM", "token": "c4k89d-...", "password": "nueva123" }
+  // Response: { "detail": "Password has been reset successfully." }
   confirmPasswordReset: async (uidb64, token, password) => {
     try {
       const response = await api.post('/password-reset/confirm/', {

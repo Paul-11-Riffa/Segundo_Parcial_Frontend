@@ -16,13 +16,16 @@ export const AuthProvider = ({ children }) => {
           const currentUser = authService.getCurrentUser();
           setUser(currentUser);
 
-          // Intentar obtener el perfil actualizado
+          // Intentar obtener el perfil actualizado (solo si el backend está disponible)
           try {
             const profile = await authService.getProfile();
             setUser(profile);
           } catch (err) {
             // Si falla, mantener el usuario del localStorage
-            console.error('Error al obtener perfil:', err);
+            // No mostrar error en consola si es un problema de conexión
+            if (err.message && !err.message.includes('Network Error') && !err.message.includes('Failed to fetch')) {
+              console.error('Error al obtener perfil:', err);
+            }
           }
         }
       } catch (err) {
@@ -95,7 +98,16 @@ export const AuthProvider = ({ children }) => {
     try {
       setError(null);
       setLoading(true);
-      const updatedUser = await authService.updateProfile(profileData);
+      // Solo enviar campos que el backend acepta: username, email, password
+      const dataToSend = {
+        username: profileData.username,
+        email: profileData.email,
+      };
+      // Solo incluir password si fue proporcionado
+      if (profileData.password) {
+        dataToSend.password = profileData.password;
+      }
+      const updatedUser = await authService.updateProfile(dataToSend);
       setUser(updatedUser);
       return updatedUser;
     } catch (err) {
@@ -111,7 +123,8 @@ export const AuthProvider = ({ children }) => {
     try {
       setError(null);
       setLoading(true);
-      await authService.requestPasswordReset(email);
+      const response = await authService.requestPasswordReset(email);
+      return response; // Devolver la respuesta para obtener la URL
     } catch (err) {
       setError(err.message || 'Error al solicitar reset de contraseña');
       throw err;

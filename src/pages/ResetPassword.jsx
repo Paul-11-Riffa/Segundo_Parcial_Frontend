@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams, useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
@@ -9,10 +9,12 @@ import Alert from '../components/ui/Alert';
 const ResetPassword = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const params = useParams();
   const { confirmPasswordReset } = useAuth();
 
-  const uidb64 = searchParams.get('uidb64');
-  const token = searchParams.get('token');
+  // Soportar ambos formatos: query params (?uidb64=...&token=...) y URL params (/uidb64/token)
+  const uidb64 = params.uidb64 || searchParams.get('uidb64');
+  const token = params.token || searchParams.get('token');
 
   const [formData, setFormData] = useState({
     password: '',
@@ -58,8 +60,9 @@ const ResetPassword = () => {
     e.preventDefault();
     setApiError('');
 
+    // Validar que existan los parámetros
     if (!uidb64 || !token) {
-      setApiError('Link de recuperación inválido o expirado');
+      setApiError('Link de recuperación inválido o expirado. Por favor solicita uno nuevo.');
       return;
     }
 
@@ -68,19 +71,28 @@ const ResetPassword = () => {
     setLoading(true);
 
     try {
-      await confirmPasswordReset(uidb64, token, formData.password);
+      const result = await confirmPasswordReset(uidb64, token, formData.password);
       setSuccess(true);
+      // Redirigir después de 3 segundos
       setTimeout(() => {
-        navigate('/login');
+        navigate('/login', { 
+          state: { message: 'Contraseña actualizada exitosamente. Inicia sesión con tu nueva contraseña.' }
+        });
       }, 3000);
     } catch (error) {
       console.error('Error al resetear contraseña:', error);
-      if (error.password) {
-        setErrors((prev) => ({ ...prev, password: error.password[0] }));
-      } else if (error.token) {
-        setApiError('El link de recuperación es inválido o ha expirado');
+      
+      // Manejar errores específicos según el documento
+      if (error.detail) {
+        // Error del backend: "Invalid token or user ID."
+        setApiError('Link inválido o expirado. Por favor solicita un nuevo link de recuperación.');
+      } else if (error.password) {
+        // Error de validación de contraseña
+        setErrors((prev) => ({ ...prev, password: Array.isArray(error.password) ? error.password[0] : error.password }));
+      } else if (error.message) {
+        setApiError(error.message);
       } else {
-        setApiError(error.message || 'Error al resetear la contraseña. Por favor intenta de nuevo.');
+        setApiError('Error al resetear la contraseña. Por favor intenta de nuevo.');
       }
     } finally {
       setLoading(false);
@@ -119,6 +131,16 @@ const ResetPassword = () => {
               {apiError && (
                 <Alert type="error" onClose={() => setApiError('')}>
                   {apiError}
+                  {apiError.includes('inválido') || apiError.includes('expirado') ? (
+                    <div className="mt-2">
+                      <Link 
+                        to="/forgot-password" 
+                        className="text-sm font-semibold underline hover:text-red-800"
+                      >
+                        Solicitar nuevo link de recuperación →
+                      </Link>
+                    </div>
+                  ) : null}
                 </Alert>
               )}
 

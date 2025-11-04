@@ -21,6 +21,8 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          {/* Ruta alternativa que acepta el formato del backend */}
+          <Route path="/reset-password/:uidb64/:token" element={<ResetPassword />} />
 
           {/* Protected Routes */}
           <Route

@@ -1,19 +1,25 @@
-# Sistema de Autenticación - ElectroShop Frontend
+# SmartSales365 - Frontend Premium
 
-Sistema completo de autenticación para ecommerce de electrodomésticos con React, Vite, TailwindCSS y conexión a backend Django REST Framework.
+Sistema de autenticación minimalista y premium para plataforma de ventas inteligente. Construido con React, Vite y TailwindCSS.
 
-## Características
+## ✨ Características del Diseño
 
-- ✅ Login y Registro de usuarios
-- ✅ Gestión de perfil
-- ✅ Recuperación de contraseña
-- ✅ Rutas protegidas
-- ✅ Diseño responsive
-- ✅ Validación de formularios
-- ✅ Manejo de tokens automático
-- ✅ Interfaz moderna con TailwindCSS
+### Diseño Minimalista Premium
+- 🎨 Paleta de colores sofisticada (blanco, negro, grises)
+- 🖼️ Espaciado generoso y tipografía limpia
+- ⚡ Animaciones suaves y transiciones fluidas
+- 📱 Completamente responsive
+- 🎯 Enfoque en contenido y usabilidad
 
-## Instalación
+### Funcionalidades Implementadas
+- ✅ **Login** - Formulario de autenticación limpio
+- ✅ **Registro** - Creación de cuenta con validaciones
+- ✅ **Perfil** - Gestión de información personal
+- ✅ **Recuperación de contraseña** - Flujo completo de recuperación
+- ✅ **Rutas protegidas** - Control de acceso basado en autenticación
+- ✅ **Validación en tiempo real** - Feedback instantáneo al usuario
+
+## 🚀 Instalación
 
 ```bash
 # Instalar dependencias
@@ -23,7 +29,7 @@ npm install
 npm run dev
 ```
 
-## Configuración
+## 🔧 Configuración
 
 Edita `src/services/api.js` para configurar la URL del backend:
 
@@ -31,22 +37,40 @@ Edita `src/services/api.js` para configurar la URL del backend:
 const API_BASE_URL = 'http://localhost:8000/api';
 ```
 
-## Rutas
+## 📄 Estructura de Páginas
 
-- `/` - Página principal
-- `/login` - Iniciar sesión
-- `/register` - Registro de usuario
-- `/profile` - Perfil (requiere autenticación)
-- `/forgot-password` - Recuperar contraseña
-- `/reset-password` - Restablecer contraseña
+- `/` - **Home** - Landing page minimalista con hero section
+- `/login` - **Login** - Formulario de inicio de sesión
+- `/register` - **Registro** - Creación de cuenta nueva
+- `/profile` - **Perfil** - Gestión de información del usuario (protegida)
+- `/forgot-password` - **Recuperar contraseña** - Solicitud de recuperación
 
-## Tecnologías
+## 🎨 Sistema de Diseño
 
-- React 19
-- Vite 7
-- TailwindCSS 4
-- React Router 6
-- Axios
+### Colores
+- **Primary**: Negro (#0f172a) - Botones principales y elementos destacados
+- **Secondary**: Grises - Textos secundarios y bordes
+- **Accent**: Blanco - Fondos y espacios
+
+### Tipografía
+- Familia: **Inter** (Google Fonts)
+- Pesos: 300 a 900
+- Optimizada para legibilidad web
+
+### Componentes UI
+- `Button` - 6 variantes (primary, secondary, outline, danger, success, ghost)
+- `Input` - Con iconos y estados de error
+- `Card` - Contenedores con sombras suaves
+- `Alert` - Notificaciones con 4 tipos (success, error, warning, info)
+
+## 🛠️ Tecnologías
+
+- **React 19** - Library de UI
+- **Vite 7** - Build tool ultra-rápido
+- **TailwindCSS 4** - Framework CSS utility-first
+- **React Router 6** - Navegación
+- **Axios** - Cliente HTTP
+- **Context API** - Gestión de estado global
 
 ## Scripts
 

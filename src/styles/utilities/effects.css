@@ -1,0 +1,104 @@
+/* Shadows */
+.shadow-soft {
+  box-shadow: var(--shadow-soft);
+}
+
+.shadow-premium {
+  box-shadow: var(--shadow-premium);
+}
+
+.shadow-glow {
+  box-shadow: var(--shadow-glow);
+}
+
+/* Opacity */
+.opacity-0 { opacity: 0; }
+.opacity-20 { opacity: 0.2; }
+.opacity-25 { opacity: 0.25; }
+.opacity-75 { opacity: 0.75; }
+.opacity-100 { opacity: 1; }
+
+/* Borders */
+.border { border-width: 1px; }
+.border-b { border-bottom-width: 1px; }
+.border-t { border-top-width: 1px; }
+.border-2 { border-width: 2px; }
+
+/* Border Radius */
+.rounded { border-radius: 0.25rem; }
+.rounded-lg { border-radius: 0.5rem; }
+.rounded-xl { border-radius: 0.75rem; }
+.rounded-2xl { border-radius: 1rem; }
+.rounded-3xl { border-radius: 1.5rem; }
+.rounded-full { border-radius: 9999px; }
+.rounded-\[2\.25rem\] { border-radius: 2.25rem; }
+.rounded-\[2\.5rem\] { border-radius: 2.5rem; }
+
+/* Transforms */
+.-rotate-12 { transform: rotate(-12deg); }
+.scale-110 { transform: scale(1.1); }
+
+/* Backdrop Filter */
+.backdrop-blur-sm { backdrop-filter: blur(4px); }
+.backdrop-blur-xl { backdrop-filter: blur(24px); }
+
+/* Filter */
+.filter { filter: var(--tw-blur, ) var(--tw-brightness, ) var(--tw-contrast, ) var(--tw-grayscale, ) var(--tw-hue-rotate, ) var(--tw-invert, ) var(--tw-saturate, ) var(--tw-sepia, ) var(--tw-drop-shadow, ); }
+.blur-xl { --tw-blur: blur(24px); filter: blur(24px); }
+.blur-3xl { --tw-blur: blur(64px); filter: blur(64px); }
+
+/* Mix Blend Mode */
+.mix-blend-multiply { mix-blend-mode: multiply; }
+
+/* Gradiente de texto */
+.gradient-text {
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* Transitions */
+.transition-all { transition-property: all; }
+.transition-colors { transition-property: color, background-color, border-color; }
+.transition-transform { transition-property: transform; }
+.transition-opacity { transition-property: opacity; }
+.duration-200 { transition-duration: 200ms; }
+.duration-300 { transition-duration: 300ms; }
+
+/* Hover States */
+.hover\:bg-dark-800:hover { background-color: var(--color-dark-800); }
+.hover\:bg-dark-100:hover { background-color: var(--color-dark-100); }
+.hover\:border-dark-300:hover { border-color: var(--color-dark-300); }
+.hover\:scale-110:hover { transform: scale(1.1); }
+.hover\:opacity-75:hover { opacity: 0.75; }
+.hover\:-translate-y-1:hover { transform: translateY(-0.25rem); }
+.hover\:shadow-premium:hover { box-shadow: var(--shadow-premium); }
+
+/* Group Hover */
+.group:hover .group-hover\:scale-110 { transform: scale(1.1); }
+.group:hover .group-hover\:opacity-100 { opacity: 1; }
+
+/* Focus States */
+.focus\:outline-none:focus { outline: none; }
+.focus\:ring-2:focus { box-shadow: 0 0 0 2px currentColor; }
+.focus\:ring-dark-700:focus { --tw-ring-color: var(--color-dark-700); }
+.focus\:border-dark-900:focus { border-color: var(--color-dark-900); }
+
+/* Scrollbar personalizado */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}

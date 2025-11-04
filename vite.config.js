@@ -9,6 +9,16 @@ export default defineConfig({
   cacheDir: path.join(process.env.TEMP || '/tmp', '.vite-cache'),
   server: {
     host: true,
-    port: 5173,
+    port: 3000,
+  },
+  // Suprimir warnings de Babel sobre archivos grandes
+  build: {
+    chunkSizeWarningLimit: 1000,
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      // Suprimir logs de optimización
+      logLevel: 'error',
+    },
   },
 })

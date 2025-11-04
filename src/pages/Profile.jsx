@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
-import Card from '../components/ui/Card';
 import Alert from '../components/ui/Alert';
+import './Profile.css';
 
 const Profile = () => {
   const navigate = useNavigate();
   const { user, updateProfile, logout } = useAuth();
 
+  const [activeTab, setActiveTab] = useState('personal');
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
@@ -126,205 +127,209 @@ const Profile = () => {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 flex items-center justify-center p-4">
-        <Card>
-          <p className="text-gray-600">Cargando perfil...</p>
-        </Card>
+      <div className="min-h-screen bg-white flex items-center justify-center p-6">
+        <div className="text-center">
+          <div className="animate-pulse">
+            <div className="w-16 h-16 bg-dark-200 rounded-full mx-auto mb-4"></div>
+            <div className="h-4 bg-dark-200 rounded w-32 mx-auto"></div>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 p-4 py-12">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
+    <div className="profile-container">
+      {/* Header */}
+      <header className="profile-header">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">Mi Perfil</h1>
-              <p className="text-gray-600 mt-2">Gestiona tu información personal</p>
-            </div>
-            <Button
-              variant="outline"
-              onClick={handleLogout}
-              icon={(props) => (
-                <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                </svg>
-              )}
-            >
+            <Link to="/" className="flex items-center space-x-2 group">
+              <div className="w-8 h-8 bg-dark-900 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                <span className="text-white font-bold text-sm">S</span>
+              </div>
+              <span className="text-xl font-semibold text-dark-900">Ventas inteligentes 365</span>
+            </Link>
+            <Button variant="ghost" size="sm" onClick={handleLogout}>
               Cerrar Sesión
             </Button>
           </div>
         </div>
+      </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Profile Card */}
-          <div className="lg:col-span-1">
-            <Card>
-              <div className="text-center">
-                <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-blue-600 to-blue-700 rounded-full mb-4">
-                  <span className="text-3xl font-bold text-white">
-                    {user.first_name?.[0]?.toUpperCase() || user.username?.[0]?.toUpperCase() || 'U'}
-                  </span>
+      {/* Main Content */}
+      <div className="max-w-5xl mx-auto px-6 lg:px-8 py-8">
+        {/* Profile Hero Section */}
+        <div className="profile-hero">
+          <div className="profile-avatar-section">
+            <div className="profile-avatar-wrapper">
+              <div className="profile-avatar">
+                {user.first_name?.[0]?.toUpperCase() || user.username?.[0]?.toUpperCase() || 'U'}
+              </div>
+              <div className="profile-avatar-upload" title="Cambiar foto de perfil">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
+            </div>
+
+            <div className="profile-info-header">
+              <div className="profile-name">
+                {user.first_name && user.last_name
+                  ? `${user.first_name} ${user.last_name}`
+                  : user.username}
+                <span className="profile-badge">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  Miembro Verificado
+                </span>
+              </div>
+              <div className="profile-username">@{user.username}</div>
+              <div className="profile-meta">
+                <div className="profile-meta-item">
+                  <span className="profile-meta-label">Miembro desde</span>
+                  <span className="profile-meta-value">Enero 2025</span>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900">
-                  {user.first_name && user.last_name
-                    ? `${user.first_name} ${user.last_name}`
-                    : user.username}
-                </h3>
-                <p className="text-gray-600 mt-1">@{user.username}</p>
-                <p className="text-sm text-gray-500 mt-2">{user.email}</p>
-
-                <div className="mt-6 space-y-2">
-                  <div className="flex items-center justify-center text-sm text-gray-600">
-                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    Cuenta verificada
-                  </div>
-                  <div className="flex items-center justify-center text-sm text-gray-600">
-                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    Miembro desde 2025
-                  </div>
+                <div className="profile-meta-item">
+                  <span className="profile-meta-label">Última actividad</span>
+                  <span className="profile-meta-value">Hoy</span>
                 </div>
               </div>
-            </Card>
-
-            {/* Quick Actions */}
-            <Card className="mt-6">
-              <h4 className="font-semibold text-gray-900 mb-4">Accesos Rápidos</h4>
-              <div className="space-y-2">
-                <button className="w-full text-left px-4 py-3 rounded-lg hover:bg-gray-50 transition flex items-center">
-                  <svg className="w-5 h-5 text-gray-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                  </svg>
-                  <span className="text-gray-700">Mis Pedidos</span>
-                </button>
-                <button className="w-full text-left px-4 py-3 rounded-lg hover:bg-gray-50 transition flex items-center">
-                  <svg className="w-5 h-5 text-gray-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                  </svg>
-                  <span className="text-gray-700">Lista de Deseos</span>
-                </button>
-                <button className="w-full text-left px-4 py-3 rounded-lg hover:bg-gray-50 transition flex items-center">
-                  <svg className="w-5 h-5 text-gray-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                  <span className="text-gray-700">Direcciones</span>
-                </button>
-              </div>
-            </Card>
+            </div>
           </div>
+        </div>
 
-          {/* Profile Form */}
-          <div className="lg:col-span-2">
-            <Card>
-              <div className="flex items-center justify-between mb-6">
+        {/* Tabs Navigation */}
+        <div className="profile-tabs">
+          <button
+            className={`profile-tab ${activeTab === 'personal' ? 'active' : ''}`}
+            onClick={() => setActiveTab('personal')}
+          >
+            Información Personal
+          </button>
+          <button
+            className={`profile-tab ${activeTab === 'security' ? 'active' : ''}`}
+            onClick={() => setActiveTab('security')}
+          >
+            Seguridad
+          </button>
+          <button
+            className={`profile-tab ${activeTab === 'preferences' ? 'active' : ''}`}
+            onClick={() => setActiveTab('preferences')}
+          >
+            Preferencias
+          </button>
+        </div>
+
+        {/* Alerts */}
+        {apiError && (
+          <Alert type="error" onClose={() => setApiError('')}>
+            {apiError}
+          </Alert>
+        )}
+
+        {success && (
+          <Alert type="success">
+            ¡Perfil actualizado exitosamente!
+          </Alert>
+        )}
+
+        {/* Tab Content - Personal Information */}
+        {activeTab === 'personal' && (
+          <div>
+            <div className="profile-card">
+              <div className="profile-card-header">
                 <div>
-                  <h3 className="text-xl font-bold text-gray-900">Información Personal</h3>
-                  <p className="text-gray-600 mt-1">Actualiza tus datos personales</p>
+                  <h3 className="profile-card-title">
+                    <svg className="profile-card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    Datos Personales
+                  </h3>
+                  <p className="profile-card-description">
+                    Actualiza tu información personal y cómo te contactamos
+                  </p>
                 </div>
                 {!isEditing && (
-                  <Button
-                    variant="outline"
-                    onClick={() => setIsEditing(true)}
-                    icon={(props) => (
-                      <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                      </svg>
-                    )}
-                  >
+                  <Button variant="outline" size="sm" onClick={() => setIsEditing(true)}>
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
                     Editar
                   </Button>
                 )}
               </div>
 
-              {apiError && (
-                <Alert type="error" onClose={() => setApiError('')}>
-                  {apiError}
-                </Alert>
-              )}
-
-              {success && (
-                <Alert type="success" onClose={() => setSuccess(false)}>
-                  ¡Perfil actualizado exitosamente!
-                </Alert>
-              )}
-
-              <form onSubmit={handleSubmit} className="space-y-4 mt-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Input
-                    label="Nombre"
-                    name="first_name"
-                    type="text"
-                    value={formData.first_name}
-                    onChange={handleChange}
-                    disabled={!isEditing}
-                    placeholder="Juan"
-                  />
-
-                  <Input
-                    label="Apellido"
-                    name="last_name"
-                    type="text"
-                    value={formData.last_name}
-                    onChange={handleChange}
-                    disabled={!isEditing}
-                    placeholder="Pérez"
-                  />
+              <form onSubmit={handleSubmit}>
+                <div className="profile-info-alert">
+                  <svg className="profile-info-alert-icon" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                  </svg>
+                  <div className="profile-info-alert-text">
+                    <strong>Información importante:</strong> Tu nombre y apellido se establecieron al registrarte y no pueden modificarse. Puedes actualizar tu nombre de usuario y correo electrónico.
+                  </div>
                 </div>
 
-                <Input
-                  label="Usuario"
-                  name="username"
-                  type="text"
-                  value={formData.username}
-                  onChange={handleChange}
-                  error={errors.username}
-                  disabled={!isEditing}
-                  placeholder="usuario123"
-                />
-
-                <Input
-                  label="Email"
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  error={errors.email}
-                  disabled={!isEditing}
-                  placeholder="email@ejemplo.com"
-                />
-
-                {isEditing && (
-                  <>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                  <div>
                     <Input
-                      label="Nueva Contraseña (dejar vacío para no cambiar)"
-                      name="password"
-                      type="password"
-                      value={formData.password}
+                      label="Nombre"
+                      name="first_name"
+                      type="text"
+                      value={formData.first_name}
                       onChange={handleChange}
-                      error={errors.password}
-                      placeholder="••••••••"
+                      disabled={true}
                     />
+                    <p className="profile-form-help">Este campo no se puede editar</p>
+                  </div>
 
-                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
-                      <p className="text-xs text-yellow-800">
-                        <strong>Nota:</strong> Solo completa este campo si deseas cambiar tu contraseña.
-                      </p>
-                    </div>
-                  </>
-                )}
+                  <div>
+                    <Input
+                      label="Apellido"
+                      name="last_name"
+                      type="text"
+                      value={formData.last_name}
+                      onChange={handleChange}
+                      disabled={true}
+                    />
+                    <p className="profile-form-help">Este campo no se puede editar</p>
+                  </div>
+                </div>
+
+                <div className="mb-6">
+                  <Input
+                    label="Nombre de Usuario"
+                    name="username"
+                    type="text"
+                    value={formData.username}
+                    onChange={handleChange}
+                    error={errors.username}
+                    disabled={!isEditing}
+                  />
+                  <p className="profile-form-help">Tu nombre de usuario único en la plataforma</p>
+                </div>
+
+                <div className="mb-6">
+                  <Input
+                    label="Correo Electrónico"
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    error={errors.email}
+                    disabled={!isEditing}
+                  />
+                  <p className="profile-form-help">Usaremos este correo para enviarte notificaciones importantes</p>
+                </div>
 
                 {isEditing && (
-                  <div className="flex gap-3 pt-4">
+                  <div className="profile-actions">
                     <Button
                       type="submit"
                       variant="primary"
+                      size="lg"
                       loading={loading}
                       className="flex-1"
                     >
@@ -332,56 +337,108 @@ const Profile = () => {
                     </Button>
                     <Button
                       type="button"
-                      variant="secondary"
+                      variant="outline"
+                      size="lg"
                       onClick={handleCancel}
-                      disabled={loading}
-                      className="flex-1"
                     >
                       Cancelar
                     </Button>
                   </div>
                 )}
               </form>
-            </Card>
+            </div>
+          </div>
+        )}
 
-            {/* Additional Settings */}
-            <Card className="mt-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Configuración de Cuenta</h3>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between py-3 border-b">
-                  <div>
-                    <p className="font-medium text-gray-900">Notificaciones por Email</p>
-                    <p className="text-sm text-gray-600">Recibe ofertas y novedades</p>
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" className="sr-only peer" defaultChecked />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                  </label>
-                </div>
-
-                <div className="flex items-center justify-between py-3 border-b">
-                  <div>
-                    <p className="font-medium text-gray-900">Autenticación de Dos Factores</p>
-                    <p className="text-sm text-gray-600">Aumenta la seguridad de tu cuenta</p>
-                  </div>
-                  <Button variant="outline" size="sm">
-                    Configurar
-                  </Button>
-                </div>
-
-                <div className="flex items-center justify-between py-3">
-                  <div>
-                    <p className="font-medium text-red-600">Eliminar Cuenta</p>
-                    <p className="text-sm text-gray-600">Eliminar permanentemente tu cuenta</p>
-                  </div>
-                  <Button variant="danger" size="sm">
-                    Eliminar
-                  </Button>
+        {/* Tab Content - Security */}
+        {activeTab === 'security' && (
+          <div>
+            <div className="profile-card">
+              <div className="profile-card-header">
+                <div>
+                  <h3 className="profile-card-title">
+                    <svg className="profile-card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                    Contraseña y Seguridad
+                  </h3>
+                  <p className="profile-card-description">
+                    Mantén tu cuenta segura actualizando tu contraseña regularmente
+                  </p>
                 </div>
               </div>
-            </Card>
+
+              <form onSubmit={handleSubmit}>
+                <div className="mb-6">
+                  <Input
+                    label="Nueva Contraseña"
+                    name="password"
+                    type="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    error={errors.password}
+                    placeholder="Mínimo 8 caracteres"
+                  />
+                  <p className="profile-form-help">
+                    Usa al menos 8 caracteres con una combinación de letras, números y símbolos
+                  </p>
+                </div>
+
+                <div className="profile-info-alert">
+                  <svg className="profile-info-alert-icon" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                  </svg>
+                  <div className="profile-info-alert-text">
+                    <strong>Consejo de seguridad:</strong> Nunca compartas tu contraseña con nadie. Te recomendamos cambiarla cada 90 días.
+                  </div>
+                </div>
+
+                <div className="profile-actions">
+                  <Button
+                    type="submit"
+                    variant="primary"
+                    size="lg"
+                    loading={loading}
+                  >
+                    Actualizar Contraseña
+                  </Button>
+                </div>
+              </form>
+            </div>
           </div>
-        </div>
+        )}
+
+        {/* Tab Content - Preferences */}
+        {activeTab === 'preferences' && (
+          <div>
+            <div className="profile-card">
+              <div className="profile-card-header">
+                <div>
+                  <h3 className="profile-card-title">
+                    <svg className="profile-card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    Preferencias de Cuenta
+                  </h3>
+                  <p className="profile-card-description">
+                    Personaliza tu experiencia en la plataforma
+                  </p>
+                </div>
+              </div>
+
+              <div className="text-center py-12">
+                <svg className="w-16 h-16 mx-auto text-dark-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                </svg>
+                <h4 className="text-lg font-semibold text-dark-900 mb-2">Próximamente</h4>
+                <p className="text-dark-600">
+                  Estamos trabajando en nuevas opciones de preferencias para ti
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import { forwardRef } from 'react';
+import './Input.css';
 
 const Input = forwardRef(({
   label,
@@ -9,34 +10,27 @@ const Input = forwardRef(({
   ...props
 }, ref) => {
   return (
-    <div className="mb-4">
+    <div className="input-container">
       {label && (
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="input-label">
           {label}
         </label>
       )}
-      <div className="relative">
+      <div className="input-wrapper">
         {Icon && (
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Icon className="h-5 w-5 text-gray-400" />
+          <div className="input-icon">
+            <Icon />
           </div>
         )}
         <input
           ref={ref}
           type={type}
-          className={`
-            w-full px-4 py-3 ${Icon ? 'pl-10' : ''}
-            border border-gray-300 rounded-lg
-            focus:ring-2 focus:ring-blue-500 focus:border-transparent
-            transition duration-200
-            ${error ? 'border-red-500 focus:ring-red-500' : ''}
-            ${className}
-          `}
+          className={`input-field ${Icon ? 'has-icon' : ''} ${error ? 'error' : ''} ${className}`}
           {...props}
         />
       </div>
       {error && (
-        <p className="mt-1 text-sm text-red-600">{error}</p>
+        <p className="input-error">{error}</p>
       )}
     </div>
   );

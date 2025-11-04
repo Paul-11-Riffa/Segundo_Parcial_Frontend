@@ -15,7 +15,12 @@
       "Bash(git init:*)",
       "Bash(cat:*)",
       "Bash(git config:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(findstr:*)",
+      "Bash(find:*)",
+      "Bash(netstat:*)",
+      "Bash(taskkill //F //PID 17848)",
+      "Bash(rm:*)"
     ],
     "deny": [],
     "ask": []

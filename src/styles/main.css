@@ -1,0 +1,20 @@
+/* ========================================
+   ARCHIVO PRINCIPAL CSS
+   Importa todos los módulos CSS organizados
+   ======================================== */
+
+/* Base Styles */
+@import './base/typography.css';
+@import './base/variables.css';
+@import './base/reset.css';
+
+/* Utilities */
+@import './utilities/layout.css';
+@import './utilities/spacing.css';
+@import './utilities/sizing.css';
+@import './utilities/colors.css';
+@import './utilities/typography-utils.css';
+@import './utilities/effects.css';
+
+/* Animations */
+@import './animations/animations.css';
