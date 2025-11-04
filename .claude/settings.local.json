@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm create:*)",
+      "Bash(dir:*)",
+      "Bash(mv:*)",
+      "Bash(mv frontend/.* .)",
+      "Bash(rmdir:*)",
+      "Bash(npm install)",
+      "Bash(npm install:*)",
+      "Bash(npx tailwindcss:*)",
+      "Bash(npm run dev:*)",
+      "Bash(timeout /t 3)",
+      "Bash(if exist \"node_modules\\.vite\" rmdir /s /q \"node_modules\\.vite\")",
+      "Bash(git init:*)",
+      "Bash(cat:*)",
+      "Bash(git config:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
