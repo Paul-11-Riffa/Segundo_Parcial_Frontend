@@ -16,6 +16,11 @@ import PredictionsDashboard from './pages/PredictionsDashboard';
 import StockAlertsDashboard from './pages/StockAlertsDashboard';
 import TrainModelPage from './pages/TrainModelPage';
 
+// Admin Layout and Pages
+import AdminLayout from './pages/admin/AdminLayout';
+import Dashboard from './pages/admin/Dashboard';
+import UsersList from './pages/admin/users/UsersList';
+
 function App() {
   return (
     <Router>
@@ -38,14 +43,21 @@ function App() {
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
 
           {/* Admin Routes (Solo administradores) */}
+          {/* New Admin Layout Routes with Sidebar */}
           <Route 
-            path="/admin/dashboard" 
+            path="/admin" 
             element={
               <ProtectedAdminRoute>
-                <AdminDashboard />
+                <AdminLayout />
               </ProtectedAdminRoute>
-            } 
-          />
+            }
+          >
+            <Route index element={<Dashboard />} />
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="users" element={<UsersList />} />
+          </Route>
+
+          {/* Old routes - Keep for backward compatibility */}
           <Route 
             path="/admin/dashboard/predictions" 
             element={
