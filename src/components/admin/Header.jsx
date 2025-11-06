@@ -1,22 +1,44 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useVoiceCommandContext } from '../../context/VoiceCommandContext';
 import {
   BellIcon,
   UserCircleIcon,
   ArrowRightOnRectangleIcon,
-  Cog6ToothIcon
+  Cog6ToothIcon,
+  MicrophoneIcon
 } from '@heroicons/react/24/outline';
+import VoiceCommandModal from './voice/VoiceCommandModal';
 
 /**
  * Header - Barra superior del panel de administración
- * Iconos limpios y profesionales
+ * Iconos limpios y profesionales con comando de voz integrado
  */
 const Header = ({ user, onMenuClick }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const { logout } = useAuth();
   const navigate = useNavigate();
+
+  // Hook de comando de voz desde el CONTEXTO GLOBAL
+  const {
+    state,
+    transcribedText,
+    reportData,
+    error,
+    suggestions,
+    processingMessage,
+    isListening,
+    isModalOpen,
+    openModal,
+    closeModal,
+    startListening,
+    stopListening,
+    processTextCommand,
+    resetState,
+    STATES
+  } = useVoiceCommandContext();
 
   // Estado simulado de notificaciones (reemplazar con data real)
   const [hasNotifications, setHasNotifications] = useState(true);
@@ -55,6 +77,23 @@ const Header = ({ user, onMenuClick }) => {
 
       {/* Right Section - Icon Buttons */}
       <div className="flex items-center space-x-2">
+
+        {/* Voice Command Button - NUEVO */}
+        <button
+          onClick={openModal}
+          className="p-2 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors duration-200 relative group"
+          title="Comando de Voz"
+        >
+          <MicrophoneIcon className="h-6 w-6" />
+          
+          {/* Indicador de disponibilidad */}
+          <span className="absolute bottom-1 right-1 w-2 h-2 bg-green-500 rounded-full"></span>
+          
+          {/* Tooltip */}
+          <div className="absolute top-full right-0 mt-2 px-3 py-1 bg-gray-900 text-white text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+            Generar reportes por voz
+          </div>
+        </button>
 
         {/* Notification Icon Button */}
         <div className="relative">
@@ -132,6 +171,24 @@ const Header = ({ user, onMenuClick }) => {
           )}
         </div>
       </div>
+
+      {/* Modal de Comando de Voz - Pasando TODAS las props */}
+      <VoiceCommandModal 
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        state={state}
+        transcribedText={transcribedText}
+        reportData={reportData}
+        error={error}
+        suggestions={suggestions}
+        processingMessage={processingMessage}
+        isListening={isListening}
+        startListening={startListening}
+        stopListening={stopListening}
+        processTextCommand={processTextCommand}
+        resetState={resetState}
+        STATES={STATES}
+      />
     </header>
   );
 };

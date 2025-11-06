@@ -27,6 +27,9 @@ import CategoriesList from './pages/admin/inventory/CategoriesList';
 import StockAlerts from './pages/admin/inventory/StockAlerts';
 import TestPage from './pages/admin/inventory/TestPage';
 
+// Voice Reports Module
+import VoiceReportsPage from './pages/admin/voice/VoiceReportsPage';
+
 function App() {
   return (
     <Router>
@@ -67,6 +70,9 @@ function App() {
             <Route path="inventory/products" element={<ProductsList />} />
             <Route path="inventory/categories" element={<CategoriesList />} />
             <Route path="inventory/alerts" element={<StockAlerts />} />
+            
+            {/* Voice Reports Route */}
+            <Route path="voice-reports" element={<VoiceReportsPage />} />
           </Route>
 
           {/* Old routes - Keep for backward compatibility */}

@@ -10,7 +10,9 @@ import {
   ChevronRightIcon,
   CubeIcon,
   TagIcon,
-  ExclamationTriangleIcon
+  ExclamationTriangleIcon,
+  MicrophoneIcon,
+  DocumentTextIcon
 } from '@heroicons/react/24/outline';
 
 /**
@@ -59,6 +61,12 @@ const Sidebar = ({ collapsed, onToggle }) => {
           path: '/admin/inventory/alerts',
         },
       ],
+    },
+    {
+      id: 'voice-reports',
+      label: 'Reportes por Voz',
+      icon: MicrophoneIcon,
+      path: '/admin/voice-reports',
     },
   ];
 

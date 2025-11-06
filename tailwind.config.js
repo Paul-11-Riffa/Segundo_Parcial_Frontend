@@ -43,6 +43,7 @@ export default {
         'glow': '0 0 20px rgba(14, 165, 233, 0.3)',
       },
       animation: {
+        'spin': 'spin 1s linear infinite',
         'fade-in': 'fade-in 0.5s ease-out',
         'slide-up': 'slide-up 0.5s ease-out',
         'slide-down': 'slide-down 0.5s ease-out',
@@ -50,6 +51,10 @@ export default {
         'blob': 'blob 7s infinite',
       },
       keyframes: {
+        'spin': {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' },
+        },
         'fade-in': {
           '0%': { opacity: '0' },
           '100%': { opacity: '1' },

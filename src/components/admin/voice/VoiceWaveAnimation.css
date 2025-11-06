@@ -1,0 +1,94 @@
+/* Estilos para la animación de ondas de voz */
+
+.voice-wave-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: 80px;
+  padding: 20px;
+}
+
+.voice-wave-bar {
+  width: 6px;
+  background: linear-gradient(to top, #3b82f6, #60a5fa);
+  border-radius: 3px;
+  animation: wave 1s ease-in-out infinite;
+  transform-origin: center;
+}
+
+/* Diferentes alturas iniciales */
+.voice-wave-bar.bar-1 {
+  height: 20px;
+  animation-delay: 0s;
+}
+
+.voice-wave-bar.bar-2 {
+  height: 30px;
+  animation-delay: 0.1s;
+}
+
+.voice-wave-bar.bar-3 {
+  height: 40px;
+  animation-delay: 0.2s;
+}
+
+.voice-wave-bar.bar-4 {
+  height: 30px;
+  animation-delay: 0.3s;
+}
+
+.voice-wave-bar.bar-5 {
+  height: 20px;
+  animation-delay: 0.4s;
+}
+
+/* Animación de onda */
+@keyframes wave {
+  0%, 100% {
+    transform: scaleY(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scaleY(1.8);
+    opacity: 1;
+  }
+}
+
+/* Estado activo - ondas más intensas */
+.voice-wave-container.active .voice-wave-bar {
+  background: linear-gradient(to top, #2563eb, #3b82f6);
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+}
+
+/* Estado inactivo - ondas pausadas */
+.voice-wave-container:not(.active) .voice-wave-bar {
+  animation: none;
+  opacity: 0.3;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .voice-wave-container {
+    height: 60px;
+    gap: 3px;
+  }
+
+  .voice-wave-bar {
+    width: 5px;
+  }
+
+  .voice-wave-bar.bar-1,
+  .voice-wave-bar.bar-5 {
+    height: 15px;
+  }
+
+  .voice-wave-bar.bar-2,
+  .voice-wave-bar.bar-4 {
+    height: 25px;
+  }
+
+  .voice-wave-bar.bar-3 {
+    height: 35px;
+  }
+}
