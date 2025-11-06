@@ -21,6 +21,12 @@ import AdminLayout from './pages/admin/AdminLayout';
 import Dashboard from './pages/admin/Dashboard';
 import UsersList from './pages/admin/users/UsersList';
 
+// Inventory Module
+import ProductsList from './pages/admin/inventory/ProductsList';
+import CategoriesList from './pages/admin/inventory/CategoriesList';
+import StockAlerts from './pages/admin/inventory/StockAlerts';
+import TestPage from './pages/admin/inventory/TestPage';
+
 function App() {
   return (
     <Router>
@@ -55,6 +61,12 @@ function App() {
             <Route index element={<Dashboard />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="users" element={<UsersList />} />
+            
+            {/* Inventory Routes */}
+            <Route path="inventory/test" element={<TestPage />} />
+            <Route path="inventory/products" element={<ProductsList />} />
+            <Route path="inventory/categories" element={<CategoriesList />} />
+            <Route path="inventory/alerts" element={<StockAlerts />} />
           </Route>
 
           {/* Old routes - Keep for backward compatibility */}
