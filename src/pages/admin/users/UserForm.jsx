@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import Modal from '../../../components/admin/Modal';
+import './UserForm.css';
 
 /**
- * UserForm - Formulario para crear/editar usuarios
+ * UserForm - Formulario para crear/editar usuarios con diseño minimalista
  * Usado dentro de un Modal
  */
 const UserForm = ({ isOpen, onClose, onSubmit, user, loading }) => {
@@ -137,18 +138,18 @@ const UserForm = ({ isOpen, onClose, onSubmit, user, loading }) => {
       title={isEditMode ? 'Edit User' : 'Create New User'}
       size="md"
     >
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="user-form">
         {/* Error general */}
         {submitError && (
-          <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg text-sm">
+          <div className="user-form-error">
             {submitError}
           </div>
         )}
 
         {/* Username */}
-        <div>
-          <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
-            Username <span className="text-red-500">*</span>
+        <div className="user-form-group">
+          <label htmlFor="username" className="user-form-label">
+            Username <span className="user-form-required">*</span>
           </label>
           <input
             type="text"
@@ -156,21 +157,18 @@ const UserForm = ({ isOpen, onClose, onSubmit, user, loading }) => {
             name="username"
             value={formData.username}
             onChange={handleChange}
-            className={`
-              w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent
-              ${errors.username ? 'border-red-500' : 'border-gray-300'}
-            `}
+            className={`user-form-input ${errors.username ? 'error' : ''}`}
             placeholder="Enter username"
           />
           {errors.username && (
-            <p className="text-red-500 text-xs mt-1">{errors.username}</p>
+            <p className="user-form-field-error">{errors.username}</p>
           )}
         </div>
 
         {/* Email */}
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-            Email <span className="text-red-500">*</span>
+        <div className="user-form-group">
+          <label htmlFor="email" className="user-form-label">
+            Email <span className="user-form-required">*</span>
           </label>
           <input
             type="email"
@@ -178,22 +176,19 @@ const UserForm = ({ isOpen, onClose, onSubmit, user, loading }) => {
             name="email"
             value={formData.email}
             onChange={handleChange}
-            className={`
-              w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent
-              ${errors.email ? 'border-red-500' : 'border-gray-300'}
-            `}
+            className={`user-form-input ${errors.email ? 'error' : ''}`}
             placeholder="user@example.com"
           />
           {errors.email && (
-            <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+            <p className="user-form-field-error">{errors.email}</p>
           )}
         </div>
 
         {/* Password */}
-        <div>
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-            Password {!isEditMode && <span className="text-red-500">*</span>}
-            {isEditMode && <span className="text-gray-500 text-xs">(leave blank to keep current)</span>}
+        <div className="user-form-group">
+          <label htmlFor="password" className="user-form-label">
+            Password {!isEditMode && <span className="user-form-required">*</span>}
+            {isEditMode && <span className="user-form-hint">(leave blank to keep current)</span>}
           </label>
           <input
             type="password"
@@ -201,21 +196,21 @@ const UserForm = ({ isOpen, onClose, onSubmit, user, loading }) => {
             name="password"
             value={formData.password}
             onChange={handleChange}
-            className={`
-              w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent
-              ${errors.password ? 'border-red-500' : 'border-gray-300'}
-            `}
+            className={`user-form-input ${errors.password ? 'error' : ''}`}
             placeholder={isEditMode ? '••••••••' : 'Minimum 8 characters'}
           />
           {errors.password && (
-            <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+            <p className="user-form-field-error">{errors.password}</p>
+          )}
+          {!isEditMode && !errors.password && (
+            <p className="user-form-password-hint">Must be at least 8 characters long</p>
           )}
         </div>
 
         {/* First Name y Last Name en una fila */}
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label htmlFor="first_name" className="block text-sm font-medium text-gray-700 mb-1">
+        <div className="user-form-row">
+          <div className="user-form-group">
+            <label htmlFor="first_name" className="user-form-label">
               First Name
             </label>
             <input
@@ -224,13 +219,13 @@ const UserForm = ({ isOpen, onClose, onSubmit, user, loading }) => {
               name="first_name"
               value={formData.first_name}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="user-form-input"
               placeholder="John"
             />
           </div>
 
-          <div>
-            <label htmlFor="last_name" className="block text-sm font-medium text-gray-700 mb-1">
+          <div className="user-form-group">
+            <label htmlFor="last_name" className="user-form-label">
               Last Name
             </label>
             <input
@@ -239,23 +234,23 @@ const UserForm = ({ isOpen, onClose, onSubmit, user, loading }) => {
               name="last_name"
               value={formData.last_name}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="user-form-input"
               placeholder="Doe"
             />
           </div>
         </div>
 
         {/* Role */}
-        <div>
-          <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-1">
-            Role <span className="text-red-500">*</span>
+        <div className="user-form-group">
+          <label htmlFor="role" className="user-form-label">
+            Role <span className="user-form-required">*</span>
           </label>
           <select
             id="role"
             name="role"
             value={formData.profile.role}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="user-form-select"
           >
             <option value="CLIENT">Client</option>
             <option value="ADMIN">Admin</option>
@@ -263,40 +258,37 @@ const UserForm = ({ isOpen, onClose, onSubmit, user, loading }) => {
         </div>
 
         {/* Active Status */}
-        <div className="flex items-center">
+        <div className="user-form-checkbox-wrapper">
           <input
             type="checkbox"
             id="is_active"
             name="is_active"
             checked={formData.is_active}
             onChange={handleChange}
-            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            className="user-form-checkbox"
           />
-          <label htmlFor="is_active" className="ml-2 block text-sm text-gray-700">
+          <label htmlFor="is_active" className="user-form-checkbox-label">
             Active user
           </label>
         </div>
 
         {/* Buttons */}
-        <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+        <div className="user-form-actions">
           <button
             type="button"
             onClick={onClose}
             disabled={loading}
-            className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+            className="user-form-button-cancel"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={loading}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+            className="user-form-button-submit"
           >
             {loading && (
-              <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
+              <div className="user-form-loading-spinner"></div>
             )}
             <span>{loading ? 'Saving...' : (isEditMode ? 'Update User' : 'Create User')}</span>
           </button>

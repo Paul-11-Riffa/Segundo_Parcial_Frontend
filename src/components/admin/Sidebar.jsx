@@ -14,6 +14,7 @@ import {
   MicrophoneIcon,
   DocumentTextIcon
 } from '@heroicons/react/24/outline';
+import './Sidebar.css';
 
 /**
  * Sidebar - Navegación lateral del panel de administración
@@ -80,28 +81,23 @@ const Sidebar = ({ collapsed, onToggle }) => {
   };
 
   return (
-    <aside
-      className={`
-        fixed left-0 top-0 h-screen bg-white border-r border-gray-200 transition-all duration-300 ease-in-out flex flex-col z-40
-        ${collapsed ? 'w-20' : 'w-64'}
-      `}
-    >
+    <aside className={`sidebar ${collapsed ? 'collapsed' : 'expanded'}`}>
       {/* Logo / Brand */}
-      <div className="h-16 flex items-center justify-center px-4 border-b border-gray-200 bg-white">
+      <div className="sidebar-brand">
         {!collapsed && (
-          <div className="flex items-center space-x-3">
-            <Squares2X2Icon className="h-7 w-7 text-gray-900" />
-            <span className="font-bold text-xl tracking-wide text-gray-900">SmartSales</span>
+          <div className="sidebar-brand-content">
+            <Squares2X2Icon className="sidebar-brand-icon" />
+            <span className="sidebar-brand-text">SmartSales</span>
           </div>
         )}
         {collapsed && (
-          <Squares2X2Icon className="h-7 w-7 text-gray-900" />
+          <Squares2X2Icon className="sidebar-brand-icon" />
         )}
       </div>
 
       {/* Navigation Menu */}
-      <nav className="flex-1 overflow-y-auto py-6">
-        <ul className="space-y-2 px-3">
+      <nav className="sidebar-nav">
+        <ul className="sidebar-menu">
           {menuItems.map((item) => {
             const Icon = item.icon;
             const active = item.path && isActive(item.path);
@@ -110,60 +106,41 @@ const Sidebar = ({ collapsed, onToggle }) => {
             const hasActiveChild = hasSubmenu && item.submenu.some(sub => isActive(sub.path));
 
             return (
-              <li key={item.id}>
+              <li key={item.id} className="sidebar-menu-item">
                 {/* Item principal */}
                 {hasSubmenu ? (
                   <div>
                     <button
                       onClick={() => !collapsed && toggleSubmenu(item.id)}
-                      className={`
-                        w-full flex items-center px-4 py-3 rounded-lg transition-all duration-200 group
-                        ${hasActiveChild
-                          ? 'bg-gray-100 text-gray-900'
-                          : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
-                        }
-                        ${collapsed ? 'justify-center' : 'justify-between'}
-                      `}
+                      className={`sidebar-item-button ${hasActiveChild ? 'active' : ''} ${isExpanded ? 'expanded' : ''}`}
                       title={collapsed ? item.label : ''}
                     >
-                      <div className={`flex items-center ${collapsed ? '' : 'space-x-3'}`}>
-                        <Icon className="flex-shrink-0 h-5 w-5" />
+                      <div className="sidebar-item-content">
+                        <Icon className="sidebar-item-icon" />
                         {!collapsed && (
-                          <span className="font-medium text-sm">{item.label}</span>
+                          <span className="sidebar-item-label">{item.label}</span>
                         )}
                       </div>
                       {!collapsed && (
-                        <div>
-                          {isExpanded ? (
-                            <ChevronDownIcon className="h-4 w-4" />
-                          ) : (
-                            <ChevronRightIcon className="h-4 w-4" />
-                          )}
-                        </div>
+                        <ChevronDownIcon className="sidebar-item-chevron" />
                       )}
                     </button>
 
                     {/* Submenú */}
                     {!collapsed && isExpanded && (
-                      <ul className="mt-2 space-y-1 ml-4">
+                      <ul className="sidebar-submenu">
                         {item.submenu.map((subItem) => {
                           const SubIcon = subItem.icon;
                           const subActive = isActive(subItem.path);
 
                           return (
-                            <li key={subItem.id}>
+                            <li key={subItem.id} className="sidebar-submenu-item">
                               <Link
                                 to={subItem.path}
-                                className={`
-                                  flex items-center px-4 py-2 rounded-lg transition-all duration-200 group
-                                  ${subActive
-                                    ? 'bg-blue-50 text-blue-700 font-semibold'
-                                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                                  }
-                                `}
+                                className={`sidebar-submenu-link ${subActive ? 'active' : ''}`}
                               >
-                                <SubIcon className="flex-shrink-0 h-4 w-4 mr-3" />
-                                <span className="font-medium text-sm">{subItem.label}</span>
+                                <SubIcon className="sidebar-submenu-icon" />
+                                <span className="sidebar-submenu-label">{subItem.label}</span>
                               </Link>
                             </li>
                           );
@@ -174,20 +151,15 @@ const Sidebar = ({ collapsed, onToggle }) => {
                 ) : (
                   <Link
                     to={item.path}
-                    className={`
-                      flex items-center px-4 py-3 rounded-lg transition-all duration-200 group
-                      ${active
-                        ? 'bg-blue-50 text-blue-700 font-semibold'
-                        : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
-                      }
-                      ${collapsed ? 'justify-center' : 'space-x-3'}
-                    `}
+                    className={`sidebar-item-link ${active ? 'active' : ''}`}
                     title={collapsed ? item.label : ''}
                   >
-                    <Icon className={`flex-shrink-0 ${active ? 'h-5 w-5' : 'h-5 w-5'}`} />
-                    {!collapsed && (
-                      <span className="font-medium text-sm">{item.label}</span>
-                    )}
+                    <div className="sidebar-item-content">
+                      <Icon className="sidebar-item-icon" />
+                      {!collapsed && (
+                        <span className="sidebar-item-label">{item.label}</span>
+                      )}
+                    </div>
                   </Link>
                 )}
               </li>
@@ -197,18 +169,18 @@ const Sidebar = ({ collapsed, onToggle }) => {
       </nav>
 
       {/* Toggle Button */}
-      <div className="border-t border-gray-200 p-3">
+      <div className="sidebar-footer">
         <button
           onClick={onToggle}
-          className="w-full flex items-center justify-center px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 group"
-          title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          className="sidebar-toggle-button"
+          title={collapsed ? 'Expandir sidebar' : 'Colapsar sidebar'}
         >
           {collapsed ? (
-            <ChevronDoubleRightIcon className="h-5 w-5" />
+            <ChevronDoubleRightIcon className="sidebar-toggle-icon" />
           ) : (
             <>
-              <ChevronDoubleLeftIcon className="h-5 w-5" />
-              <span className="ml-2 text-sm font-medium">Collapse</span>
+              <ChevronDoubleLeftIcon className="sidebar-toggle-icon" />
+              <span className="sidebar-toggle-text">Collapse</span>
             </>
           )}
         </button>

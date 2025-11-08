@@ -1,0 +1,642 @@
+/**
+ * TrainModelPage.css - Diseño Moderno para Entrenamiento de Modelos ML
+ * Estilo minimalista blanco y negro con acentos sutiles
+ */
+
+/* ========================================
+   CONTAINER PRINCIPAL
+   ======================================== */
+.train-model-container {
+  min-height: 100vh;
+  background: #fafafa;
+  padding: 3rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .train-model-container {
+    padding: 2rem 1rem;
+  }
+}
+
+/* ========================================
+   HEADER SECTION
+   ======================================== */
+.train-model-header {
+  margin-bottom: 2rem;
+}
+
+.train-model-back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  color: #666666;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 1.5rem;
+}
+
+.train-model-back-button:hover {
+  border-color: #000000;
+  color: #000000;
+  background: #ffffff;
+}
+
+.train-model-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #000000;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.train-model-header p {
+  font-size: 0.95rem;
+  color: #666666;
+}
+
+/* ========================================
+   INFO BANNER
+   ======================================== */
+.train-model-info-banner {
+  background: linear-gradient(135deg, #fafafa 0%, #ffffff 100%);
+  border: 1px solid #e5e5e5;
+  border-left: 4px solid #000000;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.train-model-info-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+.train-model-info-icon {
+  font-size: 2.5rem;
+  flex-shrink: 0;
+}
+
+.train-model-info-text h3 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #000000;
+  margin-bottom: 1rem;
+}
+
+.train-model-info-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.train-model-info-list li {
+  font-size: 0.875rem;
+  color: #666666;
+  line-height: 1.6;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.train-model-info-list li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: #000000;
+  font-weight: bold;
+}
+
+/* ========================================
+   TRAINING FORM CARD
+   ======================================== */
+.train-model-form-card {
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.train-model-form-card h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #000000;
+  margin-bottom: 0.5rem;
+}
+
+.train-model-form-card .subtitle {
+  font-size: 0.875rem;
+  color: #666666;
+  margin-bottom: 2rem;
+}
+
+.train-model-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* ========================================
+   TRAINING OPTIONS
+   ======================================== */
+.training-options-section label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #000000;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+}
+
+.training-options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.training-option-card {
+  padding: 1.25rem;
+  border: 2px solid #e5e5e5;
+  border-radius: 10px;
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.training-option-card:hover {
+  border-color: #000000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.training-option-card.selected {
+  border-color: #000000;
+  background: #fafafa;
+}
+
+.training-option-card:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.training-option-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.training-option-label {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #000000;
+}
+
+.training-option-check {
+  font-size: 1.25rem;
+  color: #000000;
+}
+
+.training-option-description {
+  font-size: 0.875rem;
+  color: #666666;
+  line-height: 1.5;
+}
+
+/* ========================================
+   FORM INPUTS
+   ======================================== */
+.form-group label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #000000;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.75rem;
+}
+
+.form-input,
+.form-textarea {
+  width: 100%;
+  padding: 0.875rem 1.25rem;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: #000000;
+  background: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: #000000;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+}
+
+.form-input:disabled,
+.form-textarea:disabled {
+  background: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.form-textarea {
+  resize: none;
+  font-family: inherit;
+}
+
+.form-hint {
+  font-size: 0.75rem;
+  color: #999999;
+  margin-top: 0.5rem;
+}
+
+/* ========================================
+   FORM FOOTER
+   ======================================== */
+.form-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e5e5e5;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.form-footer-warning {
+  font-size: 0.875rem;
+  color: #666666;
+}
+
+.form-footer-warning strong {
+  color: #000000;
+  font-weight: 600;
+}
+
+.train-model-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 2rem;
+  background: #000000;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.train-model-button:hover {
+  background: #1a1a1a;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transform: translateY(-1px);
+}
+
+.train-model-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ========================================
+   PROGRESS CARD
+   ======================================== */
+.progress-card {
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.progress-card h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #000000;
+  margin-bottom: 2rem;
+}
+
+.progress-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.progress-bar-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.progress-bar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.progress-bar-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #000000;
+}
+
+.progress-bar-percentage {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #000000;
+}
+
+.progress-bar-track {
+  width: 100%;
+  height: 12px;
+  background: #f0f0f0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #000000 0%, #434343 100%);
+  border-radius: 6px;
+  transition: width 0.5s ease;
+}
+
+.progress-status {
+  padding: 1.25rem;
+  background: #fafafa;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.progress-status.success {
+  background: #f0fdf4;
+  border-color: #d1fae5;
+}
+
+.progress-status-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.progress-status-text {
+  flex: 1;
+}
+
+.progress-status-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #000000;
+  margin-bottom: 0.25rem;
+}
+
+.progress-status.success .progress-status-title {
+  color: #15803d;
+}
+
+.progress-status-subtitle {
+  font-size: 0.75rem;
+  color: #666666;
+}
+
+.progress-status.success .progress-status-subtitle {
+  color: #16a34a;
+}
+
+/* ========================================
+   RESULTS CARD
+   ======================================== */
+.results-card {
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.results-card h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #000000;
+  margin-bottom: 0.5rem;
+}
+
+.results-card .subtitle {
+  font-size: 0.875rem;
+  color: #666666;
+  margin-bottom: 2rem;
+}
+
+.results-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.result-metric-card {
+  padding: 1.5rem;
+  background: #fafafa;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.result-metric-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+}
+
+.result-metric-card.success::before {
+  background: linear-gradient(90deg, #22c55e 0%, #16a34a 100%);
+}
+
+.result-metric-card.info::before {
+  background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%);
+}
+
+.result-metric-card.warning::before {
+  background: linear-gradient(90deg, #a855f7 0%, #9333ea 100%);
+}
+
+.result-metric-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #666666;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.75rem;
+}
+
+.result-metric-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #000000;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.375rem;
+}
+
+.result-metric-description {
+  font-size: 0.75rem;
+  color: #666666;
+}
+
+.result-metric-card.success .result-metric-description {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.results-info-section {
+  padding: 1.5rem;
+  background: #fafafa;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+}
+
+.results-info-section h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #000000;
+  margin-bottom: 1rem;
+}
+
+.results-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.results-info-item {
+  font-size: 0.875rem;
+}
+
+.results-info-item .label {
+  color: #666666;
+  font-weight: 500;
+}
+
+.results-info-item .value {
+  color: #000000;
+  font-weight: 600;
+  margin-left: 0.5rem;
+}
+
+.results-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.results-button-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 2rem;
+  background: #000000;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.results-button-primary:hover {
+  background: #1a1a1a;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transform: translateY(-1px);
+}
+
+.results-button-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 2rem;
+  background: #ffffff;
+  color: #000000;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.results-button-secondary:hover {
+  border-color: #000000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* ========================================
+   ERROR STATE
+   ======================================== */
+.error-card {
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-left: 4px solid #ef4444;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.train-model-form-card,
+.progress-card,
+.results-card {
+  animation: fadeIn 0.4s ease forwards;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.progress-bar-fill {
+  animation: pulse 2s ease-in-out infinite;
+}

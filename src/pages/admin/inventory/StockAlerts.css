@@ -1,0 +1,485 @@
+/* ========================================
+   STOCK ALERTS - INVENTORY MANAGEMENT
+   Diseño minimalista black & white profesional
+   ======================================== */
+
+/* ========================================
+   CONTAINER
+   ======================================== */
+.stock-alerts-container {
+  padding: 2rem;
+  min-height: 100vh;
+  background: #fafafa;
+}
+
+/* ========================================
+   HEADER
+   ======================================== */
+.stock-alerts-header {
+  margin-bottom: 2rem;
+}
+
+.stock-alerts-header h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #000000;
+  letter-spacing: -0.03em;
+  margin: 0 0 0.375rem 0;
+}
+
+.stock-alerts-header p {
+  font-size: 0.9375rem;
+  color: #666666;
+  margin: 0;
+}
+
+/* ========================================
+   SUMMARY CARDS
+   ======================================== */
+.stock-alerts-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stock-alert-card {
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.stock-alert-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: currentColor;
+}
+
+.stock-alert-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.stock-alert-card.critical {
+  color: #cc0000;
+}
+
+.stock-alert-card.warning {
+  color: #ff8800;
+}
+
+.stock-alert-card-content {
+  flex: 1;
+}
+
+.stock-alert-card-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #666666;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 0.5rem 0;
+}
+
+.stock-alert-card-value {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: currentColor;
+  margin: 0 0 0.375rem 0;
+  letter-spacing: -0.03em;
+}
+
+.stock-alert-card-description {
+  font-size: 0.875rem;
+  color: #999999;
+  margin: 0;
+}
+
+.stock-alert-card-icon {
+  width: 4rem;
+  height: 4rem;
+  color: currentColor;
+  opacity: 0.2;
+  flex-shrink: 0;
+}
+
+/* ========================================
+   ERROR MESSAGE
+   ======================================== */
+.stock-alerts-error {
+  background: #fff5f5;
+  border: 1px solid #ff4444;
+  border-left-width: 4px;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.stock-alerts-error-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #cc0000;
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.stock-alerts-error p {
+  color: #cc0000;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* ========================================
+   SECTION
+   ======================================== */
+.stock-alerts-section {
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.stock-alerts-section-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #e5e5e5;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.stock-alerts-section-header.critical {
+  background: linear-gradient(135deg, #fff5f5 0%, #ffe6e6 100%);
+  border-bottom-color: #ffcccc;
+}
+
+.stock-alerts-section-header.warning {
+  background: linear-gradient(135deg, #fffbf0 0%, #fff4e6 100%);
+  border-bottom-color: #ffe8cc;
+}
+
+.stock-alerts-section-header h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #000000;
+  margin: 0;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.stock-alerts-section-header-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.stock-alerts-section-header.critical h2,
+.stock-alerts-section-header.critical .stock-alerts-section-header-icon {
+  color: #cc0000;
+}
+
+.stock-alerts-section-header.warning h2,
+.stock-alerts-section-header.warning .stock-alerts-section-header-icon {
+  color: #ff8800;
+}
+
+/* ========================================
+   TABLE
+   ======================================== */
+.stock-alerts-table-container {
+  overflow-x: auto;
+}
+
+.stock-alerts-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.stock-alerts-table thead {
+  background: #fafafa;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.stock-alerts-table thead th {
+  padding: 0.875rem 1.5rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #666666;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.stock-alerts-table tbody tr {
+  border-bottom: 1px solid #f0f0f0;
+  transition: background 0.15s ease;
+}
+
+.stock-alerts-table tbody tr:hover {
+  background: #fafafa;
+}
+
+.stock-alerts-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.stock-alerts-table tbody td {
+  padding: 1rem 1.5rem;
+  font-size: 0.9375rem;
+  color: #1a1a1a;
+  vertical-align: middle;
+}
+
+/* Image Cell */
+.stock-alerts-table-image {
+  width: 3rem;
+  height: 3rem;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e5e5;
+}
+
+.stock-alerts-table-image-placeholder {
+  width: 3rem;
+  height: 3rem;
+  background: #f5f5f5;
+  border: 1px solid #e5e5e5;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stock-alerts-table-image-placeholder svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: #cccccc;
+}
+
+/* Product Name Cell */
+.stock-alerts-table-product-name {
+  font-weight: 600;
+  color: #000000;
+  margin: 0 0 0.25rem 0;
+}
+
+.stock-alerts-table-product-category {
+  font-size: 0.8125rem;
+  color: #999999;
+  margin: 0;
+}
+
+/* Stock Edit Form */
+.stock-alerts-edit-form {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stock-alerts-edit-input {
+  width: 6rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  background: #ffffff;
+  border: 1.5px solid #e5e5e5;
+  border-radius: 0.5rem;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.stock-alerts-edit-input:focus {
+  border-color: #000000;
+  background: #fafafa;
+}
+
+.stock-alerts-edit-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.stock-alerts-edit-button {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.stock-alerts-edit-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.stock-alerts-edit-button.save {
+  background: #000000;
+  color: #ffffff;
+  border-color: #000000;
+}
+
+.stock-alerts-edit-button.save:hover:not(:disabled) {
+  background: #1a1a1a;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.stock-alerts-edit-button.cancel {
+  background: #f5f5f5;
+  color: #666666;
+  border-color: #e5e5e5;
+}
+
+.stock-alerts-edit-button.cancel:hover:not(:disabled) {
+  background: #e5e5e5;
+  color: #1a1a1a;
+}
+
+.stock-alerts-update-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  background: #000000;
+  color: #ffffff;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.stock-alerts-update-button:hover {
+  background: #1a1a1a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.stock-alerts-update-button svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* ========================================
+   LOADING & EMPTY STATES
+   ======================================== */
+.stock-alerts-loading,
+.stock-alerts-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.stock-alerts-loading {
+  flex-direction: row;
+  gap: 1rem;
+}
+
+.stock-alerts-loading-spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 3px solid #e5e5e5;
+  border-top-color: #000000;
+  border-radius: 50%;
+  animation: stock-alerts-spin 0.8s linear infinite;
+}
+
+@keyframes stock-alerts-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.stock-alerts-loading-text {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #666666;
+  margin: 0;
+}
+
+.stock-alerts-empty-icon {
+  width: 4rem;
+  height: 4rem;
+  color: #cccccc;
+  margin-bottom: 1rem;
+}
+
+.stock-alerts-empty-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #666666;
+  margin: 0 0 0.5rem 0;
+}
+
+.stock-alerts-empty-description {
+  font-size: 0.875rem;
+  color: #999999;
+  margin: 0;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+@media (max-width: 768px) {
+  .stock-alerts-container {
+    padding: 1rem;
+  }
+
+  .stock-alerts-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .stock-alert-card-value {
+    font-size: 2rem;
+  }
+
+  .stock-alert-card-icon {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .stock-alerts-edit-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .stock-alerts-edit-input {
+    width: 100%;
+  }
+
+  .stock-alerts-edit-button,
+  .stock-alerts-update-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .stock-alerts-table {
+    min-width: 650px;
+  }
+}

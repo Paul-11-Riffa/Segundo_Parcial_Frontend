@@ -216,205 +216,218 @@ const ProductForm = ({ product, onClose }) => {
   };
 
   return (
-    <Modal onClose={onClose} size="lg">
-      <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h2 className="text-2xl font-bold text-gray-900">
-            {isEditing ? 'Editar Producto' : 'Nuevo Producto'}
-          </h2>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
-          >
-            <XMarkIcon className="w-6 h-6" />
-          </button>
+    <Modal
+      isOpen={true}
+      onClose={onClose}
+      title={isEditing ? 'Edit Product' : 'New Product'}
+      size="lg"
+    >
+      <form onSubmit={handleSubmit} className="user-form">
+        {/* Error general */}
+        {generalError && (
+          <div className="user-form-error">
+            {generalError}
+          </div>
+        )}
+
+        {/* Nombre */}
+        <div className="user-form-group">
+          <label className="user-form-label">
+            Product Name <span className="user-form-required">*</span>
+          </label>
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            className={`user-form-input ${errors.name ? 'error' : ''}`}
+            placeholder="e.g: HP Pavilion Laptop"
+          />
+          {errors.name && (
+            <p className="user-form-field-error">{errors.name}</p>
+          )}
         </div>
 
-        {/* Formulario */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
-          {/* Error general */}
-          {generalError && (
-            <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded flex items-start gap-3">
-              <ExclamationCircleIcon className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
-              <p className="text-red-800">{generalError}</p>
-            </div>
-          )}
+        {/* Descripción */}
+        <div className="user-form-group">
+          <label className="user-form-label">Description</label>
+          <textarea
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            rows={4}
+            className="user-form-input"
+            placeholder="Describe the product..."
+            style={{ resize: 'vertical', minHeight: '100px' }}
+          />
+        </div>
 
-          {/* Nombre */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Nombre del Producto <span className="text-red-500">*</span>
+        {/* Categoría */}
+        <div className="user-form-group">
+          <label className="user-form-label">
+            Category <span className="user-form-required">*</span>
+          </label>
+          <select
+            name="category"
+            value={formData.category}
+            onChange={handleChange}
+            className={`user-form-select ${errors.category ? 'error' : ''}`}
+            disabled={loadingCategories}
+          >
+            <option value="">Select a category</option>
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.id}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
+          {errors.category && (
+            <p className="user-form-field-error">{errors.category}</p>
+          )}
+        </div>
+
+        {/* Precio y Stock */}
+        <div className="user-form-row">
+          <div className="user-form-group">
+            <label className="user-form-label">
+              Price ($) <span className="user-form-required">*</span>
             </label>
             <input
-              type="text"
-              name="name"
-              value={formData.name}
+              type="number"
+              name="price"
+              value={formData.price}
               onChange={handleChange}
-              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                errors.name ? 'border-red-500' : 'border-gray-300'
-              }`}
-              placeholder="Ej: Laptop HP Pavilion"
+              step="0.01"
+              min="0"
+              className={`user-form-input ${errors.price ? 'error' : ''}`}
+              placeholder="0.00"
             />
-            {errors.name && (
-              <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+            {errors.price && (
+              <p className="user-form-field-error">{errors.price}</p>
             )}
           </div>
 
-          {/* Descripción */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Descripción
+          <div className="user-form-group">
+            <label className="user-form-label">
+              Stock <span className="user-form-required">*</span>
             </label>
-            <textarea
-              name="description"
-              value={formData.description}
+            <input
+              type="number"
+              name="stock"
+              value={formData.stock}
               onChange={handleChange}
-              rows={4}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-              placeholder="Describe el producto..."
+              min="0"
+              className={`user-form-input ${errors.stock ? 'error' : ''}`}
+              placeholder="0"
             />
-          </div>
-
-          {/* Categoría */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Categoría <span className="text-red-500">*</span>
-            </label>
-            <select
-              name="category"
-              value={formData.category}
-              onChange={handleChange}
-              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                errors.category ? 'border-red-500' : 'border-gray-300'
-              }`}
-              disabled={loadingCategories}
-            >
-              <option value="">Selecciona una categoría</option>
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.name}
-                </option>
-              ))}
-            </select>
-            {errors.category && (
-              <p className="text-red-500 text-sm mt-1">{errors.category}</p>
+            {errors.stock && (
+              <p className="user-form-field-error">{errors.stock}</p>
             )}
           </div>
+        </div>
 
-          {/* Precio y Stock */}
-          <div className="grid grid-cols-2 gap-4">
-            {/* Precio */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Precio ($) <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="number"
-                name="price"
-                value={formData.price}
-                onChange={handleChange}
-                step="0.01"
-                min="0"
-                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                  errors.price ? 'border-red-500' : 'border-gray-300'
-                }`}
-                placeholder="0.00"
+        {/* Imagen */}
+        <div className="user-form-group">
+          <label className="user-form-label">Product Image</label>
+          
+          {imagePreview ? (
+            <div style={{ position: 'relative' }}>
+              <img
+                src={imagePreview}
+                alt="Preview"
+                style={{
+                  width: '100%',
+                  height: '16rem',
+                  objectFit: 'cover',
+                  borderRadius: '0.5rem',
+                  border: '1.5px solid #e5e5e5'
+                }}
               />
-              {errors.price && (
-                <p className="text-red-500 text-sm mt-1">{errors.price}</p>
-              )}
+              <button
+                type="button"
+                onClick={handleRemoveImage}
+                style={{
+                  position: 'absolute',
+                  top: '0.5rem',
+                  right: '0.5rem',
+                  padding: '0.5rem',
+                  background: '#cc0000',
+                  color: '#ffffff',
+                  border: 'none',
+                  borderRadius: '0.5rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseOver={(e) => e.currentTarget.style.background = '#990000'}
+                onMouseOut={(e) => e.currentTarget.style.background = '#cc0000'}
+              >
+                <TrashIcon style={{ width: '1.25rem', height: '1.25rem' }} />
+              </button>
             </div>
-
-            {/* Stock */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Stock <span className="text-red-500">*</span>
-              </label>
+          ) : (
+            <label
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '100%',
+                height: '16rem',
+                border: '2px dashed #cccccc',
+                borderRadius: '0.5rem',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                background: '#fafafa'
+              }}
+              onMouseOver={(e) => e.currentTarget.style.background = '#f0f0f0'}
+              onMouseOut={(e) => e.currentTarget.style.background = '#fafafa'}
+            >
+              <ArrowUpTrayIcon style={{ width: '3rem', height: '3rem', color: '#999999', marginBottom: '0.75rem' }} />
+              <p style={{ fontSize: '0.875rem', color: '#666666', fontWeight: 600, marginBottom: '0.25rem' }}>
+                Click to upload an image
+              </p>
+              <p style={{ fontSize: '0.75rem', color: '#999999' }}>
+                JPG, PNG or WEBP (MAX. 5MB)
+              </p>
               <input
-                type="number"
-                name="stock"
-                value={formData.stock}
-                onChange={handleChange}
-                min="0"
-                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                  errors.stock ? 'border-red-500' : 'border-gray-300'
-                }`}
-                placeholder="0"
+                type="file"
+                accept="image/jpeg,image/jpg,image/png,image/webp"
+                onChange={handleImageChange}
+                style={{ display: 'none' }}
               />
-              {errors.stock && (
-                <p className="text-red-500 text-sm mt-1">{errors.stock}</p>
-              )}
-            </div>
-          </div>
-
-          {/* Imagen */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Imagen del Producto
             </label>
-            
-            {imagePreview ? (
-              <div className="relative">
-                <img
-                  src={imagePreview}
-                  alt="Preview"
-                  className="w-full h-64 object-cover rounded-lg border-2 border-gray-200"
-                />
-                <button
-                  type="button"
-                  onClick={handleRemoveImage}
-                  className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg transition-colors"
-                >
-                  <TrashIcon className="w-5 h-5" />
-                </button>
-              </div>
-            ) : (
-              <label className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
-                <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                  <ArrowUpTrayIcon className="w-12 h-12 text-gray-400 mb-3" />
-                  <p className="text-sm text-gray-600 font-medium mb-1">
-                    Haz clic para subir una imagen
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    JPG, PNG o WEBP (MAX. 5MB)
-                  </p>
-                </div>
-                <input
-                  type="file"
-                  accept="image/jpeg,image/jpg,image/png,image/webp"
-                  onChange={handleImageChange}
-                  className="hidden"
-                />
-              </label>
-            )}
-            
-            {errors.image && (
-              <p className="text-red-500 text-sm mt-1">{errors.image}</p>
-            )}
-          </div>
+          )}
+          
+          {errors.image && (
+            <p className="user-form-field-error">{errors.image}</p>
+          )}
+        </div>
 
-          {/* Botones */}
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-6 py-2 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition-colors"
-              disabled={loading}
-            >
-              Cancelar
-            </button>
-            <button
-              type="submit"
-              disabled={loading}
-              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors disabled:bg-blue-400 disabled:cursor-not-allowed"
-            >
-              <CheckIcon className="w-5 h-5" />
-              {loading ? 'Guardando...' : (isEditing ? 'Actualizar' : 'Crear')}
-            </button>
-          </div>
-        </form>
-      </div>
+        {/* Botones */}
+        <div className="user-form-actions">
+          <button
+            type="button"
+            onClick={onClose}
+            className="user-form-button-cancel"
+            disabled={loading}
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            disabled={loading}
+            className="user-form-button-submit"
+          >
+            {loading && (
+              <div className="user-form-loading-spinner"></div>
+            )}
+            <span>{loading ? 'Saving...' : (isEditing ? 'Update' : 'Create')}</span>
+          </button>
+        </div>
+      </form>
     </Modal>
   );
 };

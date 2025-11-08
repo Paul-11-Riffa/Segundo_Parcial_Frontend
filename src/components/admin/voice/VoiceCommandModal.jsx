@@ -27,13 +27,16 @@ import {
   AlertCircle,
   Download,
   FileText,
+  FileSpreadsheet,
   X,
   HelpCircle,
   Info,
-  Lightbulb
+  Lightbulb,
+  Sparkles
 } from 'lucide-react';
 import VoiceWaveAnimation from './VoiceWaveAnimation';
-import { COMMAND_EXAMPLES } from '../../../services/admin/voiceCommandService';
+import { COMMAND_EXAMPLES, downloadReport } from '../../../services/admin/voiceCommandService';
+import { devLog } from '../../../utils/devLogger';
 
 const VoiceCommandModal = ({ 
   isOpen, 
@@ -42,7 +45,9 @@ const VoiceCommandModal = ({
   state,
   transcribedText,
   reportData,
+  commandId,
   error,
+  errorDetails,
   suggestions,
   processingMessage,
   isListening,
@@ -51,16 +56,23 @@ const VoiceCommandModal = ({
   stopListening,
   processTextCommand,
   resetState,
+  // Polling controls
+  isPolling,
+  cancelPolling,
   STATES
 }) => {
   const [manualInput, setManualInput] = useState('');
   const [showExamples, setShowExamples] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+  // Detectar si backend ya devolvió una URL directa al archivo
+  const reportFileUrl = reportData?.file_url || reportData?.result_data?.report_info?.file_url;
 
   // Limpiar estado cuando el modal se cierra
   useEffect(() => {
     if (!isOpen) {
       setManualInput('');
       setShowExamples(false);
+      setIsDownloading(false);
     }
   }, [isOpen]);
 
@@ -89,12 +101,41 @@ const VoiceCommandModal = ({
     resetState();
     setManualInput('');
     setShowExamples(false);
+    setIsDownloading(false);
     onClose();
   };
 
-  const handleDownloadReport = (format = 'pdf') => {
-    if (reportData && reportData.file_url) {
-      window.open(reportData.file_url, '_blank');
+  /**
+   * Gestiona la descarga del reporte usando commandId o file_url
+   */
+  const handleDownloadReport = async (format = 'pdf') => {
+    // Detectar URL dentro de reportData (si el backend devuelve file_url)
+    const fileUrl = reportData?.file_url || reportData?.result_data?.report_info?.file_url;
+    const target = fileUrl || commandId;
+
+    if (!target) {
+      console.error('❌ No hay comando ni URL disponible para descargar');
+      alert('Error: No se puede descargar el reporte. ID/URL no disponible.');
+      return;
+    }
+
+    devLog(`📥 Descargando reporte target=${target} en formato ${format}...`);
+    setIsDownloading(true);
+
+    try {
+  const result = await downloadReport(target, format);
+      
+      if (result.success) {
+        devLog(`✅ Reporte descargado exitosamente en formato ${format}`);
+      } else {
+        console.error('❌ Error descargando reporte:', result.error);
+        alert(`Error al descargar el reporte: ${result.error}`);
+      }
+    } catch (error) {
+      console.error('❌ Error inesperado al descargar:', error);
+      alert('Error inesperado al descargar el reporte.');
+    } finally {
+      setIsDownloading(false);
     }
   };
 
@@ -121,6 +162,56 @@ const VoiceCommandModal = ({
                   Presiona el micrófono y di tu comando en español, o escríbelo manualmente. 
                   Puedo generar 14 tipos de reportes diferentes en PDF o Excel.
                 </p>
+              </div>
+            </div>
+
+            {/* Sugerencias Rápidas */}
+            <div className="w-full space-y-3">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-purple-600" />
+                <p className="text-sm font-medium text-gray-700">Sugerencias rápidas:</p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setManualInput('Ventas del mes');
+                    document.querySelector('input[type="text"]')?.focus();
+                  }}
+                  className="px-4 py-2 bg-gradient-to-r from-purple-50 to-purple-100 border border-purple-200 text-purple-700 rounded-full text-sm font-medium hover:from-purple-100 hover:to-purple-200 hover:border-purple-300 transition-all duration-200 hover:shadow-md"
+                >
+                  📊 Ventas del mes
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setManualInput('Top 10 productos más vendidos');
+                    document.querySelector('input[type="text"]')?.focus();
+                  }}
+                  className="px-4 py-2 bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 text-blue-700 rounded-full text-sm font-medium hover:from-blue-100 hover:to-blue-200 hover:border-blue-300 transition-all duration-200 hover:shadow-md"
+                >
+                  🏆 Top productos
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setManualInput('Productos con stock bajo');
+                    document.querySelector('input[type="text"]')?.focus();
+                  }}
+                  className="px-4 py-2 bg-gradient-to-r from-red-50 to-red-100 border border-red-200 text-red-700 rounded-full text-sm font-medium hover:from-red-100 hover:to-red-200 hover:border-red-300 transition-all duration-200 hover:shadow-md"
+                >
+                  ⚠️ Stock bajo
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setManualInput('Reporte de inventario completo');
+                    document.querySelector('input[type="text"]')?.focus();
+                  }}
+                  className="px-4 py-2 bg-gradient-to-r from-green-50 to-green-100 border border-green-200 text-green-700 rounded-full text-sm font-medium hover:from-green-100 hover:to-green-200 hover:border-green-300 transition-all duration-200 hover:shadow-md"
+                >
+                  📦 Inventario
+                </button>
               </div>
             </div>
 
@@ -254,6 +345,14 @@ const VoiceCommandModal = ({
                   {processingMessage}
                 </p>
               )}
+              {/* Mostrar opción de cancelar polling si está activo */}
+              {isPolling && (
+                <div className="mt-3">
+                  <Button onClick={() => cancelPolling()} variant="outline" className="px-3 py-1 text-sm">
+                    Cancelar
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         );
@@ -346,20 +445,52 @@ const VoiceCommandModal = ({
             )}
 
             {/* Botones de acción */}
-            <div className="flex gap-3">
-              <Button
-                onClick={() => handleDownloadReport('pdf')}
-                className="flex items-center gap-2"
-              >
-                <Download className="w-4 h-4" />
-                Descargar PDF
-              </Button>
+            <div className="flex flex-col gap-3 w-full max-w-md">
+              <div className="flex gap-3">
+                {/* Botón PDF */}
+                <Button
+                  onClick={() => handleDownloadReport('pdf')}
+                  disabled={isDownloading || !(commandId || reportFileUrl)}
+                  className="flex-1 flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white"
+                >
+                  {isDownloading ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <FileText className="w-4 h-4" />
+                  )}
+                  Descargar PDF
+                </Button>
+                
+                {/* Botón Excel */}
+                <Button
+                  onClick={() => handleDownloadReport('excel')}
+                  disabled={isDownloading || !(commandId || reportFileUrl)}
+                  className="flex-1 flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white"
+                >
+                  {isDownloading ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <FileSpreadsheet className="w-4 h-4" />
+                  )}
+                  Descargar Excel
+                </Button>
+              </div>
+              
+              {/* Botón Nuevo Reporte */}
               <Button
                 onClick={handleTryAgain}
                 variant="outline"
+                className="w-full"
               >
                 Nuevo reporte
               </Button>
+
+              {/* Debug info (solo en desarrollo) */}
+              {process.env.NODE_ENV === 'development' && commandId && (
+                <p className="text-xs text-gray-400 text-center">
+                  Command ID: {commandId}
+                </p>
+              )}
             </div>
           </div>
         );
@@ -402,10 +533,30 @@ const VoiceCommandModal = ({
               )}
             </div>
 
-            <Button onClick={handleTryAgain} className="flex items-center gap-2">
-              <MicOff className="w-4 h-4" />
-              Intentar de nuevo
-            </Button>
+            <div className="flex gap-2">
+              <Button onClick={() => processTextCommand(transcribedText || manualInput)} className="flex items-center gap-2" disabled={!transcribedText && !manualInput}>
+                <MicOff className="w-4 h-4" />
+                Reintentar
+              </Button>
+
+              <Button onClick={handleTryAgain} variant="outline" className="flex items-center gap-2">
+                Intentar de nuevo
+              </Button>
+            </div>
+
+            {/* Detalles de error por campo (si el backend los proporcionó) */}
+            {errorDetails && Object.keys(errorDetails).length > 0 && (
+              <div className="mt-4 w-full max-w-md p-3 bg-red-50 border border-red-100 rounded-lg">
+                <p className="text-sm font-medium text-red-700 mb-2">Detalles del error:</p>
+                <ul className="text-sm text-red-600 space-y-1">
+                  {Object.entries(errorDetails).map(([field, msgs]) => (
+                    <li key={field} className="break-words">
+                      <strong className="text-red-700">{field}</strong>: {Array.isArray(msgs) ? msgs.join(', ') : String(msgs)}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         );
 

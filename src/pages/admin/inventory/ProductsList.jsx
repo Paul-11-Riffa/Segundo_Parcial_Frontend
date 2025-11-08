@@ -7,10 +7,8 @@ import {
   TrashIcon,
   PhotoIcon,
   CubeIcon,
-  CurrencyDollarIcon,
   FunnelIcon,
   XMarkIcon,
-  ArrowPathIcon,
   ChevronUpIcon,
   ChevronDownIcon
 } from '@heroicons/react/24/outline';
@@ -19,6 +17,7 @@ import useCategories from '../../../hooks/admin/useCategories';
 import StockBadge from '../../../components/admin/inventory/StockBadge';
 import ProductForm from './ProductForm';
 import ConfirmDialog from '../../../components/admin/ConfirmDialog';
+import './ProductsList.css';
 
 const ProductsList = () => {
   const {
@@ -104,118 +103,103 @@ const ProductsList = () => {
   };
 
   return (
-    <div className="p-6 space-y-6">
-      {/* Header con estadísticas */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Gestión de Inventario</h1>
-          <p className="text-gray-600 mt-1">Administra productos y stock</p>
+    <div className="products-container">
+      {/* Header */}
+      <div className="products-header">
+        <div className="products-header-content">
+          <h1>Products Management</h1>
+          <p>Manage inventory and stock</p>
         </div>
-        <button
-          onClick={handleCreateProduct}
-          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
-        >
-          <PlusIcon className="w-5 h-5" />
-          Nuevo Producto
+        <button onClick={handleCreateProduct} className="products-create-button">
+          <PlusIcon />
+          New Product
         </button>
       </div>
 
-      {/* Tarjetas de estadísticas */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-4 rounded-lg shadow border-l-4 border-blue-500">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-gray-600 text-sm">Total Productos</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
+      {/* Stats Cards */}
+      <div className="products-stats">
+        <div className="products-stat-card total">
+          <div className="products-stat-card-content">
+            <div className="products-stat-info">
+              <p>Total Products</p>
+              <p>{stats.total}</p>
             </div>
-            <CubeIcon className="w-8 h-8 text-blue-500" />
+            <CubeIcon className="products-stat-icon" />
           </div>
         </div>
 
-        <div className="bg-white p-4 rounded-lg shadow border-l-4 border-green-500">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-gray-600 text-sm">En Stock</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.inStock}</p>
+        <div className="products-stat-card in-stock">
+          <div className="products-stat-card-content">
+            <div className="products-stat-info">
+              <p>In Stock</p>
+              <p>{stats.inStock}</p>
             </div>
-            <CubeIcon className="w-8 h-8 text-green-500" />
+            <CubeIcon className="products-stat-icon" />
           </div>
         </div>
 
-        <div className="bg-white p-4 rounded-lg shadow border-l-4 border-yellow-500">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-gray-600 text-sm">Stock Bajo</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.lowStock}</p>
+        <div className="products-stat-card low-stock">
+          <div className="products-stat-card-content">
+            <div className="products-stat-info">
+              <p>Low Stock</p>
+              <p>{stats.lowStock}</p>
             </div>
-            <CubeIcon className="w-8 h-8 text-yellow-500" />
+            <CubeIcon className="products-stat-icon" />
           </div>
         </div>
 
-        <div className="bg-white p-4 rounded-lg shadow border-l-4 border-red-500">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-gray-600 text-sm">Sin Stock</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.outOfStock}</p>
+        <div className="products-stat-card out-of-stock">
+          <div className="products-stat-card-content">
+            <div className="products-stat-info">
+              <p>Out of Stock</p>
+              <p>{stats.outOfStock}</p>
             </div>
-            <CubeIcon className="w-8 h-8 text-red-500" />
+            <CubeIcon className="products-stat-icon" />
           </div>
         </div>
       </div>
 
-      {/* Barra de búsqueda y filtros */}
-      <div className="bg-white p-4 rounded-lg shadow space-y-4">
-        <div className="flex flex-col sm:flex-row gap-4">
-          {/* Búsqueda */}
-          <div className="flex-1 relative">
-            <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+      {/* Toolbar */}
+      <div className="products-toolbar">
+        <div className="products-toolbar-main">
+          <div className="products-search-wrapper">
+            <MagnifyingGlassIcon className="products-search-icon" />
             <input
               type="text"
-              placeholder="Buscar productos por nombre..."
+              placeholder="Search products by name..."
               value={filters.search}
               onChange={(e) => updateFilter('search', e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="products-search-input"
             />
           </div>
 
-          {/* Botones de acción */}
-          <div className="flex gap-2">
+          <div className="products-toolbar-actions">
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg border-2 font-medium transition-colors ${
-                showFilters
-                  ? 'bg-blue-50 border-blue-500 text-blue-700'
-                  : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
-              }`}
+              className={`products-filter-button ${showFilters ? 'active' : ''}`}
             >
-              <FunnelIcon className="w-5 h-5" />
-              Filtros
+              <FunnelIcon />
+              Filters
             </button>
 
-            <button
-              onClick={resetFilters}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg border-2 border-gray-300 text-gray-700 hover:bg-gray-50 font-medium transition-colors"
-            >
-              <XMarkIcon className="w-5 h-5" />
-              Limpiar
+            <button onClick={resetFilters} className="products-clear-button">
+              <XMarkIcon />
+              Clear
             </button>
           </div>
         </div>
 
-        {/* Panel de filtros expandible */}
+        {/* Filters Panel */}
         {showFilters && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t">
-            {/* Categoría */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Categoría
-              </label>
+          <div className="products-filters-panel">
+            <div className="products-filter-group">
+              <label className="products-filter-label">Category</label>
               <select
                 value={filters.category_slug}
                 onChange={(e) => updateFilter('category_slug', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="products-filter-select"
               >
-                <option value="">Todas las categorías</option>
+                <option value="">All categories</option>
                 {categories.map((cat) => (
                   <option key={cat.id} value={cat.slug}>
                     {cat.name}
@@ -224,11 +208,8 @@ const ProductsList = () => {
               </select>
             </div>
 
-            {/* Precio mínimo */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Precio Mínimo
-              </label>
+            <div className="products-filter-group">
+              <label className="products-filter-label">Min Price</label>
               <input
                 type="number"
                 min="0"
@@ -236,15 +217,12 @@ const ProductsList = () => {
                 placeholder="$0.00"
                 value={filters.price_min}
                 onChange={(e) => updateFilter('price_min', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="products-filter-input"
               />
             </div>
 
-            {/* Precio máximo */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Precio Máximo
-              </label>
+            <div className="products-filter-group">
+              <label className="products-filter-label">Max Price</label>
               <input
                 type="number"
                 min="0"
@@ -252,178 +230,171 @@ const ProductsList = () => {
                 placeholder="$999.99"
                 value={filters.price_max}
                 onChange={(e) => updateFilter('price_max', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="products-filter-input"
               />
             </div>
 
-            {/* Stock mínimo */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Stock Mínimo
-              </label>
+            <div className="products-filter-group">
+              <label className="products-filter-label">Min Stock</label>
               <input
                 type="number"
                 min="0"
                 placeholder="0"
                 value={filters.stock_min}
                 onChange={(e) => updateFilter('stock_min', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="products-filter-input"
               />
             </div>
 
-            {/* Solo en stock */}
-            <div className="flex items-center pt-7">
+            <div className="products-filter-checkbox-wrapper">
               <input
                 type="checkbox"
                 id="in_stock"
                 checked={filters.in_stock}
                 onChange={(e) => updateFilter('in_stock', e.target.checked)}
-                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                className="products-filter-checkbox"
               />
-              <label htmlFor="in_stock" className="ml-2 text-sm font-medium text-gray-700">
-                Solo productos disponibles
+              <label htmlFor="in_stock" className="products-filter-checkbox-label">
+                Only available products
               </label>
             </div>
           </div>
         )}
       </div>
 
-      {/* Mensaje de error */}
+      {/* Error Message */}
       {error && (
-        <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded">
-          <p className="text-red-800">{error}</p>
+        <div className="products-error">
+          <p>{error}</p>
         </div>
       )}
 
-      {/* Tabla de productos */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      {/* Table */}
+      <div className="products-table-wrapper">
         {loading ? (
-          <div className="flex items-center justify-center p-12">
-            <ArrowPathIcon className="w-8 h-8 text-blue-600 animate-spin" />
-            <span className="ml-3 text-gray-600">Cargando productos...</span>
+          <div className="products-loading">
+            <div className="products-loading-spinner"></div>
+            <p className="products-loading-text">Loading products...</p>
           </div>
         ) : products.length === 0 ? (
-          <div className="text-center p-12">
-            <CubeIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-600 text-lg">No se encontraron productos</p>
-            <p className="text-gray-500 text-sm mt-2">
+          <div className="products-empty">
+            <CubeIcon className="products-empty-icon" />
+            <p className="products-empty-title">No products found</p>
+            <p className="products-empty-description">
               {filters.search || filters.category_slug
-                ? 'Intenta ajustar los filtros de búsqueda'
-                : 'Crea tu primer producto haciendo clic en "Nuevo Producto"'}
+                ? 'Try adjusting your search or filter criteria'
+                : 'Create your first product by clicking "New Product"'}
             </p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gradient-to-r from-gray-50 to-gray-100 border-b-2 border-gray-200">
+          <div className="products-table-container">
+            <table className="products-table">
+              <thead>
                 <tr>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
-                    Imagen
-                  </th>
-                  <th 
-                    className="px-6 py-4 text-left text-sm font-semibold text-gray-700 cursor-pointer hover:bg-gray-200 transition-colors"
+                  <th
+                    className="sortable"
                     onClick={() => handleSortChange('name')}
                   >
-                    <div className="flex items-center gap-2">
-                      Producto
-                      {getSortIcon('name')}
+                    <div className="products-table-sort-header">
+                      Product
+                      {getSortIcon('name') && (
+                        <span className="products-table-sort-icon">
+                          {getSortIcon('name')}
+                        </span>
+                      )}
                     </div>
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
-                    Categoría
-                  </th>
-                  <th 
-                    className="px-6 py-4 text-left text-sm font-semibold text-gray-700 cursor-pointer hover:bg-gray-200 transition-colors"
+                  <th>Category</th>
+                  <th
+                    className="sortable"
                     onClick={() => handleSortChange('price')}
                   >
-                    <div className="flex items-center gap-2">
-                      Precio
-                      {getSortIcon('price')}
+                    <div className="products-table-sort-header">
+                      Price
+                      {getSortIcon('price') && (
+                        <span className="products-table-sort-icon">
+                          {getSortIcon('price')}
+                        </span>
+                      )}
                     </div>
                   </th>
-                  <th 
-                    className="px-6 py-4 text-left text-sm font-semibold text-gray-700 cursor-pointer hover:bg-gray-200 transition-colors"
+                  <th
+                    className="sortable"
                     onClick={() => handleSortChange('stock')}
                   >
-                    <div className="flex items-center gap-2">
+                    <div className="products-table-sort-header">
                       Stock
-                      {getSortIcon('stock')}
+                      {getSortIcon('stock') && (
+                        <span className="products-table-sort-icon">
+                          {getSortIcon('stock')}
+                        </span>
+                      )}
                     </div>
                   </th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-700">
-                    Acciones
-                  </th>
+                  <th style={{ textAlign: 'right' }}>Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
-                {products.map((product, index) => (
-                  <tr
-                    key={product.id}
-                    className={`hover:bg-blue-50 transition-colors ${
-                      index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
-                    }`}
-                  >
-                    {/* Imagen */}
-                    <td className="px-6 py-4">
-                      {product.image_url ? (
-                        <img
-                          src={product.image_url}
-                          alt={product.name}
-                          className="w-16 h-16 object-cover rounded-lg border-2 border-gray-200"
-                        />
-                      ) : (
-                        <div className="w-16 h-16 bg-gray-100 rounded-lg border-2 border-gray-200 flex items-center justify-center">
-                          <PhotoIcon className="w-8 h-8 text-gray-400" />
+              <tbody>
+                {products.map((product) => (
+                  <tr key={product.id}>
+                    {/* Product */}
+                    <td>
+                      <div className="products-table-product">
+                        {product.image_url ? (
+                          <img
+                            src={product.image_url}
+                            alt={product.name}
+                            className="products-table-image"
+                          />
+                        ) : (
+                          <div className="products-table-image-placeholder">
+                            <PhotoIcon />
+                          </div>
+                        )}
+                        <div className="products-table-product-info">
+                          <p className="products-table-product-name">{product.name}</p>
+                          {product.sku && (
+                            <p className="products-table-product-sku">SKU: {product.sku}</p>
+                          )}
                         </div>
-                      )}
+                      </div>
                     </td>
 
-                    {/* Nombre */}
-                    <td className="px-6 py-4">
-                      <div className="font-medium text-gray-900">{product.name}</div>
-                      {product.description && (
-                        <div className="text-sm text-gray-500 mt-1 line-clamp-2">
-                          {product.description}
-                        </div>
-                      )}
-                    </td>
-
-                    {/* Categoría */}
-                    <td className="px-6 py-4">
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800 border-2 border-purple-200">
+                    {/* Category */}
+                    <td>
+                      <span className="products-table-category">
                         {product.category_name}
                       </span>
                     </td>
 
-                    {/* Precio */}
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-1 text-gray-900 font-semibold">
-                        <CurrencyDollarIcon className="w-4 h-4" />
-                        {Number(product.price).toFixed(2)}
-                      </div>
+                    {/* Price */}
+                    <td>
+                      <span className="products-table-price">
+                        ${Number(product.price).toFixed(2)}
+                      </span>
                     </td>
 
                     {/* Stock */}
-                    <td className="px-6 py-4">
+                    <td>
                       <StockBadge stock={product.stock} />
                     </td>
 
-                    {/* Acciones */}
-                    <td className="px-6 py-4">
-                      <div className="flex items-center justify-center gap-2">
+                    {/* Actions */}
+                    <td>
+                      <div className="products-table-actions">
                         <button
                           onClick={() => handleEditProduct(product)}
-                          className="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors"
-                          title="Editar"
+                          className="products-action-button edit"
+                          title="Edit product"
                         >
-                          <PencilIcon className="w-5 h-5" />
+                          <PencilIcon />
                         </button>
                         <button
                           onClick={() => handleDeleteClick(product)}
-                          className="p-2 text-red-600 hover:bg-red-100 rounded-lg transition-colors"
-                          title="Eliminar"
+                          className="products-action-button delete"
+                          title="Delete product"
                         >
-                          <TrashIcon className="w-5 h-5" />
+                          <TrashIcon />
                         </button>
                       </div>
                     </td>
@@ -446,16 +417,17 @@ const ProductsList = () => {
       {/* Diálogo de confirmación de eliminación */}
       {showDeleteDialog && (
         <ConfirmDialog
-          title="Eliminar Producto"
-          message={`¿Estás seguro de que deseas eliminar "${productToDelete?.name}"? Esta acción no se puede deshacer.`}
-          confirmText="Eliminar"
-          cancelText="Cancelar"
-          onConfirm={handleDeleteConfirm}
-          onCancel={() => {
+          isOpen={showDeleteDialog}
+          onClose={() => {
             setShowDeleteDialog(false);
             setProductToDelete(null);
           }}
-          type="danger"
+          onConfirm={handleDeleteConfirm}
+          title="Delete Product"
+          message={`Are you sure you want to delete "${productToDelete?.name}"? This action cannot be undone.`}
+          confirmText="Delete"
+          cancelText="Cancel"
+          variant="danger"
         />
       )}
     </div>

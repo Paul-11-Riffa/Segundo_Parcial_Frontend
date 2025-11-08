@@ -3,14 +3,17 @@
  * Maneja todos los estados de la interacción: escuchando, procesando, éxito, error
  */
 
-import { useState, useCallback, useRef } from 'react';
-import { processVoiceCommand, COMMAND_STATES } from '../../services/admin/voiceCommandService';
+import { useState, useCallback, useRef, useEffect } from 'react';
+import { processVoiceCommand, COMMAND_STATES, getCommandDetails } from '../../services/admin/voiceCommandService';
+import { devLog } from '../../utils/devLogger';
 
 export const useVoiceCommand = () => {
   const [state, setState] = useState(COMMAND_STATES.IDLE);
   const [transcribedText, setTranscribedText] = useState('');
   const [reportData, setReportData] = useState(null);
+  const [commandId, setCommandId] = useState(null);
   const [error, setError] = useState(null);
+  const [errorDetails, setErrorDetails] = useState(null);
   const [suggestions, setSuggestions] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [processingMessage, setProcessingMessage] = useState('');
@@ -18,6 +21,27 @@ export const useVoiceCommand = () => {
   // Referencias para el reconocimiento de voz
   const recognitionRef = useRef(null);
   const isListeningRef = useRef(false);
+  const [isListening, setIsListening] = useState(false);
+  const transcribedTextRef = useRef('');
+  const stateRef = useRef(COMMAND_STATES.IDLE);
+  const handleProcessCommandRef = useRef(null);
+
+  // Helpers to keep refs in sync with state setters
+  const setStateAndRef = useCallback((s) => {
+    setState(s);
+    stateRef.current = s;
+  }, []);
+
+  const setTranscribedTextAndRef = useCallback((t) => {
+    setTranscribedText(t);
+    transcribedTextRef.current = t;
+  }, []);
+  // Polling control
+  const pollingRef = useRef({ cancelled: false, timerId: null, attempts: 0 });
+  const [isPolling, setIsPolling] = useState(false);
+  const [pollingAttempts, setPollingAttempts] = useState(0);
+  const [lastPollingMessage, setLastPollingMessage] = useState('');
+  const [lastPollingLink, setLastPollingLink] = useState(null);
 
   /**
    * Inicializa el reconocimiento de voz del navegador
@@ -37,9 +61,10 @@ export const useVoiceCommand = () => {
     recognition.maxAlternatives = 1;
 
     recognition.onstart = () => {
-      console.log('🎤 Reconocimiento de voz iniciado');
+      devLog('🎤 Reconocimiento de voz iniciado');
       isListeningRef.current = true;
-      setState(COMMAND_STATES.LISTENING);
+      setIsListening(true);
+      setStateAndRef(COMMAND_STATES.LISTENING);
     };
 
     recognition.onresult = (event) => {
@@ -48,12 +73,12 @@ export const useVoiceCommand = () => {
         .map(result => result.transcript)
         .join('');
 
-      console.log('📝 Transcripción:', transcript);
-      setTranscribedText(transcript);
+  devLog('📝 Transcripción:', transcript);
+  setTranscribedTextAndRef(transcript);
 
       // Si es el resultado final, procesar
       if (event.results[0].isFinal) {
-        console.log('✅ Resultado final:', transcript);
+        devLog('✅ Resultado final:', transcript);
       }
     };
 
@@ -80,35 +105,46 @@ export const useVoiceCommand = () => {
       }
       
       setError(errorMessage);
-      setState(COMMAND_STATES.ERROR);
+      setErrorDetails(null);
+      setStateAndRef(COMMAND_STATES.ERROR);
       isListeningRef.current = false;
+      setIsListening(false);
     };
 
     recognition.onend = () => {
-      console.log('🛑 Reconocimiento de voz finalizado');
+      devLog('🛑 Reconocimiento de voz finalizado');
       isListeningRef.current = false;
-      
-      // Si tenemos texto transcrito, procesarlo
-      if (transcribedText && state === COMMAND_STATES.LISTENING) {
-        handleProcessCommand(transcribedText);
+      setIsListening(false);
+
+      // Si tenemos texto transcrito, procesarlo usando refs para evitar stale closures
+      const currentText = transcribedTextRef.current;
+      const currentState = stateRef.current;
+      if (currentText && currentState === COMMAND_STATES.LISTENING) {
+        if (handleProcessCommandRef.current) handleProcessCommandRef.current(currentText);
       }
     };
 
     recognitionRef.current = recognition;
     return true;
-  }, [transcribedText, state]);
+  }, []);
 
   /**
    * Abre el modal y resetea el estado
    */
   const openModal = useCallback(() => {
     setIsModalOpen(true);
-    setState(COMMAND_STATES.IDLE);
+    setStateAndRef(COMMAND_STATES.IDLE);
     setTranscribedText('');
     setReportData(null);
+    setCommandId(null);
     setError(null);
+    setErrorDetails(null);
     setSuggestions([]);
     setProcessingMessage('');
+    // Cancel any existing polling when opening for a fresh interaction
+    pollingRef.current.cancelled = false;
+    setIsPolling(false);
+    setPollingAttempts(0);
   }, []);
 
   /**
@@ -117,7 +153,14 @@ export const useVoiceCommand = () => {
   const closeModal = useCallback(() => {
     setIsModalOpen(false);
     stopListening();
-    setState(COMMAND_STATES.IDLE);
+    setStateAndRef(COMMAND_STATES.IDLE);
+    // Cancel polling if user closes the modal
+    pollingRef.current.cancelled = true;
+    if (pollingRef.current.timerId) {
+      clearTimeout(pollingRef.current.timerId);
+      pollingRef.current.timerId = null;
+    }
+    setIsPolling(false);
   }, []);
 
   /**
@@ -125,12 +168,12 @@ export const useVoiceCommand = () => {
    */
   const startListening = useCallback(() => {
     if (isListeningRef.current) {
-      console.log('Ya está escuchando');
+      devLog('Ya está escuchando');
       return;
     }
 
-    // Resetear estado
-    setTranscribedText('');
+  // Resetear estado
+  setTranscribedTextAndRef('');
     setError(null);
     setReportData(null);
     setSuggestions([]);
@@ -161,6 +204,7 @@ export const useVoiceCommand = () => {
     if (recognitionRef.current && isListeningRef.current) {
       recognitionRef.current.stop();
       isListeningRef.current = false;
+      setIsListening(false);
     }
   }, []);
 
@@ -174,7 +218,7 @@ export const useVoiceCommand = () => {
       return;
     }
 
-    setState(COMMAND_STATES.PROCESSING);
+  setStateAndRef(COMMAND_STATES.PROCESSING);
     setProcessingMessage(`Procesando: "${text}"`);
     setError(null);
 
@@ -182,52 +226,206 @@ export const useVoiceCommand = () => {
       // Llamar al backend
       const result = await processVoiceCommand(text);
 
-      if (result.success) {
-        const data = result.data.data || result.data;
-        
-        // Verificar el estado del comando
-        if (data.status === 'FAILED' || data.error_message) {
-          setError(data.error_message || 'No se pudo procesar el comando.');
-          setState(COMMAND_STATES.ERROR);
-          return;
-        }
+      if (!result.success) {
+        setError(result.error || 'Error al procesar el comando.');
+        setErrorDetails(result.details || null);
+        setSuggestions(result.suggestions || []);
+        setStateAndRef(COMMAND_STATES.ERROR);
+        // Exponer el fallo como reportData para que la UI (drawer/list) pueda mostrar detalles
+        const fallbackId = result.data?.command_id || result.data?.id || null;
+        setReportData({
+          id: fallbackId,
+          status: 'FAILED',
+          error: result.error || null,
+          details: result.details || null
+        });
+        return;
+      }
 
-        // Verificar si es baja confianza
-        if (data.confidence_score !== undefined && data.confidence_score < 0.5) {
-          setError('No estoy seguro de haber entendido el comando. ¿Podrías ser más específico?');
-          setSuggestions(data.suggestions || []);
-          setState(COMMAND_STATES.LOW_CONFIDENCE);
-          return;
-        }
+      const responseData = result.data;
 
-        // Estado de generación (simulado - el backend ya generó)
-        setState(COMMAND_STATES.GENERATING);
+      // Guardar command_id para descargas y polling
+      const returnedId = responseData.command_id || responseData.id;
+      if (returnedId) {
+        setCommandId(returnedId);
+        devLog('✅ Command ID guardado:', returnedId);
+      }
+
+      // Si el backend indica fallo inmediato
+      if (responseData.status === 'FAILED' || responseData.error_message) {
+        setError(responseData.error_message || 'No se pudo procesar el comando.');
+        setStateAndRef(COMMAND_STATES.ERROR);
+        return;
+      }
+
+      // Si backend devuelve PROCESSING -> iniciar polling
+      if (responseData.status === 'PROCESSING' && (returnedId || responseData.command_id)) {
+        setStateAndRef(COMMAND_STATES.PROCESSING);
+        setProcessingMessage(responseData.message || `Generando reporte...`);
+        // iniciar polling asíncrono (no bloquear)
+        startPolling(returnedId || responseData.command_id);
+        return;
+      }
+
+      // Si backend devolvió resultado final (asumimos ya generado)
+      if (responseData.status === 'EXECUTED' || responseData.status === 'SUCCESS' || responseData.status === 'COMPLETED' || responseData.file_url || responseData.result_data) {
+  setStateAndRef(COMMAND_STATES.GENERATING);
         setProcessingMessage('¡Entendido! Generando tu reporte...');
 
-        // Simular un pequeño delay para mejor UX
+        // Simular pequeño delay y mostrar resultado
         setTimeout(() => {
-          setReportData(data);
-          setState(COMMAND_STATES.SUCCESS);
+          setReportData(responseData);
+          setStateAndRef(COMMAND_STATES.SUCCESS);
           setProcessingMessage('');
-        }, 1000);
-
-      } else {
-        setError(result.error || 'Error al procesar el comando.');
-        setSuggestions(result.suggestions || []);
-        setState(COMMAND_STATES.ERROR);
+        }, 800);
+        return;
       }
+
+      // Fallback
+      setReportData(responseData);
+      setStateAndRef(COMMAND_STATES.SUCCESS);
+      setProcessingMessage('');
     } catch (err) {
       console.error('Error procesando comando:', err);
       setError('Error inesperado al procesar el comando. Por favor, intenta de nuevo.');
-      setState(COMMAND_STATES.ERROR);
+      setErrorDetails(null);
+      setStateAndRef(COMMAND_STATES.ERROR);
     }
+  }, []);
+
+  // Keep a ref to the latest handleProcessCommand to avoid stale closures in recognition handlers
+  useEffect(() => {
+    handleProcessCommandRef.current = handleProcessCommand;
+  }, [handleProcessCommand]);
+
+  /**
+   * Inicia polling para un comando que está en estado PROCESSING
+   * Usa backoff exponencial con límite de intentos. Permite cancelar.
+   */
+  const startPolling = useCallback((id, opts = {}) => {
+    if (!id) return;
+
+    // Cancel cualquier polling previo
+    pollingRef.current.cancelled = false;
+    if (pollingRef.current.timerId) {
+      clearTimeout(pollingRef.current.timerId);
+    }
+
+    const maxAttempts = opts.maxAttempts || 8; // intentos totales
+    const baseDelay = opts.baseDelay || 1000; // ms
+    const maxTotalMs = opts.maxTotalMs || 60000; // timeout total
+
+    pollingRef.current.attempts = 0;
+    setIsPolling(true);
+    setPollingAttempts(0);
+
+    const startTime = Date.now();
+
+    const attempt = async () => {
+      devLog(`Polling attempt #${pollingRef.current.attempts + 1} for id=${id}`);
+      setLastPollingMessage(`Intento ${pollingRef.current.attempts + 1} para ${id}...`);
+      if (pollingRef.current.cancelled) {
+        setIsPolling(false);
+        setLastPollingMessage('Polling cancelado por el usuario.');
+        return;
+      }
+
+      pollingRef.current.attempts += 1;
+      setPollingAttempts(pollingRef.current.attempts);
+
+      try {
+  const res = await getCommandDetails(id);
+        if (!res.success) {
+          // Error obteniendo detalles -> mostrar error y detener
+          setError(res.error || 'Error consultando estado del reporte.');
+          setErrorDetails(res.details || null);
+          setStateAndRef(COMMAND_STATES.ERROR);
+          setIsPolling(false);
+          return;
+        }
+
+        const data = res.data;
+
+        // Si sigue PROCESSING, planificar nuevo intento
+        if (data.status === 'PROCESSING') {
+          devLog(`Respuesta mock/process: status=PROCESSING for ${id} (attempt ${pollingRef.current.attempts})`);
+          setLastPollingMessage(`Servidor: PROCESSING (intento ${pollingRef.current.attempts})`);
+          // Si excede timeout total
+          if (Date.now() - startTime > maxTotalMs || pollingRef.current.attempts >= maxAttempts) {
+            setError('El servidor está tardando en generar el reporte. Puedes intentarlo más tarde o revisar el historial.');
+            setLastPollingMessage('Timeout de polling: servidor tardó demasiado.');
+            setStateAndRef(COMMAND_STATES.ERROR);
+            setIsPolling(false);
+            return;
+          }
+
+          // Exponencial backoff
+          const delay = Math.min(baseDelay * Math.pow(2, pollingRef.current.attempts - 1), 10000);
+          pollingRef.current.timerId = setTimeout(attempt, delay);
+          return;
+        }
+
+        // Si el estado es final
+        if (data.status === 'FAILED' || data.error_message) {
+          devLog('Polling result: FAILED for', id, data.error_message);
+          setLastPollingMessage(data.error_message || 'El servidor devolvió FAILED.');
+          setError(data.error_message || 'No se pudo generar el reporte.');
+          // Mostrar detalles si el backend los incluye
+          if (data.details) setReportData(data);
+          setStateAndRef(COMMAND_STATES.ERROR);
+          setIsPolling(false);
+          return;
+        }
+
+        // Éxito
+  devLog('Polling result: SUCCESS for', id, data);
+        setLastPollingMessage('Reporte generado correctamente.');
+  setReportData(data);
+  setStateAndRef(COMMAND_STATES.SUCCESS);
+        setProcessingMessage('');
+        // En modo desarrollo, exponer link para que la UI muestre un toast con el enlace
+        if (import.meta.env.DEV && data?.file_url) {
+          setLastPollingLink(data.file_url);
+          setLastPollingMessage('Reporte listo: haz clic en el enlace para ver el PDF.');
+          devLog('DEV: Reporte listo, link guardado en lastPollingLink ->', data.file_url);
+        }
+        setIsPolling(false);
+        return;
+      } catch (err) {
+        console.error('Error en polling de reporte:', err);
+        setError('Error consultando estado del reporte.');
+        setErrorDetails(null);
+        setStateAndRef(COMMAND_STATES.ERROR);
+        setIsPolling(false);
+        return;
+      }
+    };
+
+    // Ejecutar primer intento inmediatamente
+    attempt();
+  }, []);
+
+  const cancelPolling = useCallback(() => {
+    pollingRef.current.cancelled = true;
+    if (pollingRef.current.timerId) {
+      clearTimeout(pollingRef.current.timerId);
+      pollingRef.current.timerId = null;
+    }
+    setIsPolling(false);
+    setPollingAttempts(pollingRef.current.attempts || 0);
+    setLastPollingMessage('Polling cancelado por el usuario.');
+  }, []);
+
+  const clearLastPolling = useCallback(() => {
+    setLastPollingMessage('');
+    setLastPollingLink(null);
   }, []);
 
   /**
    * Procesa un comando de texto (sin voz)
    */
   const processTextCommand = useCallback(async (text) => {
-    setTranscribedText(text);
+    setTranscribedTextAndRef(text);
     await handleProcessCommand(text);
   }, [handleProcessCommand]);
 
@@ -235,10 +433,12 @@ export const useVoiceCommand = () => {
    * Reinicia el estado para un nuevo comando
    */
   const resetState = useCallback(() => {
-    setState(COMMAND_STATES.IDLE);
-    setTranscribedText('');
+    setStateAndRef(COMMAND_STATES.IDLE);
+    setTranscribedTextAndRef('');
     setReportData(null);
+    setCommandId(null);
     setError(null);
+    setErrorDetails(null);
     setSuggestions([]);
     setProcessingMessage('');
   }, []);
@@ -248,21 +448,31 @@ export const useVoiceCommand = () => {
     state,
     transcribedText,
     reportData,
+    commandId,
     error,
+  errorDetails,
     suggestions,
     isModalOpen,
     processingMessage,
-    isListening: isListeningRef.current,
+    isListening,
 
     // Acciones del modal
     openModal,
     closeModal,
 
-    // Acciones de voz
+  // Acciones de voz
     startListening,
     stopListening,
     processTextCommand,
     resetState,
+  // Polling
+  isPolling,
+  pollingAttempts,
+  cancelPolling,
+  startPolling,
+    lastPollingMessage,
+    lastPollingLink,
+    clearLastPolling,
 
     // Estados posibles (para comparación)
     STATES: COMMAND_STATES

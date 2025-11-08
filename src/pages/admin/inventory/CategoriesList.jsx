@@ -11,6 +11,7 @@ import {
 } from '@heroicons/react/24/outline';
 import useCategories from '../../../hooks/admin/useCategories';
 import ConfirmDialog from '../../../components/admin/ConfirmDialog';
+import './CategoriesList.css';
 
 const CategoriesList = () => {
   const {
@@ -163,96 +164,90 @@ const CategoriesList = () => {
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="categories-container">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Categorías</h1>
-          <p className="text-gray-600 mt-1">Administra las categorías de productos</p>
+      <div className="categories-header">
+        <div className="categories-header-content">
+          <h1>Categorías</h1>
+          <p>Administra las categorías de productos</p>
         </div>
         <button
           onClick={handleCreate}
-          className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+          className="categories-create-button"
         >
-          <PlusIcon className="w-5 h-5" />
+          <PlusIcon />
           Nueva Categoría
         </button>
       </div>
 
       {/* Mensaje de error general */}
       {error && (
-        <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded">
-          <div className="flex items-start gap-3">
-            <ExclamationCircleIcon className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
-            <p className="text-red-800">{error}</p>
-          </div>
+        <div className="categories-error">
+          <ExclamationCircleIcon className="categories-error-icon" />
+          <p>{error}</p>
         </div>
       )}
 
       {/* Formulario (mostrar si showForm es true) */}
       {showForm && (
-        <div className="bg-white p-6 rounded-lg shadow border-2 border-purple-200">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">
+        <div className="categories-form-card">
+          <h2 className="categories-form-title">
             {editingCategory ? 'Editar Categoría' : 'Nueva Categoría'}
           </h2>
           
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="categories-form">
             {/* Nombre */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Nombre <span className="text-red-500">*</span>
+            <div className="categories-form-group">
+              <label className="categories-form-label">
+                Nombre <span className="categories-form-required">*</span>
               </label>
               <input
                 type="text"
                 value={formData.name}
                 onChange={handleNameChange}
-                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
-                  formErrors.name ? 'border-red-500' : 'border-gray-300'
-                }`}
+                className={`categories-form-input ${formErrors.name ? 'error' : ''}`}
                 placeholder="Ej: Electrónica"
               />
               {formErrors.name && (
-                <p className="text-red-500 text-sm mt-1">{formErrors.name}</p>
+                <p className="categories-form-error">{formErrors.name}</p>
               )}
             </div>
 
             {/* Slug */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Slug (URL amigable) <span className="text-red-500">*</span>
+            <div className="categories-form-group">
+              <label className="categories-form-label">
+                Slug (URL amigable) <span className="categories-form-required">*</span>
               </label>
               <input
                 type="text"
                 value={formData.slug}
                 onChange={handleSlugChange}
-                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
-                  formErrors.slug ? 'border-red-500' : 'border-gray-300'
-                }`}
+                className={`categories-form-input ${formErrors.slug ? 'error' : ''}`}
                 placeholder="electronica"
               />
-              <p className="text-gray-500 text-xs mt-1">
+              <p className="categories-form-hint">
                 Solo letras minúsculas, números y guiones. Sin espacios.
               </p>
               {formErrors.slug && (
-                <p className="text-red-500 text-sm mt-1">{formErrors.slug}</p>
+                <p className="categories-form-error">{formErrors.slug}</p>
               )}
             </div>
 
             {/* Botones */}
-            <div className="flex items-center justify-end gap-3 pt-2">
+            <div className="categories-form-actions">
               <button
                 type="button"
                 onClick={handleCancel}
-                className="flex items-center gap-2 px-4 py-2 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition-colors"
+                className="categories-form-button-cancel"
               >
-                <XMarkIcon className="w-5 h-5" />
+                <XMarkIcon />
                 Cancelar
               </button>
               <button
                 type="submit"
-                className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                className="categories-form-button-submit"
               >
-                <CheckIcon className="w-5 h-5" />
+                <CheckIcon />
                 {editingCategory ? 'Actualizar' : 'Crear'}
               </button>
             </div>
@@ -261,75 +256,64 @@ const CategoriesList = () => {
       )}
 
       {/* Lista de categorías */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="categories-table-wrapper">
         {loading ? (
-          <div className="text-center p-12">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
-            <p className="text-gray-600 mt-4">Cargando categorías...</p>
+          <div className="categories-loading">
+            <div className="categories-loading-spinner"></div>
+            <p className="categories-loading-text">Cargando categorías...</p>
           </div>
         ) : categories.length === 0 ? (
-          <div className="text-center p-12">
-            <TagIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-600 text-lg">No hay categorías</p>
-            <p className="text-gray-500 text-sm mt-2">
+          <div className="categories-empty">
+            <TagIcon className="categories-empty-icon" />
+            <p className="categories-empty-title">No hay categorías</p>
+            <p className="categories-empty-description">
               Crea tu primera categoría haciendo clic en "Nueva Categoría"
             </p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gradient-to-r from-purple-50 to-purple-100 border-b-2 border-purple-200">
+          <div className="categories-table-container">
+            <table className="categories-table">
+              <thead>
                 <tr>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
-                    Nombre
-                  </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
-                    Slug
-                  </th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-700">
-                    Acciones
-                  </th>
+                  <th>Nombre</th>
+                  <th>Slug</th>
+                  <th>Acciones</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
-                {categories.map((category, index) => (
-                  <tr
-                    key={category.id}
-                    className={`hover:bg-purple-50 transition-colors ${
-                      index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
-                    }`}
-                  >
+              <tbody>
+                {categories.map((category) => (
+                  <tr key={category.id}>
                     {/* Nombre */}
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        <TagIcon className="w-5 h-5 text-purple-600" />
-                        <span className="font-medium text-gray-900">{category.name}</span>
+                    <td>
+                      <div className="categories-table-name">
+                        <TagIcon className="categories-table-name-icon" />
+                        <span className="categories-table-name-text">{category.name}</span>
                       </div>
                     </td>
 
                     {/* Slug */}
-                    <td className="px-6 py-4">
-                      <code className="px-3 py-1 bg-gray-100 text-gray-700 rounded text-sm font-mono">
+                    <td>
+                      <span className="categories-table-slug">
                         {category.slug}
-                      </code>
+                      </span>
                     </td>
 
                     {/* Acciones */}
-                    <td className="px-6 py-4">
-                      <div className="flex items-center justify-center gap-2">
+                    <td>
+                      <div className="categories-table-actions">
                         <button
                           onClick={() => handleEdit(category)}
-                          className="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors"
+                          className="categories-action-button edit"
                           title="Editar"
                         >
-                          <PencilIcon className="w-5 h-5" />
+                          <PencilIcon />
                         </button>
                         <button
                           onClick={() => handleDeleteClick(category)}
-                          className="p-2 text-red-600 hover:bg-red-100 rounded-lg transition-colors"
+                          className="categories-action-button delete"
                           title="Eliminar"
                         >
-                          <TrashIcon className="w-5 h-5" />
+                          <TrashIcon />
                         </button>
                       </div>
                     </td>
@@ -344,16 +328,17 @@ const CategoriesList = () => {
       {/* Diálogo de confirmación de eliminación */}
       {showDeleteDialog && (
         <ConfirmDialog
+          isOpen={showDeleteDialog}
           title="Eliminar Categoría"
           message={`¿Estás seguro de que deseas eliminar la categoría "${categoryToDelete?.name}"? Esta acción no se puede deshacer.`}
           confirmText="Eliminar"
           cancelText="Cancelar"
           onConfirm={handleDeleteConfirm}
-          onCancel={() => {
+          onClose={() => {
             setShowDeleteDialog(false);
             setCategoryToDelete(null);
           }}
-          type="danger"
+          variant="danger"
         />
       )}
     </div>

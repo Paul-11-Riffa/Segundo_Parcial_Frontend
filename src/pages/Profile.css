@@ -1,20 +1,31 @@
-/* Profile Page Styles - Premium Design */
+/* ========================================
+   PROFILE PAGE
+   Diseño minimalista black & white profesional
+   ======================================== */
 
+/* ========================================
+   CONTAINER
+   ======================================== */
 .profile-container {
   min-height: 100vh;
-  background: linear-gradient(to bottom, #f8fafc 0%, #ffffff 100%);
+  background: #fafafa;
 }
 
-/* Profile Header Section */
+/* ========================================
+   HEADER
+   ======================================== */
 .profile-header {
-  background: white;
-  border-bottom: 1px solid var(--color-dark-100);
+  background: #ffffff;
+  border-bottom: 1px solid #e5e5e5;
   padding: 1rem 0;
 }
 
+/* ========================================
+   HERO SECTION
+   ======================================== */
 .profile-hero {
-  background: linear-gradient(135deg, var(--color-dark-900) 0%, var(--color-dark-800) 100%);
-  border-radius: 1.5rem;
+  background: #000000;
+  border-radius: 1rem;
   padding: 3rem 2rem;
   margin-bottom: 2rem;
   position: relative;
@@ -28,16 +39,20 @@
   right: -10%;
   width: 300px;
   height: 300px;
-  background: radial-gradient(circle, rgba(14, 165, 233, 0.15) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
   border-radius: 50%;
 }
 
-/* Avatar Section */
+/* ========================================
+   AVATAR SECTION
+   ======================================== */
 .profile-avatar-section {
   display: flex;
   align-items: center;
   gap: 2rem;
   margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
 }
 
 .profile-avatar-wrapper {
@@ -48,15 +63,15 @@
 .profile-avatar {
   width: 120px;
   height: 120px;
-  border-radius: 2rem;
-  background: white;
+  border-radius: 1.5rem;
+  background: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 3rem;
-  font-weight: 700;
-  color: var(--color-dark-900);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  font-weight: 800;
+  color: #000000;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   position: relative;
   overflow: hidden;
 }
@@ -67,37 +82,14 @@
   object-fit: cover;
 }
 
+/* NO mostrar el botón de upload */
 .profile-avatar-upload {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 40px;
-  height: 40px;
-  background: var(--color-primary-500);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.4);
-  transition: all 0.3s ease;
-  border: 3px solid white;
-}
-
-.profile-avatar-upload:hover {
-  transform: scale(1.1);
-  background: var(--color-primary-600);
-}
-
-.profile-avatar-upload svg {
-  width: 20px;
-  height: 20px;
-  color: white;
+  display: none;
 }
 
 .profile-info-header {
   flex: 1;
-  color: white;
+  color: #ffffff;
 }
 
 .profile-name {
@@ -107,19 +99,20 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  color: #ffffff !important;
 }
 
 .profile-badge {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.25rem 0.75rem;
-  background: rgba(14, 165, 233, 0.2);
-  border: 1px solid rgba(14, 165, 233, 0.3);
+  padding: 0.375rem 0.875rem;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 2rem;
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--color-primary-200);
+  color: #ffffff;
 }
 
 .profile-username {
@@ -150,15 +143,17 @@
 .profile-meta-value {
   font-size: 1rem;
   font-weight: 600;
-  color: white;
+  color: #ffffff;
 }
 
-/* Tabs Navigation */
+/* ========================================
+   TABS
+   ======================================== */
 .profile-tabs {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 2rem;
-  border-bottom: 2px solid var(--color-dark-100);
+  border-bottom: 2px solid #e5e5e5;
   padding-bottom: 0;
   overflow-x: auto;
 }
@@ -166,11 +161,11 @@
 .profile-tab {
   padding: 1rem 1.5rem;
   font-weight: 600;
-  color: var(--color-dark-600);
+  color: #666666;
   background: transparent;
   border: none;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   border-bottom: 3px solid transparent;
   white-space: nowrap;
   position: relative;
@@ -178,29 +173,31 @@
 }
 
 .profile-tab:hover {
-  color: var(--color-dark-900);
-  background: var(--color-dark-50);
+  color: #000000;
+  background: #f5f5f5;
   border-radius: 0.5rem 0.5rem 0 0;
 }
 
 .profile-tab.active {
-  color: var(--color-dark-900);
-  border-bottom-color: var(--color-primary-500);
+  color: #000000;
+  border-bottom-color: #000000;
 }
 
-/* Content Cards */
+/* ========================================
+   CONTENT CARDS
+   ======================================== */
 .profile-card {
-  background: white;
-  border-radius: 1.5rem;
+  background: #ffffff;
+  border-radius: 1rem;
   padding: 2rem;
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
-  border: 1px solid var(--color-dark-100);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e5e5;
   margin-bottom: 1.5rem;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .profile-card:hover {
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transform: translateY(-2px);
 }
 
@@ -210,13 +207,13 @@
   justify-content: space-between;
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid var(--color-dark-100);
+  border-bottom: 1px solid #e5e5e5;
 }
 
 .profile-card-title {
   font-size: 1.25rem;
   font-weight: 700;
-  color: var(--color-dark-900);
+  color: #000000;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -225,16 +222,18 @@
 .profile-card-icon {
   width: 24px;
   height: 24px;
-  color: var(--color-primary-500);
+  color: #666666;
 }
 
 .profile-card-description {
   font-size: 0.875rem;
-  color: var(--color-dark-600);
+  color: #666666;
   margin-top: 0.25rem;
 }
 
-/* Form Sections */
+/* ========================================
+   FORM
+   ======================================== */
 .profile-form-section {
   margin-bottom: 2rem;
 }
@@ -247,24 +246,26 @@
   display: block;
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--color-dark-900);
+  color: #000000;
   margin-bottom: 0.5rem;
 }
 
 .profile-form-help {
   font-size: 0.75rem;
-  color: var(--color-dark-500);
+  color: #999999;
   margin-top: 0.25rem;
 }
 
-/* Info Alert */
+/* ========================================
+   INFO ALERT
+   ======================================== */
 .profile-info-alert {
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
   padding: 1rem;
-  background: var(--color-primary-50);
-  border: 1px solid var(--color-primary-200);
+  background: #f5f5f5;
+  border: 1px solid #e5e5e5;
   border-radius: 0.75rem;
   margin-bottom: 1.5rem;
 }
@@ -272,25 +273,29 @@
 .profile-info-alert-icon {
   width: 20px;
   height: 20px;
-  color: var(--color-primary-600);
+  color: #666666;
   flex-shrink: 0;
 }
 
 .profile-info-alert-text {
   font-size: 0.875rem;
-  color: var(--color-primary-900);
+  color: #1a1a1a;
   line-height: 1.5;
 }
 
-/* Action Buttons */
+/* ========================================
+   ACTION BUTTONS
+   ======================================== */
 .profile-actions {
   display: flex;
   gap: 1rem;
   padding-top: 1.5rem;
-  border-top: 1px solid var(--color-dark-100);
+  border-top: 1px solid #e5e5e5;
 }
 
-/* Responsive */
+/* ========================================
+   RESPONSIVE
+   ======================================== */
 @media (max-width: 768px) {
   .profile-hero {
     padding: 2rem 1.5rem;
@@ -308,6 +313,7 @@
   .profile-name {
     justify-content: center;
     font-size: 1.5rem;
+    color: #ffffff !important;
   }
 
   .profile-tabs {

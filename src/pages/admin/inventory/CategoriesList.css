@@ -1,0 +1,487 @@
+/* ========================================
+   CATEGORIES LIST - INVENTORY MANAGEMENT
+   Diseño minimalista black & white profesional
+   ======================================== */
+
+/* ========================================
+   CONTAINER
+   ======================================== */
+.categories-container {
+  padding: 2rem;
+  min-height: 100vh;
+  background: #fafafa;
+}
+
+/* ========================================
+   HEADER
+   ======================================== */
+.categories-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  gap: 1.5rem;
+}
+
+.categories-header-content h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #000000;
+  letter-spacing: -0.03em;
+  margin: 0 0 0.375rem 0;
+}
+
+.categories-header-content p {
+  font-size: 0.9375rem;
+  color: #666666;
+  margin: 0;
+}
+
+.categories-create-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: #000000;
+  color: #ffffff;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.categories-create-button:hover {
+  background: #1a1a1a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.categories-create-button svg {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+/* ========================================
+   ERROR MESSAGE
+   ======================================== */
+.categories-error {
+  background: #fff5f5;
+  border: 1px solid #ff4444;
+  border-left-width: 4px;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.categories-error-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #cc0000;
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.categories-error p {
+  color: #cc0000;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* ========================================
+   FORM CARD
+   ======================================== */
+.categories-form-card {
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  animation: categories-slide-down 0.3s ease;
+}
+
+@keyframes categories-slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.categories-form-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #000000;
+  margin: 0 0 1.25rem 0;
+  letter-spacing: -0.02em;
+}
+
+.categories-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Form Group */
+.categories-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.categories-form-label {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  letter-spacing: -0.01em;
+}
+
+.categories-form-required {
+  color: #cc0000;
+  font-weight: 700;
+}
+
+.categories-form-input {
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  font-size: 0.9375rem;
+  font-weight: 400;
+  color: #1a1a1a;
+  background: #ffffff;
+  border: 1.5px solid #e5e5e5;
+  border-radius: 0.5rem;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.categories-form-input::placeholder {
+  color: #999999;
+  font-weight: 400;
+}
+
+.categories-form-input:focus {
+  border-color: #000000;
+  background: #fafafa;
+}
+
+.categories-form-input:hover:not(:focus) {
+  border-color: #cccccc;
+}
+
+.categories-form-input.error {
+  border-color: #ff4444;
+  background: #fff5f5;
+}
+
+.categories-form-hint {
+  font-size: 0.75rem;
+  color: #999999;
+  margin-top: -0.25rem;
+}
+
+.categories-form-error {
+  font-size: 0.75rem;
+  color: #cc0000;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: -0.25rem;
+}
+
+.categories-form-error::before {
+  content: "•";
+  font-size: 1rem;
+}
+
+/* Form Actions */
+.categories-form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding-top: 0.5rem;
+}
+
+.categories-form-button-cancel,
+.categories-form-button-submit {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: -0.01em;
+}
+
+.categories-form-button-cancel {
+  color: #666666;
+  background: #f5f5f5;
+  border: 1px solid #e5e5e5;
+}
+
+.categories-form-button-cancel:hover {
+  background: #e5e5e5;
+  color: #1a1a1a;
+  border-color: #cccccc;
+}
+
+.categories-form-button-submit {
+  color: #ffffff;
+  background: #000000;
+  border: 1px solid #000000;
+}
+
+.categories-form-button-submit:hover {
+  background: #1a1a1a;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.categories-form-button-cancel svg,
+.categories-form-button-submit svg {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+/* ========================================
+   TABLE
+   ======================================== */
+.categories-table-wrapper {
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.categories-table-container {
+  overflow-x: auto;
+}
+
+.categories-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.categories-table thead {
+  background: #fafafa;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.categories-table thead th {
+  padding: 0.875rem 1.5rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #666666;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.categories-table thead th:last-child {
+  text-align: center;
+}
+
+.categories-table tbody tr {
+  border-bottom: 1px solid #f0f0f0;
+  transition: background 0.15s ease;
+}
+
+.categories-table tbody tr:hover {
+  background: #fafafa;
+}
+
+.categories-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.categories-table tbody td {
+  padding: 1rem 1.5rem;
+  font-size: 0.9375rem;
+  color: #1a1a1a;
+  vertical-align: middle;
+}
+
+/* Category Name Cell */
+.categories-table-name {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.categories-table-name-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #000000;
+  flex-shrink: 0;
+}
+
+.categories-table-name-text {
+  font-weight: 600;
+  color: #000000;
+}
+
+/* Slug Cell */
+.categories-table-slug {
+  display: inline-flex;
+  padding: 0.375rem 0.75rem;
+  background: #f5f5f5;
+  border: 1px solid #e5e5e5;
+  border-radius: 0.375rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+/* Actions Cell */
+.categories-table-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.categories-action-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 1px solid #e5e5e5;
+  border-radius: 0.5rem;
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.categories-action-button svg {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+.categories-action-button.edit {
+  color: #0066cc;
+}
+
+.categories-action-button.edit:hover {
+  background: #e6f2ff;
+  border-color: #0066cc;
+  transform: translateY(-1px);
+}
+
+.categories-action-button.delete {
+  color: #cc0000;
+}
+
+.categories-action-button.delete:hover {
+  background: #ffe6e6;
+  border-color: #cc0000;
+  transform: translateY(-1px);
+}
+
+/* ========================================
+   LOADING & EMPTY STATES
+   ======================================== */
+.categories-loading,
+.categories-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.categories-loading-spinner {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 3px solid #e5e5e5;
+  border-top-color: #000000;
+  border-radius: 50%;
+  animation: categories-spin 0.8s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes categories-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.categories-loading-text,
+.categories-empty-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #666666;
+  margin: 0;
+}
+
+.categories-empty-icon {
+  width: 4rem;
+  height: 4rem;
+  color: #cccccc;
+  margin-bottom: 1rem;
+}
+
+.categories-empty-description {
+  font-size: 0.875rem;
+  color: #999999;
+  margin: 0.5rem 0 0 0;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+@media (max-width: 768px) {
+  .categories-container {
+    padding: 1rem;
+  }
+
+  .categories-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .categories-create-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .categories-form-actions {
+    flex-direction: column-reverse;
+    gap: 0.5rem;
+  }
+
+  .categories-form-button-cancel,
+  .categories-form-button-submit {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .categories-table-container {
+    overflow-x: auto;
+  }
+
+  .categories-table {
+    min-width: 600px;
+  }
+}

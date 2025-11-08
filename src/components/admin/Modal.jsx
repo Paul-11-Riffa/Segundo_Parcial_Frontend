@@ -1,8 +1,9 @@
 import { useEffect, useRef } from 'react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
+import './Modal.css';
 
 /**
- * Modal - Componente modal reutilizable
+ * Modal - Componente modal reutilizable con diseño minimalista
  * 
  * Props:
  * - isOpen: boolean - controla si el modal está visible
@@ -48,46 +49,33 @@ const Modal = ({
 
   if (!isOpen) return null;
 
-  const sizeClasses = {
-    sm: 'max-w-md',
-    md: 'max-w-lg',
-    lg: 'max-w-2xl',
-    xl: 'max-w-4xl',
-  };
-
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
-      {/* Backdrop */}
-      <div 
-        className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
-        onClick={onClose}
-      ></div>
-
-      {/* Modal Container */}
-      <div className="flex min-h-full items-center justify-center p-4">
+    <div className="modal-overlay">
+      {/* Modal wrapper (centering container) */}
+      <div className="modal-wrapper" onClick={onClose}>
+        {/* Modal content */}
         <div
           ref={modalRef}
-          className={`
-            relative bg-white rounded-lg shadow-xl w-full ${sizeClasses[size]}
-            transform transition-all
-          `}
+          className={`modal-content modal-${size}`}
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-gray-200">
-            <h3 className="text-xl font-semibold text-gray-900">{title}</h3>
+          <div className="modal-header">
+            <h3 className="modal-title">{title}</h3>
             {showCloseButton && (
               <button
+                type="button"
                 onClick={onClose}
-                className="text-gray-400 hover:text-gray-600 transition-colors duration-200"
+                className="modal-close-button"
+                aria-label="Close modal"
               >
-                <XMarkIcon className="h-6 w-6" />
+                <XMarkIcon />
               </button>
             )}
           </div>
 
-          {/* Content */}
-          <div className="p-6">
+          {/* Body */}
+          <div className="modal-body">
             {children}
           </div>
         </div>

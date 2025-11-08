@@ -8,6 +8,7 @@ import {
 } from '@heroicons/react/24/outline';
 import useProducts from '../../../hooks/admin/useProducts';
 import StockBadge from '../../../components/admin/inventory/StockBadge';
+import './StockAlerts.css';
 
 const StockAlerts = () => {
   const {
@@ -79,61 +80,56 @@ const StockAlerts = () => {
     const isUpdating = updatingProduct === product.id;
 
     return (
-      <tr
-        key={product.id}
-        className={`hover:bg-blue-50 transition-colors ${
-          index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
-        }`}
-      >
+      <tr key={product.id}>
         {/* Imagen */}
-        <td className="px-6 py-4">
+        <td>
           {product.image_url ? (
             <img
               src={product.image_url}
               alt={product.name}
-              className="w-12 h-12 object-cover rounded-lg border-2 border-gray-200"
+              className="stock-alerts-table-image"
             />
           ) : (
-            <div className="w-12 h-12 bg-gray-100 rounded-lg border-2 border-gray-200 flex items-center justify-center">
-              <ArchiveBoxXMarkIcon className="w-6 h-6 text-gray-400" />
+            <div className="stock-alerts-table-image-placeholder">
+              <ArchiveBoxXMarkIcon />
             </div>
           )}
         </td>
 
         {/* Nombre */}
-        <td className="px-6 py-4">
-          <div className="font-medium text-gray-900">{product.name}</div>
-          <div className="text-sm text-gray-500">{product.category_name}</div>
+        <td>
+          <div className="stock-alerts-table-product-name">{product.name}</div>
+          <div className="stock-alerts-table-product-category">{product.category_name}</div>
         </td>
 
         {/* Stock actual */}
-        <td className="px-6 py-4">
+        <td>
           <StockBadge stock={product.stock} />
         </td>
 
         {/* Acción de actualizar stock */}
-        <td className="px-6 py-4">
+        <td>
           {isEditing ? (
-            <div className="flex items-center gap-2">
+            <div className="stock-alerts-edit-form">
               <input
                 type="number"
                 min="0"
                 value={editingStock[product.id]}
                 onChange={(e) => handleStockChange(product.id, e.target.value)}
-                className="w-24 px-3 py-1 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="stock-alerts-edit-input"
                 disabled={isUpdating}
               />
               <button
                 onClick={() => handleSaveStock(product.id)}
                 disabled={isUpdating}
-                className="px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors disabled:bg-green-400"
+                className="stock-alerts-edit-button save"
               >
                 {isUpdating ? 'Guardando...' : 'Guardar'}
               </button>
               <button
                 onClick={() => handleCancelEdit(product.id)}
                 disabled={isUpdating}
-                className="px-3 py-1 bg-gray-300 hover:bg-gray-400 text-gray-700 rounded-lg font-medium transition-colors"
+                className="stock-alerts-edit-button cancel"
               >
                 Cancelar
               </button>
@@ -141,9 +137,9 @@ const StockAlerts = () => {
           ) : (
             <button
               onClick={() => handleEditStock(product.id, product.stock)}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+              className="stock-alerts-update-button"
             >
-              <PencilIcon className="w-4 h-4" />
+              <PencilIcon />
               Actualizar Stock
             </button>
           )}
@@ -153,91 +149,78 @@ const StockAlerts = () => {
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="stock-alerts-container">
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">Alertas de Stock</h1>
-        <p className="text-gray-600 mt-1">
-          Productos que requieren atención inmediata
-        </p>
+      <div className="stock-alerts-header">
+        <h1>Alertas de Stock</h1>
+        <p>Productos que requieren atención inmediata</p>
       </div>
 
       {/* Tarjetas de resumen */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="bg-white p-6 rounded-lg shadow border-l-4 border-red-500">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-gray-600 text-sm font-medium">Sin Stock (Crítico)</p>
-              <p className="text-3xl font-bold text-red-600 mt-1">
-                {outOfStockProducts.length}
-              </p>
-              <p className="text-gray-500 text-sm mt-1">Requieren reposición urgente</p>
-            </div>
-            <ArchiveBoxXMarkIcon className="w-12 h-12 text-red-500" />
+      <div className="stock-alerts-summary">
+        <div className="stock-alert-card critical">
+          <div className="stock-alert-card-content">
+            <p className="stock-alert-card-label">Sin Stock (Crítico)</p>
+            <p className="stock-alert-card-value">
+              {outOfStockProducts.length}
+            </p>
+            <p className="stock-alert-card-description">Requieren reposición urgente</p>
           </div>
+          <ArchiveBoxXMarkIcon className="stock-alert-card-icon" />
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow border-l-4 border-yellow-500">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-gray-600 text-sm font-medium">Stock Bajo</p>
-              <p className="text-3xl font-bold text-yellow-600 mt-1">
-                {lowStockProducts.length}
-              </p>
-              <p className="text-gray-500 text-sm mt-1">Menos de 10 unidades</p>
-            </div>
-            <ExclamationTriangleIcon className="w-12 h-12 text-yellow-500" />
+        <div className="stock-alert-card warning">
+          <div className="stock-alert-card-content">
+            <p className="stock-alert-card-label">Stock Bajo</p>
+            <p className="stock-alert-card-value">
+              {lowStockProducts.length}
+            </p>
+            <p className="stock-alert-card-description">Menos de 10 unidades</p>
           </div>
+          <ExclamationTriangleIcon className="stock-alert-card-icon" />
         </div>
       </div>
 
       {/* Mensaje de error */}
       {error && (
-        <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded">
-          <p className="text-red-800">{error}</p>
+        <div className="stock-alerts-error">
+          <ExclamationTriangleIcon className="stock-alerts-error-icon" />
+          <p>{error}</p>
         </div>
       )}
 
       {/* Productos sin stock */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <div className="bg-red-50 px-6 py-4 border-b-2 border-red-200">
-          <h2 className="text-xl font-bold text-red-800 flex items-center gap-2">
-            <ArchiveBoxXMarkIcon className="w-6 h-6" />
+      <div className="stock-alerts-section">
+        <div className="stock-alerts-section-header critical">
+          <h2>
+            <ArchiveBoxXMarkIcon className="stock-alerts-section-header-icon" />
             Productos Sin Stock (Crítico)
           </h2>
         </div>
 
         {loading ? (
-          <div className="flex items-center justify-center p-12">
-            <ArrowPathIcon className="w-8 h-8 text-blue-600 animate-spin" />
-            <span className="ml-3 text-gray-600">Cargando...</span>
+          <div className="stock-alerts-loading">
+            <div className="stock-alerts-loading-spinner"></div>
+            <span className="stock-alerts-loading-text">Cargando...</span>
           </div>
         ) : outOfStockProducts.length === 0 ? (
-          <div className="text-center p-12">
-            <ArchiveBoxXMarkIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-600 text-lg">No hay productos sin stock</p>
-            <p className="text-gray-500 text-sm mt-2">¡Excelente gestión de inventario!</p>
+          <div className="stock-alerts-empty">
+            <ArchiveBoxXMarkIcon className="stock-alerts-empty-icon" />
+            <p className="stock-alerts-empty-title">No hay productos sin stock</p>
+            <p className="stock-alerts-empty-description">¡Excelente gestión de inventario!</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50 border-b">
+          <div className="stock-alerts-table-container">
+            <table className="stock-alerts-table">
+              <thead>
                 <tr>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                    Imagen
-                  </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                    Producto
-                  </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                    Stock Actual
-                  </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                    Acción
-                  </th>
+                  <th>Imagen</th>
+                  <th>Producto</th>
+                  <th>Stock Actual</th>
+                  <th>Acción</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody>
                 {outOfStockProducts.map((product, index) => renderProductRow(product, index))}
               </tbody>
             </table>
@@ -246,45 +229,37 @@ const StockAlerts = () => {
       </div>
 
       {/* Productos con stock bajo */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <div className="bg-yellow-50 px-6 py-4 border-b-2 border-yellow-200">
-          <h2 className="text-xl font-bold text-yellow-800 flex items-center gap-2">
-            <ExclamationTriangleIcon className="w-6 h-6" />
+      <div className="stock-alerts-section">
+        <div className="stock-alerts-section-header warning">
+          <h2>
+            <ExclamationTriangleIcon className="stock-alerts-section-header-icon" />
             Productos con Stock Bajo
           </h2>
         </div>
 
         {loading ? (
-          <div className="flex items-center justify-center p-12">
-            <ArrowPathIcon className="w-8 h-8 text-blue-600 animate-spin" />
-            <span className="ml-3 text-gray-600">Cargando...</span>
+          <div className="stock-alerts-loading">
+            <div className="stock-alerts-loading-spinner"></div>
+            <span className="stock-alerts-loading-text">Cargando...</span>
           </div>
         ) : lowStockProducts.length === 0 ? (
-          <div className="text-center p-12">
-            <ExclamationTriangleIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-600 text-lg">No hay productos con stock bajo</p>
-            <p className="text-gray-500 text-sm mt-2">Todos los productos tienen stock adecuado</p>
+          <div className="stock-alerts-empty">
+            <ExclamationTriangleIcon className="stock-alerts-empty-icon" />
+            <p className="stock-alerts-empty-title">No hay productos con stock bajo</p>
+            <p className="stock-alerts-empty-description">Todos los productos tienen stock adecuado</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50 border-b">
+          <div className="stock-alerts-table-container">
+            <table className="stock-alerts-table">
+              <thead>
                 <tr>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                    Imagen
-                  </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                    Producto
-                  </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                    Stock Actual
-                  </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                    Acción
-                  </th>
+                  <th>Imagen</th>
+                  <th>Producto</th>
+                  <th>Stock Actual</th>
+                  <th>Acción</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody>
                 {lowStockProducts.map((product, index) => renderProductRow(product, index))}
               </tbody>
             </table>
