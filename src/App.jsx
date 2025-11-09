@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { NotificationProvider } from './context/NotificationContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import ProtectedAdminRoute from './components/ProtectedAdminRoute';
 
@@ -30,11 +31,28 @@ import TestPage from './pages/admin/inventory/TestPage';
 // Voice Reports Module
 import VoiceReportsPage from './pages/admin/voice/VoiceReportsPage';
 
+// Admin Notifications Module
+import SendNotification from './pages/admin/notifications/SendNotification';
+
+// Notification Pages
+import NotificationsPage from './pages/NotificationsPage';
+import NotificationPreferencesPage from './pages/NotificationPreferencesPage';
+
+// Notification Components
+import { NotificationBanner, NotificationToastContainer } from './components/notifications';
+
 function App() {
   return (
     <Router>
       <AuthProvider>
-        <Routes>
+        <NotificationProvider>
+          {/* Banner para solicitar permisos de notificaciones */}
+          <NotificationBanner />
+          
+          {/* Container para toasts de notificaciones en foreground */}
+          <NotificationToastContainer />
+          
+          <Routes>
           {/* Public Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
@@ -50,6 +68,10 @@ function App() {
           {/* Protected Routes (Usuario normal) */}
           <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          
+          {/* Notification Routes */}
+          <Route path="/notifications" element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />
+          <Route path="/notifications/preferences" element={<ProtectedRoute><NotificationPreferencesPage /></ProtectedRoute>} />
 
           {/* Admin Routes (Solo administradores) */}
           {/* New Admin Layout Routes with Sidebar */}
@@ -73,6 +95,9 @@ function App() {
             
             {/* Voice Reports Route */}
             <Route path="voice-reports" element={<VoiceReportsPage />} />
+            
+            {/* Notifications Route */}
+            <Route path="notifications/send" element={<SendNotification />} />
           </Route>
 
           {/* Old routes - Keep for backward compatibility */}
@@ -103,7 +128,8 @@ function App() {
 
           {/* Redirect any unknown route to home */}
           <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+          </Routes>
+        </NotificationProvider>
       </AuthProvider>
     </Router>
   );

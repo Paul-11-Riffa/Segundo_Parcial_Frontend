@@ -1,0 +1,132 @@
+/* ========================================
+   NOTIFICATION PREVIEW - Vista previa de notificación
+   ======================================== */
+
+.notification-preview-container {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e5e5;
+}
+
+.notification-preview-title {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Tarjeta de simulación */
+.notification-preview-card {
+  background: #f9fafb;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  max-width: 400px;
+  margin: 0 auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.notification-preview-header {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+/* Ícono */
+.notification-preview-icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+}
+
+.notification-preview-icon-emoji {
+  font-size: 22px;
+}
+
+/* Contenido */
+.notification-preview-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.notification-preview-heading {
+  margin: 0 0 4px 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #111827;
+  line-height: 1.3;
+  word-wrap: break-word;
+}
+
+.notification-preview-body {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.5;
+  word-wrap: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Imagen */
+.notification-preview-image-container {
+  margin-top: 8px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.notification-preview-image {
+  width: 100%;
+  height: auto;
+  max-height: 120px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Timestamp */
+.notification-preview-time {
+  margin: 8px 0 0 0;
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+/* Hint */
+.notification-preview-hint {
+  margin: 16px 0 0 0;
+  padding: 12px;
+  background: #f0f9ff;
+  border-left: 3px solid #3b82f6;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #1e40af;
+  line-height: 1.5;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .notification-preview-card {
+    max-width: 100%;
+  }
+  
+  .notification-preview-heading {
+    font-size: 14px;
+  }
+  
+  .notification-preview-body {
+    font-size: 13px;
+  }
+}

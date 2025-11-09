@@ -1,0 +1,6 @@
+/* Página de preferencias de notificaciones */
+.notification-preferences-page {
+  min-height: 100vh;
+  background: #f9fafb;
+  padding-top: 20px;
+}

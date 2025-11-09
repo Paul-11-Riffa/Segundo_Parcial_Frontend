@@ -1,0 +1,321 @@
+/* ========================================
+   SEND NOTIFICATION PAGE - Página de envío de notificaciones
+   ======================================== */
+
+.send-notification-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+  min-height: 100vh;
+}
+
+/* ========================================
+   HEADER
+   ======================================== */
+
+.send-notification-header {
+  margin-bottom: 32px;
+}
+
+.send-notification-header-content {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 32px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+}
+
+.send-notification-title {
+  margin: 0 0 12px 0;
+  font-size: 32px;
+  font-weight: 700;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.send-notification-title-icon {
+  font-size: 36px;
+}
+
+.send-notification-subtitle {
+  margin: 0;
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.5;
+}
+
+/* ========================================
+   FEEDBACK MESSAGE (Success/Error)
+   ======================================== */
+
+.send-notification-feedback {
+  margin-bottom: 24px;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.send-notification-feedback-success {
+  background: #ecfdf5;
+  border: 2px solid #10b981;
+}
+
+.send-notification-feedback-error {
+  background: #fef2f2;
+  border: 2px solid #ef4444;
+}
+
+.send-notification-feedback-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.send-notification-feedback-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.send-notification-feedback-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.send-notification-feedback-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  flex: 1;
+}
+
+.send-notification-feedback-success .send-notification-feedback-title {
+  color: #065f46;
+}
+
+.send-notification-feedback-error .send-notification-feedback-title {
+  color: #991b1b;
+}
+
+.send-notification-feedback-close {
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.send-notification-feedback-close:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #374151;
+}
+
+/* Detalles del feedback */
+.send-notification-feedback-details {
+  padding-top: 12px;
+  border-top: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.send-notification-feedback-stats {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 12px;
+}
+
+.send-notification-feedback-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.send-notification-feedback-stat-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #059669;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.send-notification-feedback-stat-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #065f46;
+}
+
+.send-notification-feedback-warning {
+  padding: 10px 12px;
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #92400e;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.send-notification-feedback-error-details {
+  padding: 12px;
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: 6px;
+  font-size: 14px;
+  color: #991b1b;
+  line-height: 1.5;
+}
+
+/* ========================================
+   MAIN CONTENT
+   ======================================== */
+
+.send-notification-content {
+  margin-bottom: 24px;
+}
+
+/* ========================================
+   FOOTER INFO
+   ======================================== */
+
+.send-notification-footer {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 2px dashed #e5e7eb;
+}
+
+.send-notification-footer-info {
+  display: flex;
+  align-items: start;
+  gap: 12px;
+  padding: 16px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+}
+
+.send-notification-footer-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.send-notification-footer-text {
+  margin: 0;
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 768px) {
+  .send-notification-page {
+    padding: 16px;
+  }
+
+  .send-notification-header-content {
+    padding: 24px 20px;
+  }
+
+  .send-notification-title {
+    font-size: 24px;
+    flex-wrap: wrap;
+  }
+
+  .send-notification-title-icon {
+    font-size: 28px;
+  }
+
+  .send-notification-subtitle {
+    font-size: 14px;
+  }
+
+  .send-notification-feedback {
+    padding: 16px;
+  }
+
+  .send-notification-feedback-stats {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .send-notification-feedback-header {
+    flex-wrap: wrap;
+  }
+
+  .send-notification-feedback-title {
+    font-size: 16px;
+  }
+
+  .send-notification-footer-info {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .send-notification-page {
+    padding: 12px;
+  }
+
+  .send-notification-header-content {
+    padding: 20px 16px;
+  }
+
+  .send-notification-title {
+    font-size: 20px;
+  }
+
+  .send-notification-subtitle {
+    font-size: 13px;
+  }
+
+  .send-notification-feedback {
+    padding: 12px;
+  }
+
+  .send-notification-feedback-icon {
+    font-size: 20px;
+  }
+
+  .send-notification-feedback-title {
+    font-size: 15px;
+  }
+}
+
+/* ========================================
+   PRINT STYLES
+   ======================================== */
+
+@media print {
+  .send-notification-header-content {
+    background: #667eea;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .send-notification-feedback {
+    border: 2px solid #000;
+  }
+
+  .send-notification-footer {
+    page-break-before: avoid;
+  }
+}

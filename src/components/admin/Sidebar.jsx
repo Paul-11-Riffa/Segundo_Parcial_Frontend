@@ -12,7 +12,8 @@ import {
   TagIcon,
   ExclamationTriangleIcon,
   MicrophoneIcon,
-  DocumentTextIcon
+  DocumentTextIcon,
+  BellAlertIcon
 } from '@heroicons/react/24/outline';
 import './Sidebar.css';
 
@@ -68,6 +69,12 @@ const Sidebar = ({ collapsed, onToggle }) => {
       label: 'Reportes por Voz',
       icon: MicrophoneIcon,
       path: '/admin/voice-reports',
+    },
+    {
+      id: 'notifications',
+      label: 'Enviar Notificación',
+      icon: BellAlertIcon,
+      path: '/admin/notifications/send',
     },
   ];
 

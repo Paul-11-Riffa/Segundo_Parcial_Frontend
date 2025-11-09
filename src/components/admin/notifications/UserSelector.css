@@ -1,0 +1,408 @@
+/* ========================================
+   USER SELECTOR - Selector de usuarios con búsqueda
+   ======================================== */
+
+.user-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Loading State */
+.user-selector-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  text-align: center;
+  color: #6b7280;
+}
+
+.user-selector-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #e5e7eb;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: user-selector-spin 0.8s linear infinite;
+  margin-bottom: 12px;
+}
+
+@keyframes user-selector-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ========================================
+   FILTRO POR ROL
+   ======================================== */
+
+.user-selector-role-filter {
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: #f9fafb;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.user-selector-role-btn {
+  flex: 1;
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  border: 2px solid #d1d5db;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #ffffff;
+  color: #374151;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.user-selector-role-btn:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+  color: #111827;
+}
+
+.user-selector-role-btn.active {
+  background: #000000;
+  color: #ffffff;
+  border-color: #000000;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Campo de búsqueda */
+.user-selector-search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.user-selector-search-icon {
+  position: absolute;
+  left: 12px;
+  font-size: 16px;
+  color: #9ca3af;
+  pointer-events: none;
+}
+.user-selector-search-input {
+  width: 100%;
+  padding: 10px 40px 10px 38px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.user-selector-search-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.user-selector-search-clear {
+  position: absolute;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f3f4f6;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #6b7280;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.user-selector-search-clear:hover {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+/* Botones de acción */
+.user-selector-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.user-selector-action-btn {
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #3b82f6;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.user-selector-action-btn:hover:not(:disabled) {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.user-selector-action-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Lista de usuarios */
+.user-selector-list {
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  max-height: 320px;
+  overflow-y: auto;
+  background: #ffffff;
+}
+
+/* Scrollbar personalizado */
+.user-selector-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.user-selector-list::-webkit-scrollbar-track {
+  background: #f3f4f6;
+  border-radius: 8px;
+}
+
+.user-selector-list::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 8px;
+}
+
+.user-selector-list::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* Estado vacío */
+.user-selector-empty {
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.user-selector-empty-icon {
+  font-size: 48px;
+  margin: 0 0 12px 0;
+  opacity: 0.3;
+}
+
+.user-selector-empty-text {
+  margin: 0;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* Item de usuario */
+.user-selector-item {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.user-selector-item:last-child {
+  border-bottom: none;
+}
+
+.user-selector-item:hover {
+  background: #f9fafb;
+}
+
+.user-selector-item.selected {
+  background: #eff6ff;
+}
+
+/* Checkbox */
+.user-selector-checkbox {
+  width: 18px;
+  height: 18px;
+  margin-right: 12px;
+  cursor: pointer;
+  accent-color: #3b82f6;
+  flex-shrink: 0;
+}
+
+/* Info del usuario */
+.user-selector-user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Avatar */
+.user-selector-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+/* Detalles del usuario */
+.user-selector-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.user-selector-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+
+.user-selector-name {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex-shrink: 1;
+}
+
+/* Badges de rol - Esquema blanco/negro */
+.user-selector-role-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  border: 1px solid;
+}
+
+.user-role-badge-superadmin {
+  background: #000000;
+  color: #ffffff;
+  border-color: #000000;
+}
+
+.user-role-badge-admin {
+  background: #374151;
+  color: #ffffff;
+  border-color: #374151;
+}
+
+.user-role-badge-client {
+  background: #ffffff;
+  color: #374151;
+  border-color: #d1d5db;
+}
+
+.user-selector-email {
+  margin: 0;
+  font-size: 13px;
+  color: #6b7280;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-selector-username {
+  margin: 2px 0 0 0;
+  font-size: 12px;
+  color: #9ca3af;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Contador */
+.user-selector-counter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: #f9fafb;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.user-selector-counter-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 8px;
+  background: #3b82f6;
+  color: #ffffff;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.user-selector-counter-text {
+  color: #374151;
+  font-weight: 500;
+}
+
+.user-selector-counter-filter {
+  color: #6b7280;
+  font-size: 13px;
+  margin-left: auto;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .user-selector-role-filter {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .user-selector-role-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  .user-selector-list {
+    max-height: 240px;
+  }
+  
+  .user-selector-item {
+    padding: 10px;
+  }
+  
+  .user-selector-avatar {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+  }
+  
+  .user-selector-name {
+    font-size: 13px;
+  }
+
+  .user-selector-role-badge {
+    font-size: 9px;
+    padding: 2px 6px;
+  }
+  
+  .user-selector-email {
+    font-size: 12px;
+  }
+}

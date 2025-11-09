@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Button from '../components/ui/Button';
+import { NotificationIcon } from '../components/notifications';
 import './pages.css';
 
 const heroProducts = [
@@ -108,6 +109,7 @@ const Home = () => {
           <nav className="flex items-center gap-2 sm:gap-3">
             {user ? (
               <>
+                <NotificationIcon />
                 <span className="hidden text-sm text-dark-600 sm:inline">{user.username}</span>
                 <Link to="/profile">
                   <Button variant="ghost" size="sm">Mi Perfil</Button>

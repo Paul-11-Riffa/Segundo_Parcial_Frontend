@@ -1,0 +1,109 @@
+/* Container del ícono de notificaciones */
+.notification-icon-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* Botón del ícono */
+.notification-icon-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--text-primary, #1f2937);
+}
+
+.notification-icon-button:hover {
+  background: var(--hover-bg, #f3f4f6);
+  transform: scale(1.05);
+}
+
+.notification-icon-button:active {
+  transform: scale(0.95);
+}
+
+.notification-icon-button.notification-icon-active {
+  background: var(--primary-light, #dbeafe);
+  color: var(--primary, #3b82f6);
+}
+
+/* Ícono de campana */
+.notification-icon {
+  width: 22px;
+  height: 22px;
+}
+
+/* Badge con contador */
+.notification-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  background: var(--danger, #ef4444);
+  color: white;
+  border-radius: 9px;
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  box-shadow: 0 0 0 2px var(--bg-primary, white);
+  animation: notification-badge-appear 0.3s ease;
+}
+
+/* Animación de pulsación para nuevas notificaciones */
+.notification-icon-pulse {
+  animation: notification-pulse 2s ease-in-out infinite;
+}
+
+@keyframes notification-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes notification-badge-appear {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .notification-icon-button {
+    width: 36px;
+    height: 36px;
+  }
+
+  .notification-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .notification-badge {
+    min-width: 16px;
+    height: 16px;
+    font-size: 10px;
+  }
+}
