@@ -1,5 +1,5 @@
 // src/hooks/admin/useProducts.js
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import productService from '../../services/admin/productService';
 
 /**
@@ -9,6 +9,9 @@ export const useProducts = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  
+  // ✅ NUEVO: Ref para evitar que se cancelen requests en mount/unmount rápido
+  const isMountedRef = useRef(true);
   
   // Filtros
   const [filters, setFilters] = useState({
@@ -26,30 +29,79 @@ export const useProducts = () => {
    */
   const fetchProducts = useCallback(async () => {
     try {
+      console.log('[useProducts] 🔄 INICIO fetchProducts');
+      console.log('[useProducts] → isMountedRef.current:', isMountedRef.current);
+      console.log('[useProducts] → Filtros:', JSON.stringify(filters, null, 2));
+
       setLoading(true);
       setError(null);
-      console.log('[useProducts] Fetching products with filters:', filters);
-      
+
       const data = await productService.getAll(filters);
+      console.log('[useProducts] 📥 Data recibida:', data?.length, 'productos');
+
+      // ✅ Solo actualizar si el componente sigue montado
+      if (!isMountedRef.current) {
+        console.log('[useProducts] ⚠️ Component unmounted, skipping state update');
+        return;
+      }
+
       // Asegurar que data sea un array
       const productsArray = Array.isArray(data) ? data : [];
+      console.log('[useProducts] 📝 Actualizando state con', productsArray.length, 'productos');
+
       setProducts(productsArray);
-      console.log('[useProducts] Products loaded:', productsArray.length);
+
+      console.log('[useProducts] ✅ Products loaded successfully:', productsArray.length);
     } catch (err) {
-      console.error('[useProducts] Error loading products:', err);
+      console.error('[useProducts] ❌ Error loading products:', err);
+
+      // ✅ Solo actualizar si el componente sigue montado
+      if (!isMountedRef.current) {
+        console.log('[useProducts] Component unmounted, skipping error update');
+        return;
+      }
+
       setError(err.response?.data?.message || 'Error al cargar productos');
       setProducts([]); // Resetear a array vacío en caso de error
     } finally {
-      setLoading(false);
+      // ✅ Solo actualizar si el componente sigue montado
+      if (isMountedRef.current) {
+        console.log('[useProducts] 🏁 fetchProducts finalizado, setLoading(false)');
+        setLoading(false);
+      }
     }
-  }, [filters]);
+  }, [filters]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  /**
+   * ✅ NUEVO: Cleanup para evitar memory leaks
+   */
+  useEffect(() => {
+    isMountedRef.current = true;
+    
+    return () => {
+      isMountedRef.current = false;
+      console.log('[useProducts] Component unmounting, canceling future updates');
+    };
+  }, []);
 
   /**
    * Cargar productos al montar y cuando cambien los filtros
+   * ✅ MEJORADO: Dependencias específicas para evitar re-renders innecesarios
    */
   useEffect(() => {
+    console.log('[useProducts] Effect triggered - fetching products');
     fetchProducts();
-  }, [fetchProducts]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    filters.search,
+    filters.category_slug,
+    filters.price_min,
+    filters.price_max,
+    filters.stock_min,
+    filters.in_stock,
+    filters.ordering,
+    filters.is_active,
+  ]); // ✅ Dependencias específicas (fetchProducts se actualiza con filters)
 
   /**
    * Actualizar un filtro específico
@@ -86,16 +138,25 @@ export const useProducts = () => {
       setLoading(true);
       setError(null);
       console.log('[useProducts] Creating product:', productData);
-      
+
       const newProduct = await productService.create(productData);
       console.log('[useProducts] Product created:', newProduct);
-      
-      // Recargar lista
+      console.log('[useProducts] → is_active:', newProduct.is_active);
+
+      // ✅ PASO 1: Agregar inmediatamente a la lista (optimistic update)
+      setProducts(prev => {
+        console.log('[useProducts] 🆕 Agregando nuevo producto a la lista');
+        return [...prev, newProduct];
+      });
+
+      // ✅ PASO 2: Recargar lista completa para asegurar sincronización
+      console.log('[useProducts] 🔄 Recargando lista completa...');
       await fetchProducts();
+
       return newProduct;
     } catch (err) {
       console.error('[useProducts] Error creating product:', err);
-      const errorMessage = err.response?.data?.message || 
+      const errorMessage = err.response?.data?.message ||
                           err.response?.data?.error ||
                           'Error al crear producto';
       setError(errorMessage);
@@ -113,16 +174,34 @@ export const useProducts = () => {
       setLoading(true);
       setError(null);
       console.log('[useProducts] Updating product:', id, productData);
-      
+
       const updatedProduct = await productService.update(id, productData);
       console.log('[useProducts] Product updated:', updatedProduct);
-      
-      // Actualizar en el estado local
-      setProducts(prev => prev.map(p => p.id === id ? updatedProduct : p));
+      console.log('[useProducts] → is_active recibido:', updatedProduct.is_active);
+
+      // ✅ PASO 1: Actualizar inmediatamente en memoria (optimistic update)
+      setProducts(prev => {
+        const updated = prev.map(p => {
+          if (p.id === id) {
+            console.log('[useProducts] 🔄 Actualizando producto en memoria:', id);
+            console.log('[useProducts]   Antes:', { is_active: p.is_active });
+            console.log('[useProducts]   Después:', { is_active: updatedProduct.is_active });
+            return { ...p, ...updatedProduct };
+          }
+          return p;
+        });
+        return updated;
+      });
+
+      // ✅ PASO 2: Recargar toda la lista para obtener datos frescos (incluyendo imágenes)
+      // Esto asegura que tengamos todos los datos actualizados del servidor
+      console.log('[useProducts] 🔄 Recargando lista completa...');
+      await fetchProducts();
+
       return updatedProduct;
     } catch (err) {
       console.error('[useProducts] Error updating product:', err);
-      const errorMessage = err.response?.data?.message || 
+      const errorMessage = err.response?.data?.message ||
                           err.response?.data?.error ||
                           'Error al actualizar producto';
       setError(errorMessage);
@@ -130,7 +209,7 @@ export const useProducts = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [fetchProducts]);
 
   /**
    * Eliminar un producto
@@ -151,6 +230,52 @@ export const useProducts = () => {
       const errorMessage = err.response?.data?.message || 
                           err.response?.data?.error ||
                           'Error al eliminar producto';
+      setError(errorMessage);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  /**
+   * Toggle activo/inactivo de un producto
+   */
+  const toggleProductActive = useCallback(async (id, forceState = undefined) => {
+    try {
+      setLoading(true);
+      setError(null);
+      console.log('[useProducts] 🔄 Toggling active state for product:', id, 'forceState:', forceState);
+      
+      const response = await productService.toggleActive(id, forceState);
+      console.log('[useProducts] 📥 Toggle response:', response);
+      
+      // Actualizar en el estado local
+      if (response && response.success && response.product) {
+        console.log('[useProducts] ✅ Updating local state with is_active:', response.product.is_active);
+        
+        setProducts(prev => {
+          const updated = prev.map(p => {
+            if (p.id === id) {
+              console.log('[useProducts] 🔄 Product before:', { id: p.id, is_active: p.is_active });
+              const newProduct = { ...p, is_active: response.product.is_active };
+              console.log('[useProducts] 🔄 Product after:', { id: newProduct.id, is_active: newProduct.is_active });
+              return newProduct;
+            }
+            return p;
+          });
+          return updated;
+        });
+      } else {
+        console.warn('[useProducts] ⚠️ Response no tiene estructura esperada:', response);
+      }
+      
+      return response;
+    } catch (err) {
+      console.error('[useProducts] ❌ Error toggling product active:', err);
+      console.error('[useProducts] ❌ Error details:', err.response?.data);
+      const errorMessage = err.response?.data?.message || 
+                          err.response?.data?.error ||
+                          'Error al cambiar estado del producto';
       setError(errorMessage);
       throw err;
     } finally {
@@ -300,10 +425,19 @@ export const useProducts = () => {
     createProduct,
     updateProduct,
     deleteProduct,
+    toggleProductActive,  // ⭐ NUEVO: Toggle activo/inactivo
     
-    // Imágenes
+    // Imágenes (legacy - imagen única)
     uploadImage,
     deleteImage,
+    
+    // Múltiples Imágenes (nuevo)
+    bulkUploadImages: productService.bulkUploadImages,
+    getProductImages: productService.getProductImages,
+    setImageAsPrimary: productService.setImageAsPrimary,
+    reorderImages: productService.reorderImages,
+    updateImageAltText: productService.updateImageAltText,
+    deleteProductImage: productService.deleteProductImage,
     
     // Stock
     updateStock,

@@ -224,6 +224,13 @@ export const NotificationProvider = ({ children }) => {
    */
   const loadNotifications = useCallback(async (filters = {}) => {
     try {
+      // Verificar que el usuario esté autenticado
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.warn('[NotificationContext] Usuario no autenticado, no se cargan notificaciones');
+        return [];
+      }
+
       console.log('🔵 [CONTEXT] Cargando notificaciones del backend (sin cache)...');
       
       const response = await fetchNotifications(filters);
@@ -249,6 +256,12 @@ export const NotificationProvider = ({ children }) => {
       
       return fetchedNotifications;
     } catch (err) {
+      // Si es 401, silenciosamente no hacer nada (evita bucle infinito)
+      if (err.response?.status === 401) {
+        console.warn('⚠️ [CONTEXT] No autorizado para cargar notificaciones');
+        return [];
+      }
+      
       console.error('❌ [CONTEXT] Error cargando notificaciones:', err);
       setError(err.message || 'Error al cargar notificaciones');
       throw err;
@@ -267,6 +280,13 @@ export const NotificationProvider = ({ children }) => {
         console.log('[NotificationContext] Preferencias cargadas del cache');
       }
 
+      // Verificar que el usuario esté autenticado antes de llamar al backend
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.warn('[NotificationContext] Usuario no autenticado, usando preferencias del cache');
+        return cached;
+      }
+
       // Luego cargar del backend
       const prefs = await fetchPreferences();
       setPreferences(prefs);
@@ -275,8 +295,14 @@ export const NotificationProvider = ({ children }) => {
       
       return prefs;
     } catch (err) {
-      console.error('[NotificationContext] Error cargando preferencias:', err);
-      // Si falla, usar las del cache o defaults
+      // Si falla (ej: 401), silenciosamente usar las del cache
+      if (err.response?.status === 401) {
+        console.warn('[NotificationContext] No autorizado para cargar preferencias, usando cache');
+      } else {
+        console.error('[NotificationContext] Error cargando preferencias:', err);
+      }
+      // NO re-lanzar el error, solo continuar con cache
+      return getCachedPreferences();
     }
   }, []);
 

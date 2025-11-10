@@ -14,7 +14,8 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 30000, // 30 segundos de timeout para evitar que se quede colgado
+  // ✅ AJUSTADO: 60 segundos para Neon Database (plan gratuito puede tardar ~30s en despertar)
+  timeout: 60000, // 60 segundos (era 30s)
 });
 
 // Interceptor para agregar el token a las peticiones

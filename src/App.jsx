@@ -3,6 +3,13 @@ import { AuthProvider } from './context/AuthContext';
 import { NotificationProvider } from './context/NotificationContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import ProtectedAdminRoute from './components/ProtectedAdminRoute';
+import { useEffect } from 'react';
+
+// Utilidades
+import { warmupDatabase, dbKeepAlive } from './utils/dbWarmup';
+
+// Componentes globales
+import DatabaseWarmupIndicator from './components/DatabaseWarmupIndicator';
 
 // Pages
 import Home from './pages/Home';
@@ -34,6 +41,13 @@ import VoiceReportsPage from './pages/admin/voice/VoiceReportsPage';
 // Admin Notifications Module
 import SendNotification from './pages/admin/notifications/SendNotification';
 
+// Audit Module
+import { 
+  AuditDashboard as AuditDashboardPage, 
+  AuditLogs, 
+  SecurityAlerts
+} from './pages/admin/audit';
+
 // Notification Pages
 import NotificationsPage from './pages/NotificationsPage';
 import NotificationPreferencesPage from './pages/NotificationPreferencesPage';
@@ -41,11 +55,34 @@ import NotificationPreferencesPage from './pages/NotificationPreferencesPage';
 // Notification Components
 import { NotificationBanner, NotificationToastContainer } from './components/notifications';
 
+// Shop Pages (Public)
+import Shop from './pages/Shop';
+import ProductDetail from './pages/ProductDetail';
+
 function App() {
+  // ✅ Calentar base de datos al iniciar la aplicación
+  useEffect(() => {
+    // Ejecutar warmup de forma asíncrona (no bloquea la UI)
+    warmupDatabase().then((success) => {
+      if (success) {
+        // Si el warmup fue exitoso, iniciar sistema de keep-alive
+        dbKeepAlive.start();
+      }
+    });
+
+    // Cleanup: detener keep-alive al desmontar la app
+    return () => {
+      dbKeepAlive.stop();
+    };
+  }, []);
+
   return (
     <Router>
       <AuthProvider>
         <NotificationProvider>
+          {/* ✅ Indicador de base de datos despertando */}
+          <DatabaseWarmupIndicator />
+          
           {/* Banner para solicitar permisos de notificaciones */}
           <NotificationBanner />
           
@@ -61,6 +98,10 @@ function App() {
           <Route path="/reset-password" element={<ResetPassword />} />
           {/* Ruta alternativa que acepta el formato del backend */}
           <Route path="/reset-password/:uidb64/:token" element={<ResetPassword />} />
+          
+          {/* Shop Routes (Public - No login required) */}
+          <Route path="/shop" element={<Shop />} />
+          <Route path="/products/:id" element={<ProductDetail />} />
           
           {/* Access Denied */}
           <Route path="/access-denied" element={<AccessDenied />} />
@@ -95,6 +136,11 @@ function App() {
             
             {/* Voice Reports Route */}
             <Route path="voice-reports" element={<VoiceReportsPage />} />
+            
+            {/* Audit Routes */}
+            <Route path="audit/dashboard" element={<AuditDashboardPage />} />
+            <Route path="audit/logs" element={<AuditLogs />} />
+            <Route path="audit/security" element={<SecurityAlerts />} />
             
             {/* Notifications Route */}
             <Route path="notifications/send" element={<SendNotification />} />

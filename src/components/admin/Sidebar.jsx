@@ -13,7 +13,9 @@ import {
   ExclamationTriangleIcon,
   MicrophoneIcon,
   DocumentTextIcon,
-  BellAlertIcon
+  BellAlertIcon,
+  ShieldCheckIcon,
+  ClipboardDocumentListIcon
 } from '@heroicons/react/24/outline';
 import './Sidebar.css';
 
@@ -24,6 +26,7 @@ const Sidebar = ({ collapsed, onToggle }) => {
   const location = useLocation();
   const [expandedMenus, setExpandedMenus] = useState({
     inventory: true, // Expandido por defecto
+    audit: false, // Menú de auditoría colapsado por defecto
   });
 
   const menuItems = [
@@ -69,6 +72,31 @@ const Sidebar = ({ collapsed, onToggle }) => {
       label: 'Reportes por Voz',
       icon: MicrophoneIcon,
       path: '/admin/voice-reports',
+    },
+    {
+      id: 'audit',
+      label: 'Auditoría',
+      icon: ShieldCheckIcon,
+      submenu: [
+        {
+          id: 'audit-dashboard',
+          label: 'Dashboard',
+          icon: Squares2X2Icon,
+          path: '/admin/audit/dashboard',
+        },
+        {
+          id: 'audit-logs',
+          label: 'Logs',
+          icon: ClipboardDocumentListIcon,
+          path: '/admin/audit/logs',
+        },
+        {
+          id: 'audit-security',
+          label: 'Alertas de Seguridad',
+          icon: ExclamationTriangleIcon,
+          path: '/admin/audit/security',
+        },
+      ],
     },
     {
       id: 'notifications',

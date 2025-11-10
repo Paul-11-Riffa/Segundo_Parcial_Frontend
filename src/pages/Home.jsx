@@ -1,60 +1,57 @@
 import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { getAllProducts } from '../services/shopService';
+import { formatPrice, getProductImage } from '../utils/productHelpers';
 import Button from '../components/ui/Button';
 import { NotificationIcon } from '../components/notifications';
+import StockBadge from '../components/shop/StockBadge';
 import './pages.css';
 
-const heroProducts = [
-  { name: 'Termostato Nest', subtitle: 'Ahorra hasta un 30% de energía', price: '$249' },
-  { name: 'Kit Philips Hue', subtitle: 'Iluminación adaptable y control por voz', price: '$189' },
-  { name: 'Cerradura Yale', subtitle: 'Acceso seguro desde tu smartphone', price: '$299' },
-];
-
 const stats = [
-  { value: '12K+', label: 'Pedidos entregados' },
-  { value: '150+', label: 'Marcas premium aliadas' },
-  { value: '4.9/5', label: 'Valoración promedio' },
+  { value: '500+', label: 'Productos disponibles' },
+  { value: '50+', label: 'Marcas premium' },
+  { value: '4.9/5', label: 'Valoración clientes' },
 ];
 
 const benefits = [
   {
-    title: 'Calidad verificada',
-    description: 'Seleccionamos y probamos cada producto antes de ofrecerlo en la tienda.',
+    title: 'Envío gratis',
+    description: 'En compras superiores a Bs. 200. Recibe tus productos en 24-48h.',
     accent: 'bg-emerald-100 text-emerald-600',
     icon: (
       <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
       </svg>
     ),
   },
   {
-    title: 'Entregas express',
-    description: 'Cobertura nacional con envíos en 24-48h y seguimiento en tiempo real.',
+    title: 'Garantía extendida',
+    description: 'Todos nuestros productos cuentan con garantía oficial del fabricante.',
     accent: 'bg-primary-100 text-primary-600',
     icon: (
       <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7h18l-1.5 9h-15L3 7zm3 12h12M7 11h10" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
     ),
   },
   {
-    title: 'Soporte humano',
-    description: 'Especialistas que resuelven tus dudas por chat, videollamada o visita técnica.',
+    title: 'Soporte 24/7',
+    description: 'Atención al cliente disponible todos los días. Resolvemos tus dudas.',
     accent: 'bg-amber-100 text-amber-600',
     icon: (
       <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h8m-8 4h5m11-4v6a2 2 0 01-2 2h-6l-4 4v-4H5a2 2 0 01-2-2V8a2 2 0 012-2h14a2 2 0 012 2z" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
       </svg>
     ),
   },
   {
-    title: 'Pagos flexibles',
-    description: 'Financia tus compras y paga a plazos con tasas preferenciales.',
+    title: 'Devoluciones fáciles',
+    description: 'No estás satisfecho? Tienes 30 días para devoluciones sin complicaciones.',
     accent: 'bg-purple-100 text-purple-600',
     icon: (
       <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7h18a2 2 0 012 2v6a2 2 0 01-2 2H3a2 2 0 01-2-2V9a2 2 0 012-2z" />
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h.01M11 15h2" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
       </svg>
     ),
   },
@@ -62,24 +59,45 @@ const benefits = [
 
 const steps = [
   {
-    title: 'Elige tu setup ideal',
-    description: 'Explora un catálogo curado por expertos con comparativas claras y reseñas reales.',
+    title: 'Explora el catálogo',
+    description: 'Navega entre cientos de productos organizados por categorías. Usa filtros de precio, stock y búsqueda.',
   },
   {
-    title: 'Acompañamiento personalizado',
-    description: 'Un concierge te asesora en la instalación, configuración y uso diario de tus dispositivos.',
+    title: 'Agrega al carrito',
+    description: 'Selecciona los productos que necesitas. Verifica stock disponible y precios actualizados.',
   },
   {
-    title: 'Servicio postventa superior',
-    description: 'Actualizaciones, mantenimiento y garantías extendidas para que tu inversión rinda más tiempo.',
+    title: 'Recibe en casa',
+    description: 'Envío rápido en 24-48h. Garantía oficial y soporte técnico incluido en cada compra.',
   },
 ];
 
 const Home = () => {
   const { user, loading } = useAuth();
+  const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [loadingProducts, setLoadingProducts] = useState(true);
 
-  // Verificar si el usuario es administrador (backend devuelve "ADMIN")
+  // Verificar si el usuario es administrador
   const isAdmin = user?.isAdmin || user?.role === 'ADMIN';
+
+  // Cargar productos destacados al montar
+  useEffect(() => {
+    loadFeaturedProducts();
+  }, []);
+
+  const loadFeaturedProducts = async () => {
+    try {
+      setLoadingProducts(true);
+      const products = await getAllProducts({ ordering: '-created_at' });
+      // Tomar los primeros 4 productos
+      setFeaturedProducts(products.slice(0, 4));
+    } catch (error) {
+      console.error('Error loading featured products:', error);
+      setFeaturedProducts([]);
+    } finally {
+      setLoadingProducts(false);
+    }
+  };
 
   // Mostrar loading mientras se verifica la autenticación
   if (loading) {
@@ -141,61 +159,54 @@ const Home = () => {
             <div className="relative z-10 max-w-2xl">
               <span className="inline-flex items-center gap-2 rounded-full border border-dark-100 bg-white/80 px-4 py-2 text-sm font-medium shadow-soft backdrop-blur">
                 <span className="h-2 w-2 rounded-full bg-primary-500" />
-                Tecnología seleccionada para tu hogar inteligente
+                Tu tienda de tecnología inteligente
               </span>
 
               <h1 className="mt-6 text-4xl font-semibold leading-tight text-dark-900 sm:text-5xl lg:text-[52px]">
-                Eleva tu hogar con experiencias inteligentes y sin complicaciones
+                Descubre productos de calidad para tu hogar y oficina
               </h1>
 
               <p className="mt-6 text-lg leading-relaxed text-dark-600 md:text-xl">
-                Seleccionamos los mejores dispositivos smart home y te acompañamos en cada paso: asesoría, instalación y soporte postventa premium.
+                Explora nuestro catálogo de productos seleccionados. Envío rápido, garantía oficial y soporte técnico especializado.
               </p>
 
               <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center">
+                <Link to="/shop" className="w-full sm:w-auto">
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    className="w-full bg-dark-900 hover:bg-dark-800 focus:ring-dark-700"
+                  >
+                    <svg className="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                    </svg>
+                    Ver catálogo completo
+                  </Button>
+                </Link>
+                
                 {!user ? (
-                  <>
-                    <Link to="/register" className="w-full sm:w-auto">
-                      <Button
-                        variant="primary"
-                        size="lg"
-                        className="w-full bg-dark-900 hover:bg-dark-800 focus:ring-dark-700"
-                      >
-                        Crear cuenta gratis
-                      </Button>
-                    </Link>
-                    <Link to="/login" className="w-full sm:w-auto">
-                      <Button
-                        variant="outline"
-                        size="lg"
-                        className="w-full border-dark-200 text-dark-800 hover:bg-dark-900 hover:text-white focus:ring-dark-400"
-                      >
-                        Ya tengo cuenta
-                      </Button>
-                    </Link>
-                  </>
-                ) : (
-                  <>
-                    <Link 
-                      to={isAdmin ? '/admin/dashboard' : '/profile'} 
-                      className="w-full sm:w-auto"
-                    >
-                      <Button
-                        variant="primary"
-                        size="lg"
-                        className="w-full bg-dark-900 hover:bg-dark-800 focus:ring-dark-700"
-                      >
-                        {isAdmin ? 'Ir a mi dashboard' : 'Ir a mi panel'}
-                      </Button>
-                    </Link>
+                  <Link to="/register" className="w-full sm:w-auto">
                     <Button
                       variant="outline"
                       size="lg"
-                      className="w-full sm:w-auto border-dark-200 text-dark-800 hover:bg-dark-900 hover:text-white focus:ring-dark-400"
+                      className="w-full border-dark-200 text-dark-800 hover:bg-dark-900 hover:text-white focus:ring-dark-400"
                     >
-                      Explorar novedades
+                      Crear cuenta
                     </Button>
-                  </>
+                  </Link>
+                ) : (
+                  <Link 
+                    to={isAdmin ? '/admin/dashboard' : '/profile'} 
+                    className="w-full sm:w-auto"
+                  >
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      className="w-full border-dark-200 text-dark-800 hover:bg-dark-900 hover:text-white focus:ring-dark-400"
+                    >
+                      {isAdmin ? 'Panel de administración' : 'Mi perfil'}
+                    </Button>
+                  </Link>
                 )}
               </div>
 
@@ -215,27 +226,50 @@ const Home = () => {
             <div className="relative z-10 w-full max-w-[420px] rounded-[2.25rem] border border-white/60 bg-white/80 p-8 shadow-premium backdrop-blur-xl">
               <div className="flex items-center justify-between gap-4">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.35em] text-dark-500">Colección destacada</p>
-                  <h3 className="mt-2 text-2xl font-semibold text-dark-900">Smart Home Essentials</h3>
+                  <p className="text-xs font-semibold uppercase tracking-[0.35em] text-dark-500">Productos destacados</p>
+                  <h3 className="mt-2 text-2xl font-semibold text-dark-900">Recién llegados</h3>
                 </div>
-                <span className="rounded-full bg-primary-100 px-3 py-1 text-sm font-medium text-primary-700">
-                  Nuevo
-                </span>
+                <Link to="/shop">
+                  <span className="rounded-full bg-primary-100 px-3 py-1 text-sm font-medium text-primary-700 cursor-pointer hover:bg-primary-200 transition-colors">
+                    Ver todos
+                  </span>
+                </Link>
               </div>
 
               <div className="mt-8 space-y-4">
-                {heroProducts.map((product) => (
-                  <div
-                    key={product.name}
-                    className="flex items-center justify-between rounded-2xl border border-dark-100 bg-white/90 px-5 py-4 shadow-soft"
-                  >
-                    <div>
-                      <p className="text-sm font-semibold text-dark-900">{product.name}</p>
-                      <p className="text-xs text-dark-500">{product.subtitle}</p>
+                {loadingProducts ? (
+                  // Loading skeletons
+                  [...Array(3)].map((_, i) => (
+                    <div key={i} className="rounded-2xl border border-dark-100 bg-white/90 px-5 py-4 animate-pulse">
+                      <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                      <div className="h-3 bg-gray-200 rounded w-1/2"></div>
                     </div>
-                    <span className="text-sm font-semibold text-dark-800">{product.price}</span>
+                  ))
+                ) : featuredProducts.length > 0 ? (
+                  featuredProducts.slice(0, 3).map((product) => (
+                    <Link 
+                      key={product.id}
+                      to={`/products/${product.id}`}
+                      className="block"
+                    >
+                      <div className="flex items-center justify-between rounded-2xl border border-dark-100 bg-white/90 px-5 py-4 shadow-soft hover:shadow-md transition-all hover:scale-[1.02] cursor-pointer">
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold text-dark-900 truncate">{product.name}</p>
+                          <div className="flex items-center gap-2 mt-1">
+                            <p className="text-xs text-dark-500">{product.category_name || 'Sin categoría'}</p>
+                            <span className="text-xs">•</span>
+                            <StockBadge stock={product.stock} />
+                          </div>
+                        </div>
+                        <span className="text-sm font-semibold text-dark-800 ml-3">{formatPrice(product.price)}</span>
+                      </div>
+                    </Link>
+                  ))
+                ) : (
+                  <div className="text-center py-8 text-dark-500">
+                    <p className="text-sm">No hay productos disponibles</p>
                   </div>
-                ))}
+                )}
               </div>
 
               <div className="mt-8 flex items-center gap-4 rounded-2xl border border-dark-100 bg-dark-900/95 px-5 py-4 text-white shadow-soft">
@@ -245,30 +279,25 @@ const Home = () => {
                   </svg>
                 </div>
                 <div>
-                  <p className="text-sm font-semibold">Clientes felices</p>
+                  <p className="text-sm font-semibold">Clientes satisfechos</p>
                   <p className="text-xs text-white/70">4.9/5 calificación promedio</p>
                 </div>
                 <span className="ml-auto text-2xl font-bold">12K+</span>
               </div>
 
               <div className="mt-6 flex gap-4 rounded-2xl border border-white/60 bg-white/90 p-5 shadow-soft backdrop-blur">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary-500/10 text-primary-600">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600">
                   <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
                   </svg>
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-semibold text-dark-900">Instalación guiada</p>
-                  <p className="mt-1 text-xs text-dark-500">Especialistas disponibles en todo el país.</p>
-                  <div className="mt-3 flex -space-x-2">
-                    {['AR', 'MP', 'VS'].map((initials) => (
-                      <span
-                        key={initials}
-                        className="flex h-7 w-7 items-center justify-center rounded-full bg-dark-900/90 text-[11px] font-semibold text-white shadow-soft"
-                      >
-                        {initials}
-                      </span>
-                    ))}
+                  <p className="text-sm font-semibold text-dark-900">Envío gratis</p>
+                  <p className="mt-1 text-xs text-dark-500">En compras superiores a Bs. 200</p>
+                  <div className="mt-3 flex items-center gap-2">
+                    <span className="flex h-7 px-3 items-center justify-center rounded-full bg-dark-900/90 text-[11px] font-semibold text-white shadow-soft">
+                      24-48h
+                    </span>
                   </div>
                 </div>
               </div>
@@ -280,14 +309,14 @@ const Home = () => {
           <div className="mx-auto max-w-7xl">
             <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
               <div>
-                <h2 className="text-3xl font-bold text-dark-900 md:text-4xl">Experiencia premium sin complicaciones</h2>
+                <h2 className="text-3xl font-bold text-dark-900 md:text-4xl">¿Por qué comprar con nosotros?</h2>
                 <p className="mt-4 max-w-2xl text-dark-600">
-                  Combinamos productos top con acompañamiento experto para que cada instalación sea impecable. Desde la planificación hasta el soporte postventa, cuidamos cada detalle.
+                  Ofrecemos mucho más que productos. Garantizamos calidad, rapidez y atención personalizada en cada compra.
                 </p>
               </div>
-              <Link to="/login" className="inline-flex">
+              <Link to="/shop" className="inline-flex">
                 <Button variant="ghost" size="md" className="text-dark-700 hover:bg-dark-100">
-                  Ver cómo funciona
+                  Explorar tienda
                 </Button>
               </Link>
             </div>
@@ -304,7 +333,7 @@ const Home = () => {
                   <h3 className="mt-6 text-xl font-semibold text-dark-900">{benefit.title}</h3>
                   <p className="mt-3 text-dark-600">{benefit.description}</p>
                   <div className="mt-6 flex items-center gap-2 text-sm font-semibold text-dark-900 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                    <span>Descubrir más</span>
+                    <span>Más información</span>
                     <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
@@ -315,12 +344,86 @@ const Home = () => {
           </div>
         </section>
 
+        {/* Featured Products Grid */}
+        <section className="px-6 py-20 sm:px-8 bg-gradient-to-b from-white to-dark-50">
+          <div className="mx-auto max-w-7xl">
+            <div className="text-center">
+              <h2 className="text-3xl font-bold text-dark-900 md:text-4xl">Productos destacados</h2>
+              <p className="mt-4 text-dark-600">
+                Descubre nuestra selección de productos más populares
+              </p>
+            </div>
+
+            {loadingProducts ? (
+              <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                {[...Array(4)].map((_, i) => (
+                  <div key={i} className="rounded-2xl border border-dark-100 bg-white p-4 animate-pulse">
+                    <div className="aspect-square bg-gray-200 rounded-xl mb-4"></div>
+                    <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                    <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                  </div>
+                ))}
+              </div>
+            ) : featuredProducts.length > 0 ? (
+              <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                {featuredProducts.map((product) => (
+                  <Link 
+                    key={product.id}
+                    to={`/products/${product.id}`}
+                    className="group"
+                  >
+                    <div className="rounded-2xl border border-dark-100 bg-white p-4 shadow-soft hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                      <div className="relative aspect-square overflow-hidden rounded-xl bg-gray-100 mb-4">
+                        <img
+                          src={getProductImage(product)}
+                          alt={product.name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                        <div className="absolute top-2 right-2">
+                          <StockBadge stock={product.stock} />
+                        </div>
+                      </div>
+                      <h3 className="font-semibold text-dark-900 truncate group-hover:text-primary-600 transition-colors">
+                        {product.name}
+                      </h3>
+                      <p className="text-sm text-dark-500 mt-1">{product.category_name || 'Sin categoría'}</p>
+                      <div className="flex items-center justify-between mt-3">
+                        <span className="text-lg font-bold text-dark-900">{formatPrice(product.price)}</span>
+                        <span className="text-xs text-dark-500">{product.stock} disponibles</span>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <div className="mt-12 text-center py-16">
+                <p className="text-dark-500">No hay productos disponibles en este momento</p>
+              </div>
+            )}
+
+            <div className="mt-12 text-center">
+              <Link to="/shop">
+                <Button
+                  variant="primary"
+                  size="lg"
+                  className="bg-dark-900 hover:bg-dark-800 focus:ring-dark-700"
+                >
+                  Ver todos los productos
+                  <svg className="h-5 w-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </section>
+
         <section className="bg-dark-900 py-24 text-white">
           <div className="mx-auto grid max-w-7xl gap-16 px-6 sm:px-8 lg:grid-cols-[420px_1fr]">
             <div>
-              <h2 className="text-3xl font-bold md:text-4xl">Un proceso pensado para ti</h2>
+              <h2 className="text-3xl font-bold md:text-4xl">Compra fácil en 3 pasos</h2>
               <p className="mt-4 text-white/70">
-                Evita complicaciones técnicas. Nuestro equipo acompaña cada fase para que disfrutes de una experiencia premium desde el primer día.
+                Un proceso de compra simple y seguro. Desde la búsqueda hasta la entrega, todo está diseñado para tu comodidad.
               </p>
             </div>
 
@@ -347,41 +450,32 @@ const Home = () => {
               <div className="absolute -top-20 -right-10 h-56 w-56 rounded-full bg-primary-500/40 blur-3xl" />
               <div className="relative z-10 flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
                 <div>
-                  <h2 className="text-3xl font-bold md:text-4xl">¿Listo para transformar tu hogar inteligente?</h2>
+                  <h2 className="text-3xl font-bold md:text-4xl">¿Listo para empezar a comprar?</h2>
                   <p className="mt-4 max-w-xl text-white/80">
-                    Accede a lanzamientos exclusivos, asesoría personalizada y entregas rápidas en todo el país. Empieza gratis en menos de dos minutos.
+                    Explora nuestro catálogo completo con envío rápido, garantía oficial y las mejores ofertas del mercado.
                   </p>
                 </div>
                 <div className="flex flex-col gap-4 sm:flex-row">
-                  {!user ? (
-                    <>
-                      <Link to="/register">
-                        <Button
-                          variant="primary"
-                          size="lg"
-                          className="bg-white text-dark-900 hover:bg-dark-100 focus:ring-white/40"
-                        >
-                          Crear cuenta gratis
-                        </Button>
-                      </Link>
-                      <Link to="/login">
-                        <Button
-                          variant="outline"
-                          size="lg"
-                          className="border-white text-white hover:bg-white hover:text-dark-900 focus:ring-white/60"
-                        >
-                          Ya tengo cuenta
-                        </Button>
-                      </Link>
-                    </>
-                  ) : (
-                    <Link to={isAdmin ? '/admin/dashboard' : '/profile'}>
+                  <Link to="/shop">
+                    <Button
+                      variant="primary"
+                      size="lg"
+                      className="bg-white text-dark-900 hover:bg-dark-100 focus:ring-white/40"
+                    >
+                      <svg className="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                      </svg>
+                      Ir a la tienda
+                    </Button>
+                  </Link>
+                  {!user && (
+                    <Link to="/register">
                       <Button
-                        variant="primary"
+                        variant="outline"
                         size="lg"
-                        className="bg-white text-dark-900 hover:bg-dark-100 focus:ring-white/40"
+                        className="border-white text-white hover:bg-white hover:text-dark-900 focus:ring-white/60"
                       >
-                        {isAdmin ? 'Ir a mi dashboard' : 'Ir a mi panel'}
+                        Crear cuenta
                       </Button>
                     </Link>
                   )}

@@ -15,6 +15,7 @@ import {
 import useProducts from '../../../hooks/admin/useProducts';
 import useCategories from '../../../hooks/admin/useCategories';
 import StockBadge from '../../../components/admin/inventory/StockBadge';
+import ProductToggleButton from '../../../components/admin/inventory/ProductToggleButton';
 import ProductForm from './ProductForm';
 import ConfirmDialog from '../../../components/admin/ConfirmDialog';
 import './ProductsList.css';
@@ -27,7 +28,9 @@ const ProductsList = () => {
     filters,
     updateFilter,
     resetFilters,
+    fetchProducts,  // ✅ NUEVO: Necesario para recargar después de editar
     deleteProduct,
+    toggleProductActive,  // ⭐ NUEVO
     updateStock,
     getStockStats,
   } = useProducts();
@@ -51,6 +54,8 @@ const ProductsList = () => {
   };
 
   const handleEditProduct = (product) => {
+    console.log('[ProductsList] 📝 Editando producto:', product.id, product.name);
+    console.log('[ProductsList] 📝 Datos completos:', product);
     setSelectedProduct(product);
     setShowForm(true);
   };
@@ -71,8 +76,32 @@ const ProductsList = () => {
   };
 
   const handleFormClose = () => {
+    console.log('[ProductsList] 🚪 Modal cerrado (sin guardar cambios)');
     setShowForm(false);
     setSelectedProduct(null);
+    // Nota: NO recargamos aquí porque ProductForm ya llamó a onSave
+    // si se guardaron cambios, o no hay nada que recargar si se canceló
+  };
+
+  const handleToggleActive = async (productId) => {
+    try {
+      console.log('[ProductsList] 🔄 Toggling product:', productId);
+      const response = await toggleProductActive(productId);
+      
+      console.log('[ProductsList] 📥 Response:', response);
+      
+      if (response && response.success) {
+        console.log('[ProductsList] ✅ Toggle successful:', response.message);
+        console.log('[ProductsList] 📊 New state:', response.product?.is_active);
+        // El hook ya actualiza el estado local, no necesitamos hacer nada más
+      } else {
+        console.warn('[ProductsList] ⚠️ Response sin success:', response);
+      }
+    } catch (error) {
+      console.error('[ProductsList] ❌ Error toggling product:', error);
+      console.error('[ProductsList] ❌ Error response:', error.response?.data);
+      alert(error.response?.data?.error || error.message || 'Error al cambiar estado del producto');
+    }
   };
 
   const handleSortChange = (field) => {
@@ -258,6 +287,26 @@ const ProductsList = () => {
                 Only available products
               </label>
             </div>
+
+            <div className="products-filter-group">
+              <label className="products-filter-label">Status</label>
+              <select
+                value={filters.is_active === undefined ? 'all' : filters.is_active ? 'active' : 'inactive'}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (value === 'all') {
+                    updateFilter('is_active', undefined);
+                  } else {
+                    updateFilter('is_active', value === 'active');
+                  }
+                }}
+                className="products-filter-select"
+              >
+                <option value="all">All Products</option>
+                <option value="active">Active Only</option>
+                <option value="inactive">Inactive Only</option>
+              </select>
+            </div>
           </div>
         )}
       </div>
@@ -331,22 +380,42 @@ const ProductsList = () => {
                       )}
                     </div>
                   </th>
+                  <th
+                    className="sortable"
+                    onClick={() => handleSortChange('is_active')}
+                  >
+                    <div className="products-table-sort-header">
+                      Status
+                      {getSortIcon('is_active') && (
+                        <span className="products-table-sort-icon">
+                          {getSortIcon('is_active')}
+                        </span>
+                      )}
+                    </div>
+                  </th>
                   <th style={{ textAlign: 'right' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {products.map((product) => (
-                  <tr key={product.id}>
+                  <tr key={product.id} className={!product.is_active ? 'inactive-product' : ''}>
                     {/* Product */}
                     <td>
                       <div className="products-table-product">
-                        {product.image_url ? (
+                        {/* Prioridad: primary_image > image_url > image > placeholder */}
+                        {product.primary_image?.image_url || product.image_url || product.image ? (
                           <img
-                            src={product.image_url}
+                            src={product.primary_image?.image_url || product.image_url || product.image}
                             alt={product.name}
                             className="products-table-image"
+                            onError={(e) => {
+                              // Fallback si la imagen falla al cargar
+                              e.target.style.display = 'none';
+                              e.target.nextSibling.style.display = 'flex';
+                            }}
                           />
-                        ) : (
+                        ) : null}
+                        {!product.primary_image?.image_url && !product.image_url && !product.image && (
                           <div className="products-table-image-placeholder">
                             <PhotoIcon />
                           </div>
@@ -377,6 +446,14 @@ const ProductsList = () => {
                     {/* Stock */}
                     <td>
                       <StockBadge stock={product.stock} />
+                    </td>
+
+                    {/* Status */}
+                    <td>
+                      <ProductToggleButton
+                        product={product}
+                        onToggle={handleToggleActive}
+                      />
                     </td>
 
                     {/* Actions */}
@@ -411,6 +488,7 @@ const ProductsList = () => {
         <ProductForm
           product={selectedProduct}
           onClose={handleFormClose}
+          onSave={fetchProducts}  // ✅ NUEVO: Pasar función para recargar lista
         />
       )}
 

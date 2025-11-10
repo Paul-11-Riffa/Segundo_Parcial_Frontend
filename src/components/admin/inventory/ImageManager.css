@@ -1,0 +1,426 @@
+/* =========================================
+   IMAGE MANAGER - Admin Multiple Images
+   ========================================= */
+
+.image-manager {
+  width: 100%;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+/* Header */
+.image-manager__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.image-manager__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #000;
+  margin: 0;
+}
+
+.image-manager__count {
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+  background: #f5f5f5;
+  padding: 4px 12px;
+  border-radius: 12px;
+}
+
+/* Error Alert */
+.image-manager__error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fee;
+  border: 1px solid #fcc;
+  color: #c00;
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.image-manager__error button {
+  margin-left: auto;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #c00;
+  padding: 4px;
+}
+
+/* Grid */
+.image-manager__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+/* Image Item */
+.image-manager__item {
+  position: relative;
+  background: #fafafa;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  cursor: move;
+}
+
+.image-manager__item:hover {
+  border-color: #000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.image-manager__item.dragging {
+  opacity: 0.5;
+  transform: scale(0.95);
+}
+
+.image-manager__item.primary {
+  border-color: #2196f3;
+  border-width: 3px;
+}
+
+/* Preview */
+.image-manager__preview {
+  position: relative;
+  width: 100%;
+  padding-top: 100%;
+  background: #f5f5f5;
+  overflow: hidden;
+}
+
+.image-manager__preview img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Badges */
+.image-manager__primary-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #2196f3;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 12px;
+  z-index: 2;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.image-manager__new-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #4caf50;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 10px;
+  z-index: 2;
+  text-transform: uppercase;
+}
+
+/* Overlay with Actions */
+.image-manager__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 1;
+}
+
+.image-manager__item:hover .image-manager__overlay {
+  opacity: 1;
+}
+
+.image-manager__action {
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.image-manager__action:hover {
+  background: #fff;
+  transform: scale(1.1);
+}
+
+.image-manager__action--drag {
+  cursor: move;
+  color: #666;
+}
+
+.image-manager__action--star {
+  color: #ff9800;
+}
+
+.image-manager__action--edit {
+  color: #2196f3;
+}
+
+.image-manager__action--delete {
+  color: #f44336;
+}
+
+/* Info Section */
+.image-manager__info {
+  padding: 12px;
+  background: #fff;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.image-manager__order {
+  font-size: 12px;
+  font-weight: 700;
+  color: #666;
+}
+
+.image-manager__alt {
+  font-size: 12px;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Alt Text Editor */
+.image-manager__alt-edit {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.image-manager__alt-edit input {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.image-manager__alt-edit input:focus {
+  outline: none;
+  border-color: #2196f3;
+}
+
+.image-manager__alt-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.image-manager__alt-actions button {
+  flex: 1;
+  padding: 6px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.image-manager__alt-actions button:first-child {
+  background: #4caf50;
+  color: #fff;
+}
+
+.image-manager__alt-actions button:first-child:hover {
+  background: #45a049;
+}
+
+.image-manager__alt-actions button:last-child {
+  background: #f5f5f5;
+  color: #666;
+}
+
+.image-manager__alt-actions button:last-child:hover {
+  background: #e0e0e0;
+}
+
+/* Upload Button */
+.image-manager__upload {
+  position: relative;
+  background: #fafafa;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-manager__upload:hover {
+  border-color: #2196f3;
+  background: #f0f8ff;
+}
+
+.image-manager__upload input {
+  display: none;
+}
+
+.image-manager__upload-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: #666;
+  padding: 20px;
+  text-align: center;
+}
+
+.image-manager__upload-content svg {
+  color: #999;
+}
+
+.image-manager__upload-content span {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.image-manager__upload-content small {
+  font-size: 11px;
+  color: #999;
+}
+
+/* Empty State */
+.image-manager__empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: #999;
+}
+
+.image-manager__empty svg {
+  margin: 0 auto 16px;
+  opacity: 0.5;
+}
+
+.image-manager__empty p {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+
+.image-manager__empty small {
+  font-size: 13px;
+}
+
+/* Tips */
+.image-manager__tips {
+  background: #f0f8ff;
+  border: 1px solid #b3d9ff;
+  border-radius: 6px;
+  padding: 16px;
+  margin-top: 16px;
+}
+
+.image-manager__tips h4 {
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000;
+}
+
+.image-manager__tips ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.image-manager__tips li {
+  font-size: 13px;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+/* Spinner */
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #2196f3;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .image-manager__grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+  }
+
+  .image-manager__action {
+    width: 32px;
+    height: 32px;
+  }
+
+  .image-manager__overlay {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.5);
+  }
+}
+
+@media (max-width: 480px) {
+  .image-manager__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .image-manager__tips {
+    padding: 12px;
+  }
+
+  .image-manager__tips li {
+    font-size: 12px;
+  }
+}

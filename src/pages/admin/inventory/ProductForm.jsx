@@ -3,17 +3,24 @@ import React, { useState, useEffect } from 'react';
 import { 
   XMarkIcon, 
   CheckIcon, 
-  ArrowUpTrayIcon, 
-  TrashIcon, 
-  PhotoIcon, 
   ExclamationCircleIcon 
 } from '@heroicons/react/24/outline';
 import useProducts from '../../../hooks/admin/useProducts';
 import useCategories from '../../../hooks/admin/useCategories';
 import Modal from '../../../components/admin/Modal';
+import ImageManager from '../../../components/admin/inventory/ImageManager';
 
-const ProductForm = ({ product, onClose }) => {
-  const { createProduct, updateProduct, uploadImage, deleteImage } = useProducts();
+const ProductForm = ({ product, onClose, onSave }) => {
+  const { 
+    createProduct, 
+    updateProduct, 
+    bulkUploadImages,
+    getProductImages,
+    deleteProductImage,
+    setImageAsPrimary,
+    reorderImages,
+    updateImageAltText
+  } = useProducts();
   const { categories, loading: loadingCategories } = useCategories();
 
   const isEditing = !!product;
@@ -25,31 +32,75 @@ const ProductForm = ({ product, onClose }) => {
     price: '',
     stock: '',
     category: '',
+    is_active: true,  // Nuevo campo para activar/desactivar producto
   });
 
-  const [imageFile, setImageFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
-  const [deleteExistingImage, setDeleteExistingImage] = useState(false);
+  // Estado de imágenes (reemplaza imageFile e imagePreview)
+  const [productImages, setProductImages] = useState([]);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [generalError, setGeneralError] = useState(null);
 
   // Cargar datos del producto si está editando
   useEffect(() => {
+    console.log('🔄 [ProductForm] useEffect triggered - product:', product?.id);
+    
     if (product) {
+      console.log('📝 [ProductForm] Cargando datos del producto:', product.id, product.name);
+      
       setFormData({
         name: product.name || '',
         description: product.description || '',
         price: product.price || '',
         stock: product.stock || '',
         category: product.category || '',
+        is_active: product.is_active !== undefined ? product.is_active : true,
       });
       
-      if (product.image_url) {
-        setImagePreview(product.image_url);
+      // ⭐ IMPORTANTE: Limpiar imágenes previas ANTES de cargar las nuevas
+      console.log('🧹 [ProductForm] Limpiando imágenes previas...');
+      setProductImages([]);
+      
+      // Cargar imágenes existentes
+      if (product.id) {
+        loadProductImages(product.id);
       }
+    } else {
+      console.log('🆕 [ProductForm] Creando nuevo producto, limpiando formulario');
+      // Limpiar formulario para nuevo producto
+      setFormData({
+        name: '',
+        description: '',
+        price: '',
+        stock: '',
+        category: '',
+        is_active: true,
+      });
+      setProductImages([]);
     }
   }, [product]);
+
+  // Cargar imágenes del producto
+  const loadProductImages = async (productId) => {
+    try {
+      console.log('🖼️ [ProductForm] ============================================');
+      console.log('🖼️ [ProductForm] Cargando imágenes para producto ID:', productId);
+      console.log('🖼️ [ProductForm] Tipo de productId:', typeof productId);
+      console.log('🖼️ [ProductForm] ============================================');
+      
+      const images = await getProductImages(productId);
+      
+      console.log('🖼️ [ProductForm] Imágenes recibidas:', images);
+      console.log('🖼️ [ProductForm] Cantidad de imágenes:', images?.length || 0);
+      
+      // ⚠️ NOTA: El backend no incluye 'product' en las imágenes
+      // pero el filtro por product_id se hace en el backend, así que son las correctas
+      
+      setProductImages(images || []);
+    } catch (error) {
+      console.error('❌ [ProductForm] Error loading product images:', error);
+    }
+  };
 
   // Validar formulario
   const validateForm = () => {
@@ -92,60 +143,7 @@ const ProductForm = ({ product, onClose }) => {
     }
   };
 
-  // Manejar selección de imagen
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    
-    if (file) {
-      // Validar tipo de archivo
-      const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
-      if (!validTypes.includes(file.type)) {
-        setErrors(prev => ({
-          ...prev,
-          image: 'Formato no válido. Use JPG, PNG o WEBP',
-        }));
-        return;
-      }
-
-      // Validar tamaño (máximo 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        setErrors(prev => ({
-          ...prev,
-          image: 'La imagen debe ser menor a 5MB',
-        }));
-        return;
-      }
-
-      setImageFile(file);
-      setDeleteExistingImage(false);
-      
-      // Crear preview
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
-
-      // Limpiar error de imagen si existe
-      if (errors.image) {
-        setErrors(prev => ({
-          ...prev,
-          image: null,
-        }));
-      }
-    }
-  };
-
-  // Eliminar imagen seleccionada
-  const handleRemoveImage = () => {
-    setImageFile(null);
-    setImagePreview(null);
-    
-    if (isEditing && product.image_url) {
-      setDeleteExistingImage(true);
-    }
-  };
-
+  // Enviar formulario
   // Enviar formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -165,30 +163,118 @@ const ProductForm = ({ product, onClose }) => {
         price: parseFloat(formData.price),
         stock: parseInt(formData.stock),
         category: parseInt(formData.category),
+        is_active: formData.is_active,  // Incluir estado activo/inactivo
       };
+
+      // 🔍 DEBUG: Ver qué datos se están enviando
+      console.log('📤 Datos a enviar al backend:', productData);
+      console.log('  → is_active:', productData.is_active, '(tipo:', typeof productData.is_active, ')');
 
       let savedProduct;
 
       if (isEditing) {
-        // Actualizar producto
+        // Actualizar producto (sin forzar refresh aún)
+        console.log('📝 Actualizando producto ID:', product.id);
         savedProduct = await updateProduct(product.id, productData);
-        console.log('Producto actualizado:', savedProduct);
+        console.log('✅ Producto actualizado:', savedProduct);
+        console.log('  → is_active en respuesta:', savedProduct.is_active);
       } else {
         // Crear nuevo producto
         savedProduct = await createProduct(productData);
         console.log('Producto creado:', savedProduct);
       }
 
-      // Manejar imagen si hay cambios
-      if (deleteExistingImage && isEditing) {
-        // Eliminar imagen existente
-        await deleteImage(product.id);
+      // =====================================================
+      // GESTIÓN DE MÚLTIPLES IMÁGENES
+      // =====================================================
+      
+      console.log('💾 Procesando imágenes del producto...');
+      
+      // 1. Eliminar imágenes marcadas para eliminar (PRIMERO)
+      const imagesToDelete = productImages.filter(img => img.toDelete && !img.isNew);
+      if (imagesToDelete.length > 0) {
+        console.log(`🗑️ Eliminando ${imagesToDelete.length} imágenes...`);
+        for (const img of imagesToDelete) {
+          console.log('  - Eliminando imagen:', img.id);
+          await deleteProductImage(img.id);
+        }
       }
 
-      if (imageFile) {
-        // Subir nueva imagen
-        await uploadImage(savedProduct.id, imageFile);
+      // 2. Subir imágenes nuevas
+      const newImages = productImages.filter(img => img.isNew && !img.toDelete);
+      if (newImages.length > 0) {
+        console.log(`📤 Subiendo ${newImages.length} imágenes nuevas...`);
+        const uploadResult = await bulkUploadImages(savedProduct.id, newImages);
+        console.log('  ✅ Resultado de carga:', uploadResult);
+        
+        // Después de subir, obtener las imágenes con sus IDs reales
+        const uploadedImages = await getProductImages(savedProduct.id);
+        console.log('  📋 Imágenes después de subir:', uploadedImages.length);
+        
+        // Actualizar alt_text y marcar principal si es necesario
+        for (let i = 0; i < newImages.length && i < uploadedImages.length; i++) {
+          const newImg = newImages[i];
+          const uploadedImg = uploadedImages.find(img => img.order === newImg.order);
+          
+          if (uploadedImg) {
+            // Actualizar alt_text si existe
+            if (newImg.alt_text) {
+              console.log(`  🏷️ Actualizando alt_text de imagen ${uploadedImg.id}`);
+              await updateImageAltText(uploadedImg.id, newImg.alt_text);
+            }
+            
+            // Marcar como principal si era principal
+            if (newImg.is_primary) {
+              console.log(`  ⭐ Marcando imagen ${uploadedImg.id} como principal`);
+              await setImageAsPrimary(uploadedImg.id);
+            }
+          }
+        }
       }
+
+      // 3. Actualizar orden y alt text de imágenes existentes
+      const existingImages = productImages.filter(img => !img.isNew && !img.toDelete);
+      if (existingImages.length > 0) {
+        console.log(`🔄 Actualizando ${existingImages.length} imágenes existentes...`);
+        
+        // Reordenar
+        const imageOrders = existingImages.map(img => ({
+          id: img.id,
+          order: img.order
+        }));
+        console.log('  📊 Reordenando imágenes...');
+        await reorderImages(imageOrders);
+
+        // Actualizar alt text si cambió
+        for (const img of existingImages) {
+          if (img.alt_text !== img.originalAltText) {
+            console.log(`  🏷️ Actualizando alt_text de imagen ${img.id}`);
+            await updateImageAltText(img.id, img.alt_text);
+          }
+        }
+
+        // Marcar imagen principal si cambió
+        const primaryImage = existingImages.find(img => img.is_primary);
+        if (primaryImage) {
+          console.log(`  ⭐ Estableciendo imagen ${primaryImage.id} como principal`);
+          await setImageAsPrimary(primaryImage.id);
+        }
+      }
+
+      console.log('✅ Todas las operaciones de imágenes completadas');
+
+      // ✅ CRÍTICO: Llamar a onSave para que ProductsList recargue su lista
+      if (onSave) {
+        console.log('🔄 Llamando a onSave para recargar lista en ProductsList...');
+        await onSave();
+        console.log('✅ Lista de ProductsList recargada');
+      }
+
+      // ✅ IMPORTANTE: Delay para asegurar que el UI se actualice
+      console.log('⏳ Esperando 300ms para sincronización visual...');
+      await new Promise(resolve => setTimeout(resolve, 300));
+
+      console.log('🔄 Cerrando modal');
 
       // Cerrar modal
       onClose();
@@ -326,83 +412,61 @@ const ProductForm = ({ product, onClose }) => {
           </div>
         </div>
 
-        {/* Imagen */}
+        {/* Estado del Producto (Activo/Inactivo) */}
         <div className="user-form-group">
-          <label className="user-form-label">Product Image</label>
-          
-          {imagePreview ? (
-            <div style={{ position: 'relative' }}>
-              <img
-                src={imagePreview}
-                alt="Preview"
-                style={{
-                  width: '100%',
-                  height: '16rem',
-                  objectFit: 'cover',
-                  borderRadius: '0.5rem',
-                  border: '1.5px solid #e5e5e5'
-                }}
-              />
-              <button
-                type="button"
-                onClick={handleRemoveImage}
-                style={{
-                  position: 'absolute',
-                  top: '0.5rem',
-                  right: '0.5rem',
-                  padding: '0.5rem',
-                  background: '#cc0000',
-                  color: '#ffffff',
-                  border: 'none',
-                  borderRadius: '0.5rem',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  transition: 'all 0.2s ease'
-                }}
-                onMouseOver={(e) => e.currentTarget.style.background = '#990000'}
-                onMouseOut={(e) => e.currentTarget.style.background = '#cc0000'}
-              >
-                <TrashIcon style={{ width: '1.25rem', height: '1.25rem' }} />
-              </button>
-            </div>
-          ) : (
-            <label
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '100%',
-                height: '16rem',
-                border: '2px dashed #cccccc',
-                borderRadius: '0.5rem',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-                background: '#fafafa'
-              }}
-              onMouseOver={(e) => e.currentTarget.style.background = '#f0f0f0'}
-              onMouseOut={(e) => e.currentTarget.style.background = '#fafafa'}
-            >
-              <ArrowUpTrayIcon style={{ width: '3rem', height: '3rem', color: '#999999', marginBottom: '0.75rem' }} />
-              <p style={{ fontSize: '0.875rem', color: '#666666', fontWeight: 600, marginBottom: '0.25rem' }}>
-                Click to upload an image
-              </p>
-              <p style={{ fontSize: '0.75rem', color: '#999999' }}>
-                JPG, PNG or WEBP (MAX. 5MB)
-              </p>
+          <div className="user-form-checkbox-wrapper">
+            <label className="user-form-checkbox-label">
               <input
-                type="file"
-                accept="image/jpeg,image/jpg,image/png,image/webp"
-                onChange={handleImageChange}
-                style={{ display: 'none' }}
+                type="checkbox"
+                name="is_active"
+                checked={formData.is_active}
+                onChange={(e) => setFormData(prev => ({ ...prev, is_active: e.target.checked }))}
+                className="user-form-checkbox"
               />
+              <span className="user-form-checkbox-text">
+                <strong>Producto Activo</strong>
+                <small style={{ display: 'block', color: '#666', marginTop: '4px' }}>
+                  {formData.is_active 
+                    ? '✅ Visible en la tienda para clientes'
+                    : '❌ Oculto de la tienda (solo visible para administradores)'
+                  }
+                </small>
+              </span>
             </label>
-          )}
-          
-          {errors.image && (
-            <p className="user-form-field-error">{errors.image}</p>
+          </div>
+          <div style={{ 
+            marginTop: '12px', 
+            padding: '12px', 
+            background: formData.is_active ? '#e8f5e9' : '#fff3e0',
+            border: `1px solid ${formData.is_active ? '#c8e6c9' : '#ffe0b2'}`,
+            borderRadius: '6px',
+            fontSize: '13px'
+          }}>
+            <p style={{ margin: 0, color: '#333' }}>
+              {formData.is_active ? (
+                <>
+                  <strong>ℹ️ Producto activo:</strong> Los clientes pueden ver y comprar este producto en la tienda.
+                </>
+              ) : (
+                <>
+                  <strong>⚠️ Producto desactivado:</strong> Los clientes NO pueden ver este producto. 
+                  Útil para productos descontinuados con historial de ventas.
+                </>
+              )}
+            </p>
+          </div>
+        </div>
+
+        {/* Galería de Imágenes Múltiples */}
+        <div className="user-form-group" style={{ marginTop: '24px' }}>
+          <ImageManager
+            productId={product?.id}
+            initialImages={productImages}
+            onChange={setProductImages}
+            maxImages={10}
+          />
+          {errors.images && (
+            <p className="user-form-field-error">{errors.images}</p>
           )}
         </div>
 

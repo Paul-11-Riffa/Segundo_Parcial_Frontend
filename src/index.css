@@ -144,3 +144,102 @@
 .animate-fadeIn {
   animation: fadeIn 0.3s ease-out;
 }
+
+/* ========================================
+   SHOP CATALOG - Global Variables & Styles
+   Apple/Nike minimalist design system
+   ======================================== */
+
+:root {
+  /* Shop Color Palette */
+  --shop-primary: #000000;
+  --shop-secondary: #ffffff;
+  --shop-background: #fafafa;
+  --shop-border: #e0e0e0;
+  --shop-text-primary: #000000;
+  --shop-text-secondary: #757575;
+  --shop-text-muted: #9e9e9e;
+  
+  /* Status Colors */
+  --shop-success: #4CAF50;
+  --shop-success-bg: rgba(76, 175, 80, 0.1);
+  --shop-warning: #FFC107;
+  --shop-warning-bg: rgba(255, 193, 7, 0.1);
+  --shop-danger: #F44336;
+  --shop-danger-bg: rgba(244, 67, 54, 0.1);
+  --shop-info: #2196F3;
+  --shop-info-bg: rgba(33, 150, 243, 0.1);
+  
+  /* Spacing */
+  --shop-spacing-xs: 4px;
+  --shop-spacing-sm: 8px;
+  --shop-spacing-md: 16px;
+  --shop-spacing-lg: 24px;
+  --shop-spacing-xl: 32px;
+  --shop-spacing-2xl: 48px;
+  
+  /* Border Radius */
+  --shop-radius-sm: 4px;
+  --shop-radius-md: 8px;
+  --shop-radius-lg: 12px;
+  --shop-radius-xl: 24px;
+  --shop-radius-full: 50%;
+  
+  /* Shadows */
+  --shop-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shop-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --shop-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --shop-shadow-xl: 0 12px 32px rgba(0, 0, 0, 0.15);
+  
+  /* Transitions */
+  --shop-transition-fast: 0.15s ease;
+  --shop-transition-base: 0.2s ease;
+  --shop-transition-slow: 0.3s ease;
+  
+  /* Typography */
+  --shop-font-xs: 0.75rem;
+  --shop-font-sm: 0.875rem;
+  --shop-font-base: 1rem;
+  --shop-font-lg: 1.125rem;
+  --shop-font-xl: 1.25rem;
+  --shop-font-2xl: 1.5rem;
+  --shop-font-3xl: 2rem;
+  --shop-font-4xl: 2.5rem;
+}
+
+/* Shop-specific scrollbar */
+.shop ::-webkit-scrollbar,
+.product-detail ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.shop ::-webkit-scrollbar-track,
+.product-detail ::-webkit-scrollbar-track {
+  background: #f5f5f5;
+}
+
+.shop ::-webkit-scrollbar-thumb,
+.product-detail ::-webkit-scrollbar-thumb {
+  background: #c0c0c0;
+  border-radius: 5px;
+}
+
+.shop ::-webkit-scrollbar-thumb:hover,
+.product-detail ::-webkit-scrollbar-thumb:hover {
+  background: #a0a0a0;
+}
+
+/* Focus styles for accessibility */
+.shop *:focus-visible,
+.product-detail *:focus-visible {
+  outline: 2px solid var(--shop-primary);
+  outline-offset: 2px;
+}
+
+/* Selection color */
+.shop ::selection,
+.product-detail ::selection {
+  background: var(--shop-primary);
+  color: var(--shop-secondary);
+}
