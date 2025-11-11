@@ -1,0 +1,535 @@
+/**
+ * OrderSuccessPage Styles - Black & White Minimalist Design
+ * Diseño profesional minimalista en blanco y negro
+ * - Sin colores, solo negro, blanco y grises
+ * - Tipografía clara y legible
+ * - Espaciado generoso
+ * - Animaciones sutiles
+ */
+
+/* ============================================================================
+   CONTENEDOR PRINCIPAL
+   ============================================================================ */
+
+.order-success-page {
+  min-height: 100vh;
+  background: #ffffff;
+  padding: 3rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.order-success-page__container {
+  max-width: 700px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* ============================================================================
+   ANIMACIÓN DE ÉXITO (Checkmark)
+   ============================================================================ */
+
+.order-success-page__success-animation {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2.5rem;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.order-success-page__checkmark-circle {
+  width: 120px;
+  height: 120px;
+  background: #000000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.order-success-page__checkmark {
+  font-size: 4rem;
+  color: #ffffff;
+  font-weight: bold;
+  animation: checkmarkPop 0.4s 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) backwards;
+}
+
+/* ============================================================================
+   HEADER
+   ============================================================================ */
+
+.order-success-page__header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  animation: slideUp 0.6s ease-out;
+}
+
+.order-success-page__title {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #000000;
+  margin: 0 0 0.75rem 0;
+  letter-spacing: -0.5px;
+}
+
+.order-success-page__subtitle {
+  font-size: 1.125rem;
+  color: #666666;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* ============================================================================
+   CARD DE INFORMACIÓN
+   ============================================================================ */
+
+.order-success-page__card {
+  background: #ffffff;
+  border: 2px solid #000000;
+  border-radius: 0;
+  padding: 2.5rem;
+  margin-bottom: 2rem;
+  animation: slideUp 0.6s 0.2s ease-out backwards;
+}
+
+/* ============================================================================
+   INFORMACIÓN DE LA ORDEN
+   ============================================================================ */
+
+.order-success-page__order-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.order-success-page__info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.order-success-page__info-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.order-success-page__info-label {
+  color: #666666;
+  font-weight: 500;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.875rem;
+}
+
+.order-success-page__info-value {
+  color: #000000;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.order-success-page__info-value--highlight {
+  color: #000000;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+/* Badge de estado */
+.order-success-page__status-badge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border: 2px solid #000000;
+  border-radius: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background: #000000;
+  color: #ffffff;
+}
+
+.order-success-page__status-badge--completed {
+  background: #000000;
+  color: #ffffff;
+}
+
+/* ============================================================================
+   DIVIDER
+   ============================================================================ */
+
+.order-success-page__divider {
+  height: 2px;
+  background: #000000;
+  margin: 2rem 0;
+}
+
+/* ============================================================================
+   SECCIÓN DE TOTAL
+   ============================================================================ */
+
+.order-success-page__total-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  background: #000000;
+  color: #ffffff;
+  margin-top: 2rem;
+}
+
+.order-success-page__total-label {
+  font-size: 1.125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.order-success-page__total-amount {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+/* ============================================================================
+   LISTA DE PRODUCTOS
+   ============================================================================ */
+
+.order-success-page__items-section {
+  margin-top: 2rem;
+}
+
+.order-success-page__items-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #000000;
+  margin: 0 0 1.25rem 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.order-success-page__items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid #e5e5e5;
+}
+
+.order-success-page__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e5e5;
+  transition: background 0.2s;
+}
+
+.order-success-page__item:last-child {
+  border-bottom: none;
+}
+
+.order-success-page__item:hover {
+  background: #f5f5f5;
+}
+
+.order-success-page__item-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.order-success-page__item-name {
+  color: #000000;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.order-success-page__item-quantity {
+  color: #666666;
+  font-size: 0.875rem;
+  font-weight: 600;
+  background: #f5f5f5;
+  padding: 0.25rem 0.5rem;
+  border-radius: 3px;
+}
+
+.order-success-page__item-price {
+  color: #000000;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+/* ============================================================================
+   CAJA DE INFORMACIÓN ADICIONAL
+   ============================================================================ */
+
+.order-success-page__info-box {
+  display: flex;
+  align-items: start;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: #f5f5f5;
+  border-left: 4px solid #000000;
+  margin-bottom: 2rem;
+  animation: slideUp 0.6s 0.3s ease-out backwards;
+}
+
+.order-success-page__info-box-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.order-success-page__info-box-text {
+  color: #333333;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ============================================================================
+   BOTONES DE ACCIÓN
+   ============================================================================ */
+
+.order-success-page__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  animation: slideUp 0.6s 0.4s ease-out backwards;
+}
+
+.order-success-page__button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.125rem 2rem;
+  border-radius: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s;
+  min-height: 52px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.order-success-page__button--primary {
+  background: #000000;
+  color: #ffffff;
+  border: 2px solid #000000;
+}
+
+.order-success-page__button--primary:hover {
+  background: #ffffff;
+  color: #000000;
+}
+
+.order-success-page__button--secondary {
+  background: #ffffff;
+  color: #000000;
+  border: 2px solid #000000;
+}
+
+.order-success-page__button--secondary:hover {
+  background: #000000;
+  color: #ffffff;
+}
+
+.order-success-page__button:focus {
+  outline: 2px solid #000000;
+  outline-offset: 2px;
+}
+
+/* ============================================================================
+   ESTADO DE CARGA
+   ============================================================================ */
+
+.order-success-page__loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+  min-height: 60vh;
+}
+
+.order-success-page__loading-spinner {
+  width: 60px;
+  height: 60px;
+  border: 4px solid #e5e5e5;
+  border-top-color: #000000;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 2rem;
+}
+
+.order-success-page__loading h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #000000;
+  margin: 0 0 0.5rem 0;
+}
+
+.order-success-page__loading p {
+  font-size: 1rem;
+  color: #666666;
+  margin: 0;
+}
+
+/* ============================================================================
+   ESTADO DE ERROR
+   ============================================================================ */
+
+.order-success-page__error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 3rem 2rem;
+  background: #ffffff;
+  border: 2px solid #000000;
+  min-height: 60vh;
+  justify-content: center;
+}
+
+.order-success-page__error-icon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+}
+
+.order-success-page__error-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #000000;
+  margin: 0 0 1rem 0;
+}
+
+.order-success-page__error-text {
+  font-size: 1rem;
+  color: #666666;
+  margin: 0 0 2rem 0;
+  line-height: 1.6;
+  max-width: 500px;
+}
+
+.order-success-page__error-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  max-width: 400px;
+}
+
+/* ============================================================================
+   ANIMACIONES
+   ============================================================================ */
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes checkmarkPop {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================================================
+   RESPONSIVE - TABLET
+   ============================================================================ */
+
+@media (min-width: 768px) {
+  .order-success-page {
+    padding: 4rem 2rem;
+  }
+
+  .order-success-page__title {
+    font-size: 2.75rem;
+  }
+
+  .order-success-page__card {
+    padding: 3rem;
+  }
+
+  .order-success-page__actions {
+    flex-direction: row;
+  }
+
+  .order-success-page__button {
+    flex: 1;
+  }
+}
+
+/* ============================================================================
+   ACCESIBILIDAD
+   ============================================================================ */
+
+/* Reducir movimiento para usuarios con preferencias */
+@media (prefers-reduced-motion: reduce) {
+  .order-success-page__success-animation,
+  .order-success-page__header,
+  .order-success-page__card,
+  .order-success-page__info-box,
+  .order-success-page__actions,
+  .order-success-page__checkmark-circle,
+  .order-success-page__checkmark {
+    animation: none;
+  }
+
+  .order-success-page__loading-spinner {
+    animation: none;
+  }
+
+  .order-success-page__button {
+    transition: none;
+  }
+}
+
+/* Focus visible para navegación por teclado */
+:focus-visible {
+  outline: 2px solid #000000;
+  outline-offset: 2px;
+}

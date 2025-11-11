@@ -21,7 +21,9 @@
       "Bash(netstat:*)",
       "Bash(taskkill //F //PID 17848)",
       "Bash(rm:*)",
-      "Bash(npm uninstall:*)"
+      "Bash(npm uninstall:*)",
+      "Bash(curl:*)",
+      "Bash(nul)"
     ],
     "deny": [],
     "ask": []

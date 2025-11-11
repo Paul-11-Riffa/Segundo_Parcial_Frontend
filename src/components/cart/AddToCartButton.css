@@ -1,0 +1,379 @@
+/**
+ * Estilos para el botón "Añadir al Carrito"
+ */
+
+/* ============================================================================
+   CONTENEDOR PRINCIPAL
+   ============================================================================ */
+
+.add-to-cart-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 400px;
+}
+
+/* ============================================================================
+   SELECTOR DE CANTIDAD
+   ============================================================================ */
+
+.quantity-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.quantity-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  margin: 0;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px; /* Touch-friendly height */
+}
+
+/* Botones de cantidad */
+.quantity-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 2px solid #ddd;
+  background: white;
+  color: #333;
+  font-size: 20px;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.quantity-btn:hover:not(:disabled) {
+  background: #f5f5f5;
+  border-color: #4CAF50;
+  color: #4CAF50;
+}
+
+.quantity-btn:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.quantity-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background: #f9f9f9;
+}
+
+.quantity-btn:focus {
+  outline: 2px solid #4CAF50;
+  outline-offset: 2px;
+}
+
+/* Input de cantidad */
+.quantity-input {
+  width: 60px;
+  height: 40px;
+  text-align: center;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  transition: border-color 0.2s ease;
+}
+
+.quantity-input:focus {
+  outline: none;
+  border-color: #4CAF50;
+}
+
+.quantity-input:disabled {
+  opacity: 0.4;
+  background: #f9f9f9;
+  cursor: not-allowed;
+}
+
+/* Ocultar spinners del input number */
+.quantity-input::-webkit-inner-spin-button,
+.quantity-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.quantity-input[type=number] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* Información de stock */
+.stock-info {
+  font-size: 13px;
+  color: #666;
+}
+
+.stock-available {
+  color: #4CAF50;
+  font-weight: 500;
+}
+
+.stock-unavailable {
+  color: #f44336;
+  font-weight: 600;
+}
+
+/* ============================================================================
+   BOTÓN PRINCIPAL
+   ============================================================================ */
+
+.add-to-cart-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  
+  /* Diseño */
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 24px;
+  
+  /* Colores */
+  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  
+  /* Texto */
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  
+  /* Efectos */
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.add-to-cart-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #45a049 0%, #3d8b40 100%);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+}
+
+.add-to-cart-btn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.add-to-cart-btn:focus {
+  outline: 3px solid rgba(76, 175, 80, 0.3);
+  outline-offset: 2px;
+}
+
+.add-to-cart-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Ícono del botón */
+.btn-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+/* ============================================================================
+   ESTADOS DEL BOTÓN
+   ============================================================================ */
+
+/* Estado: Añadiendo (loading) */
+.add-to-cart-btn:disabled .btn-spinner {
+  width: 16px;
+  height: 16px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Estado: Éxito */
+.add-to-cart-btn.success {
+  background: linear-gradient(135deg, #8BC34A 0%, #7CB342 100%);
+  animation: successPulse 0.4s ease;
+}
+
+@keyframes successPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* Estado: Sin stock */
+.add-to-cart-btn.out-of-stock {
+  background: linear-gradient(135deg, #9E9E9E 0%, #757575 100%);
+  cursor: not-allowed;
+}
+
+.add-to-cart-btn.out-of-stock:hover {
+  transform: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================================================
+   MENSAJE DE ERROR
+   ============================================================================ */
+
+.add-to-cart-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: #ffebee;
+  border: 1px solid #ef5350;
+  border-radius: 4px;
+  color: #c62828;
+  font-size: 14px;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.error-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+/* ============================================================================
+   RESPONSIVE
+   ============================================================================ */
+
+/* Mobile */
+@media (max-width: 768px) {
+  .add-to-cart-container {
+    max-width: 100%;
+  }
+  
+  .quantity-controls {
+    height: 48px;
+  }
+  
+  .quantity-btn {
+    width: 44px;
+    height: 44px;
+  }
+  
+  .quantity-input {
+    width: 70px;
+    height: 44px;
+    font-size: 18px;
+  }
+  
+  .add-to-cart-btn {
+    min-height: 52px;
+    font-size: 16px;
+  }
+}
+
+/* Tablet */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .add-to-cart-container {
+    max-width: 350px;
+  }
+}
+
+/* ============================================================================
+   VARIANTES
+   ============================================================================ */
+
+/* Variante compacta (sin selector de cantidad) */
+.add-to-cart-container.compact {
+  max-width: 200px;
+}
+
+.add-to-cart-container.compact .add-to-cart-btn {
+  min-height: 40px;
+  padding: 8px 16px;
+  font-size: 14px;
+}
+
+/* Variante inline (horizontal) */
+.add-to-cart-container.inline {
+  flex-direction: row;
+  align-items: center;
+  max-width: 100%;
+}
+
+.add-to-cart-container.inline .quantity-selector {
+  flex-direction: row;
+  align-items: center;
+}
+
+.add-to-cart-container.inline .add-to-cart-btn {
+  flex-shrink: 0;
+  width: auto;
+  min-width: 160px;
+}
+
+/* ============================================================================
+   ACCESIBILIDAD
+   ============================================================================ */
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .add-to-cart-btn {
+    border: 2px solid currentColor;
+  }
+  
+  .quantity-btn,
+  .quantity-input {
+    border-width: 3px;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .add-to-cart-btn,
+  .quantity-btn,
+  .btn-spinner,
+  .add-to-cart-error {
+    animation: none;
+    transition: none;
+  }
+}
+
+/* Dark mode support (opcional) */
+@media (prefers-color-scheme: dark) {
+  .quantity-label {
+    color: #e0e0e0;
+  }
+  
+  .quantity-btn,
+  .quantity-input {
+    background: #2a2a2a;
+    border-color: #555;
+    color: #e0e0e0;
+  }
+  
+  .quantity-btn:hover:not(:disabled) {
+    background: #333;
+  }
+}

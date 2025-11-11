@@ -37,10 +37,24 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Si el token es inválido, limpiar el localStorage
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('user');
-      window.location.href = '/login';
+      // Obtener la URL que causó el error
+      const requestUrl = error.config?.url || '';
+      
+      // NO desloguear si el error 401 viene del carrito
+      // El carrito puede devolver 401 por otros motivos (carrito vacío, etc.)
+      if (requestUrl.includes('/sales/cart')) {
+        console.warn('[API] Error 401 en carrito, pero manteniendo sesión');
+        return Promise.reject(error);
+      }
+      
+      // Para otros endpoints, si es 401 significa token inválido
+      // Solo desloguear si NO es una petición de login
+      if (!requestUrl.includes('/login/') && !requestUrl.includes('/register/')) {
+        console.warn('[API] Token inválido o expirado, cerrando sesión');
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('user');
+        window.location.href = '/login';
+      }
     } else if (error.response?.status === 403) {
       // Usuario no tiene permisos (no es admin)
       console.error('Acceso denegado: Permisos insuficientes');

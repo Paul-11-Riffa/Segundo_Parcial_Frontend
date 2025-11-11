@@ -22,17 +22,20 @@ const productService = {
   async getAll(params = {}) {
     try {
       console.log('[productService] Fetching products with params:', params);
-      
+
       // Limpiar parámetros undefined
       const cleanParams = Object.fromEntries(
         Object.entries(params).filter(([_, v]) => v !== undefined && v !== null && v !== '')
       );
-      
+
+      // ✅ ANTI-CACHE: Agregar timestamp único para evitar cache del navegador
+      cleanParams._cacheBust = Date.now();
+
       const response = await api.get(PRODUCTS_URL, { params: cleanParams });
       console.log('[productService] Raw response:', response);
       console.log('[productService] Response data type:', typeof response.data);
       console.log('[productService] Response data:', response.data);
-      
+
       // Asegurar que devolvemos un array
       const data = Array.isArray(response.data) ? response.data : [];
       console.log('[productService] Products fetched:', data.length);
@@ -359,9 +362,13 @@ const productService = {
       console.log('[productService] 🖼️ Params:', { product: productId });
 
       const response = await api.get('/shop/product-images/', {
-        params: { product: productId }
+        params: {
+          product: productId,
+          // ✅ ANTI-CACHE: Timestamp único para evitar cache
+          _cacheBust: Date.now()
+        }
       });
-      
+
       console.log('[productService] 📥 Images response:', response.data);
       console.log('[productService] 📊 Images count:', response.data?.length || 0);
 
@@ -375,7 +382,7 @@ const productService = {
         }
         console.log('[productService] ✅ Imágenes recibidas (confiando en filtro del backend)');
       }
-      
+
       return response.data;
     } catch (error) {
       console.error('[productService] ❌ Error fetching images:', error);

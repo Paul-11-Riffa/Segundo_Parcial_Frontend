@@ -76,11 +76,12 @@ const ProductsList = () => {
   };
 
   const handleFormClose = () => {
-    console.log('[ProductsList] 🚪 Modal cerrado (sin guardar cambios)');
+    console.log('[ProductsList] 🚪 Modal cerrado');
     setShowForm(false);
     setSelectedProduct(null);
-    // Nota: NO recargamos aquí porque ProductForm ya llamó a onSave
-    // si se guardaron cambios, o no hay nada que recargar si se canceló
+
+    // ✅ OPTIMIZADO: ProductForm ya recargó la lista, no es necesario recargar aquí
+    // Esto evita recargas duplicadas y mejora la velocidad
   };
 
   const handleToggleActive = async (productId) => {
@@ -402,24 +403,38 @@ const ProductsList = () => {
                     {/* Product */}
                     <td>
                       <div className="products-table-product">
-                        {/* Prioridad: primary_image > image_url > image > placeholder */}
-                        {product.primary_image?.image_url || product.image_url || product.image ? (
-                          <img
-                            src={product.primary_image?.image_url || product.image_url || product.image}
-                            alt={product.name}
-                            className="products-table-image"
-                            onError={(e) => {
-                              // Fallback si la imagen falla al cargar
-                              e.target.style.display = 'none';
-                              e.target.nextSibling.style.display = 'flex';
-                            }}
-                          />
-                        ) : null}
-                        {!product.primary_image?.image_url && !product.image_url && !product.image && (
-                          <div className="products-table-image-placeholder">
-                            <PhotoIcon />
-                          </div>
-                        )}
+                        {/* Prioridad: images[is_primary=true] > image_url > image > placeholder */}
+                        {(() => {
+                          // Buscar imagen principal en el array de imágenes
+                          const primaryImage = product.images?.find(img => img.is_primary);
+                          let imageUrl = primaryImage?.image_url || product.image_url || product.image;
+
+                          // ✅ Cache-busting: Usar timestamp de la imagen o created_at para forzar recarga
+                          // Esto evita parpadeos constantes pero fuerza recarga cuando la imagen cambia
+                          if (imageUrl && primaryImage?.created_at) {
+                            const cacheBuster = new Date(primaryImage.created_at).getTime();
+                            const separator = imageUrl.includes('?') ? '&' : '?';
+                            imageUrl = `${imageUrl}${separator}v=${cacheBuster}`;
+                          }
+
+                          return imageUrl ? (
+                            <img
+                              key={`product-img-${product.id}-${primaryImage?.id || 'default'}`}
+                              src={imageUrl}
+                              alt={primaryImage?.alt_text || product.name}
+                              className="products-table-image"
+                              onError={(e) => {
+                                // Fallback si la imagen falla al cargar
+                                e.target.style.display = 'none';
+                                e.target.nextSibling.style.display = 'flex';
+                              }}
+                            />
+                          ) : (
+                            <div className="products-table-image-placeholder">
+                              <PhotoIcon />
+                            </div>
+                          );
+                        })()}
                         <div className="products-table-product-info">
                           <p className="products-table-product-name">{product.name}</p>
                           {product.sku && (

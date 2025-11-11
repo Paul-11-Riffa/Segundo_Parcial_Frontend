@@ -16,6 +16,7 @@ export { default as api, API_BASE_URL } from './apiConfig';
 // Exportar servicios específicos
 export { default as authService } from './authService';
 export { default as dashboardService } from './dashboardService';
+export { default as cartService } from './cartService';
 
 // Exportación por defecto (configuración de axios)
 export { default } from './apiConfig';

@@ -263,16 +263,15 @@ const ProductForm = ({ product, onClose, onSave }) => {
 
       console.log('✅ Todas las operaciones de imágenes completadas');
 
-      // ✅ CRÍTICO: Llamar a onSave para que ProductsList recargue su lista
-      if (onSave) {
-        console.log('🔄 Llamando a onSave para recargar lista en ProductsList...');
-        await onSave();
-        console.log('✅ Lista de ProductsList recargada');
-      }
-
-      // ✅ IMPORTANTE: Delay para asegurar que el UI se actualice
-      console.log('⏳ Esperando 300ms para sincronización visual...');
+      // ✅ OPTIMIZADO: Una sola recarga con delay mínimo
+      console.log('⏳ Esperando 300ms para que el backend procese...');
       await new Promise(resolve => setTimeout(resolve, 300));
+
+      if (onSave) {
+        console.log('🔄 Recargando lista de productos...');
+        await onSave();
+        console.log('✅ Lista recargada');
+      }
 
       console.log('🔄 Cerrando modal');
 

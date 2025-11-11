@@ -79,9 +79,9 @@ const NotificationIcon = () => {
         title={`${unreadCount} notificaciones sin leer`}
       >
         {unreadCount > 0 ? (
-          <BellRing className="notification-icon" />
+          <BellRing className="notification-icon" size={16} strokeWidth={2} />
         ) : (
-          <Bell className="notification-icon" />
+          <Bell className="notification-icon" size={16} strokeWidth={2} />
         )}
         
         {unreadCount > 0 && (

@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { NotificationProvider } from './context/NotificationContext';
+import { CartProvider } from './context/CartContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import ProtectedAdminRoute from './components/ProtectedAdminRoute';
 import { useEffect } from 'react';
@@ -41,12 +42,12 @@ import VoiceReportsPage from './pages/admin/voice/VoiceReportsPage';
 // Admin Notifications Module
 import SendNotification from './pages/admin/notifications/SendNotification';
 
-// Audit Module
-import { 
-  AuditDashboard as AuditDashboardPage, 
-  AuditLogs, 
-  SecurityAlerts
-} from './pages/admin/audit';
+// Audit Module - COMMENTED OUT (files don't exist)
+// import { 
+//   AuditDashboard as AuditDashboardPage, 
+//   AuditLogs, 
+//   SecurityAlerts
+// } from './pages/admin/audit';
 
 // Notification Pages
 import NotificationsPage from './pages/NotificationsPage';
@@ -58,6 +59,12 @@ import { NotificationBanner, NotificationToastContainer } from './components/not
 // Shop Pages (Public)
 import Shop from './pages/Shop';
 import ProductDetail from './pages/ProductDetail';
+
+// Cart Pages (Protected)
+import CartPage from './pages/cart/CartPage';
+import OrderSuccessPage from './pages/cart/OrderSuccessPage';
+import OrderCancelPage from './pages/cart/OrderCancelPage';
+import OrderHistoryPage from './pages/cart/OrderHistoryPage';
 
 function App() {
   // ✅ Calentar base de datos al iniciar la aplicación
@@ -79,17 +86,18 @@ function App() {
   return (
     <Router>
       <AuthProvider>
-        <NotificationProvider>
-          {/* ✅ Indicador de base de datos despertando */}
-          <DatabaseWarmupIndicator />
-          
-          {/* Banner para solicitar permisos de notificaciones */}
-          <NotificationBanner />
-          
-          {/* Container para toasts de notificaciones en foreground */}
-          <NotificationToastContainer />
-          
-          <Routes>
+        <CartProvider>
+          <NotificationProvider>
+            {/* ✅ Indicador de base de datos despertando */}
+            <DatabaseWarmupIndicator />
+            
+            {/* Banner para solicitar permisos de notificaciones */}
+            <NotificationBanner />
+            
+            {/* Container para toasts de notificaciones en foreground */}
+            <NotificationToastContainer />
+            
+            <Routes>
           {/* Public Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
@@ -114,6 +122,12 @@ function App() {
           <Route path="/notifications" element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />
           <Route path="/notifications/preferences" element={<ProtectedRoute><NotificationPreferencesPage /></ProtectedRoute>} />
 
+          {/* Cart Routes (Protected - Usuario debe estar logueado) */}
+          <Route path="/cart" element={<ProtectedRoute><CartPage /></ProtectedRoute>} />
+          <Route path="/order/success" element={<ProtectedRoute><OrderSuccessPage /></ProtectedRoute>} />
+          <Route path="/order/cancel" element={<ProtectedRoute><OrderCancelPage /></ProtectedRoute>} />
+          <Route path="/my-orders" element={<ProtectedRoute><OrderHistoryPage /></ProtectedRoute>} />
+
           {/* Admin Routes (Solo administradores) */}
           {/* New Admin Layout Routes with Sidebar */}
           <Route 
@@ -137,10 +151,10 @@ function App() {
             {/* Voice Reports Route */}
             <Route path="voice-reports" element={<VoiceReportsPage />} />
             
-            {/* Audit Routes */}
-            <Route path="audit/dashboard" element={<AuditDashboardPage />} />
-            <Route path="audit/logs" element={<AuditLogs />} />
-            <Route path="audit/security" element={<SecurityAlerts />} />
+            {/* Audit Routes - COMMENTED OUT (components don't exist) */}
+            {/* <Route path="audit/dashboard" element={<AuditDashboardPage />} /> */}
+            {/* <Route path="audit/logs" element={<AuditLogs />} /> */}
+            {/* <Route path="audit/security" element={<SecurityAlerts />} /> */}
             
             {/* Notifications Route */}
             <Route path="notifications/send" element={<SendNotification />} />
@@ -176,6 +190,7 @@ function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </NotificationProvider>
+      </CartProvider>
       </AuthProvider>
     </Router>
   );

@@ -6,6 +6,7 @@ import { formatPrice, getProductImage } from '../utils/productHelpers';
 import Button from '../components/ui/Button';
 import { NotificationIcon } from '../components/notifications';
 import StockBadge from '../components/shop/StockBadge';
+import CartIcon from '../components/cart/CartIcon';
 import './pages.css';
 
 const stats = [
@@ -124,13 +125,41 @@ const Home = () => {
             <span className="text-lg font-semibold text-dark-900">Ventas inteligentes 365</span>
           </Link>
 
-          <nav className="flex items-center gap-2 sm:gap-3">
+          <nav className="flex items-center gap-4">
             {user ? (
               <>
-                <NotificationIcon />
-                <span className="hidden text-sm text-dark-600 sm:inline">{user.username}</span>
-                <Link to="/profile">
-                  <Button variant="ghost" size="sm">Mi Perfil</Button>
+                {/* Iconos de Acción */}
+                <div className="flex items-center gap-2">
+                  <NotificationIcon />
+                  <CartIcon />
+                </div>
+
+                {/* Mis Órdenes */}
+                <Link to="/my-orders" className="group">
+                  <button className="nav-link-button-enhanced">
+                    <svg className="nav-icon-enhanced" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                    </svg>
+                    <span className="hidden md:inline">Mis Órdenes</span>
+                  </button>
+                </Link>
+
+                {/* Perfil de Usuario */}
+                <Link to="/profile" className="group">
+                  <div className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors">
+                    <div className="hidden sm:flex items-center gap-2.5">
+                      <div className="w-9 h-9 rounded-full bg-gradient-to-br from-gray-900 to-gray-700 flex items-center justify-center text-white text-sm font-semibold shadow-sm">
+                        {user.username?.charAt(0).toUpperCase()}
+                      </div>
+                      <div className="hidden md:flex flex-col">
+                        <span className="text-sm font-semibold text-gray-900 leading-tight">{user.username}</span>
+                        <span className="text-xs text-gray-500">Ver perfil</span>
+                      </div>
+                    </div>
+                    <svg className="md:hidden w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                  </div>
                 </Link>
               </>
             ) : (
