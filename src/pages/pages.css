@@ -1449,3 +1449,128 @@
     justify-content: space-between;
   }
 }
+
+/* ============================================
+   ESTILOS PARA ICONOS DEL NAVBAR
+   (Notificaciones, Carrito, Mis Órdenes, Perfil)
+   ============================================ */
+
+/* Botón de icono base - diseño limpio y minimalista */
+.icon-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  color: #1f2937;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.icon-button:hover {
+  background-color: #f3f4f6;
+  color: #000000;
+  transform: translateY(-1px);
+}
+
+.icon-button:active {
+  transform: translateY(0) scale(0.97);
+}
+
+/* Badge de contador (para notificaciones y carrito) */
+.icon-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000000;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  border-radius: 9999px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15), 0 0 0 2px white;
+}
+
+/* Botón "Mis Órdenes" */
+.nav-link-button-enhanced {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  color: #4b5563;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.nav-link-button-enhanced:hover {
+  background-color: #f3f4f6;
+  color: #000000;
+  transform: translateY(-1px);
+}
+
+.nav-link-button-enhanced:active {
+  transform: translateY(0) scale(0.97);
+}
+
+.nav-icon-enhanced {
+  /* No definir width/height - dejar que lucide-react controle el tamaño con la prop size */
+  stroke-width: 2;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.nav-link-button-enhanced:hover .nav-icon-enhanced {
+  transform: scale(1.05);
+}
+
+/* Contenedor del perfil de usuario */
+.flex.items-center.gap-3.px-3.py-2 {
+  border-radius: 10px;
+  transition: background-color 0.2s ease;
+}
+
+/* Avatar mejorado */
+.w-9.h-9.rounded-full {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.flex.items-center.gap-3.px-3.py-2:hover .w-9.h-9.rounded-full {
+  transform: scale(1.05);
+}
+
+/* Responsive - móvil */
+@media (max-width: 640px) {
+  .icon-button {
+    width: 38px;
+    height: 38px;
+  }
+  
+  .icon-badge {
+    min-width: 16px;
+    height: 16px;
+    font-size: 9px;
+  }
+  
+  .nav-link-button-enhanced {
+    padding: 8px 12px;
+  }
+}

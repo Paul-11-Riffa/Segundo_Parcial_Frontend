@@ -7,6 +7,7 @@ import Button from '../components/ui/Button';
 import { NotificationIcon } from '../components/notifications';
 import StockBadge from '../components/shop/StockBadge';
 import CartIcon from '../components/cart/CartIcon';
+import { Package } from 'lucide-react';
 import './pages.css';
 
 const stats = [
@@ -135,12 +136,10 @@ const Home = () => {
                 </div>
 
                 {/* Mis Órdenes */}
-                <Link to="/my-orders" className="group">
-                  <button className="nav-link-button-enhanced">
-                    <svg className="nav-icon-enhanced" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                    </svg>
-                    <span className="hidden md:inline">Mis Órdenes</span>
+                <Link to="/my-orders">
+                  <button className="icon-button" style={{ gap: '6px', paddingLeft: '12px', paddingRight: '12px' }}>
+                    <Package size={20} strokeWidth={2} />
+                    <span className="hidden md:inline text-sm font-medium">Mis Órdenes</span>
                   </button>
                 </Link>
 
