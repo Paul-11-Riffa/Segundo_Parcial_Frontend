@@ -42,12 +42,12 @@ import VoiceReportsPage from './pages/admin/voice/VoiceReportsPage';
 // Admin Notifications Module
 import SendNotification from './pages/admin/notifications/SendNotification';
 
-// Audit Module - COMMENTED OUT (files don't exist)
-// import { 
-//   AuditDashboard as AuditDashboardPage, 
-//   AuditLogs, 
-//   SecurityAlerts
-// } from './pages/admin/audit';
+// Audit Module
+import { 
+  AuditDashboard as AuditDashboardPage, 
+  AuditLogs, 
+  SecurityAlerts
+} from './pages/admin/audit';
 
 // Notification Pages
 import NotificationsPage from './pages/NotificationsPage';
@@ -151,10 +151,10 @@ function App() {
             {/* Voice Reports Route */}
             <Route path="voice-reports" element={<VoiceReportsPage />} />
             
-            {/* Audit Routes - COMMENTED OUT (components don't exist) */}
-            {/* <Route path="audit/dashboard" element={<AuditDashboardPage />} /> */}
-            {/* <Route path="audit/logs" element={<AuditLogs />} /> */}
-            {/* <Route path="audit/security" element={<SecurityAlerts />} /> */}
+            {/* Audit Routes */}
+            <Route path="audit/dashboard" element={<AuditDashboardPage />} />
+            <Route path="audit/logs" element={<AuditLogs />} />
+            <Route path="audit/security" element={<SecurityAlerts />} />
             
             {/* Notifications Route */}
             <Route path="notifications/send" element={<SendNotification />} />
