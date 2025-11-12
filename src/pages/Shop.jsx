@@ -12,7 +12,8 @@ import StockBadge from '../components/shop/StockBadge';
 import Button from '../components/ui/Button';
 import { NotificationIcon } from '../components/notifications';
 import CartIcon from '../components/cart/CartIcon';
-import { Package } from 'lucide-react';
+import { Package, Mic, MicOff, Loader } from 'lucide-react';
+import { useVoiceSearch } from '../hooks/useVoiceSearch';
 import './Shop.css';
 
 const Shop = () => {
@@ -28,6 +29,19 @@ const Shop = () => {
   const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || '');
   const [sortBy, setSortBy] = useState(searchParams.get('sort') || 'name-asc');
   const [showOnlyInStock, setShowOnlyInStock] = useState(false);
+
+  // Hook de búsqueda por voz
+  const {
+    isListening,
+    isProcessing,
+    results: voiceResults,
+    error: voiceError,
+    interpretation,
+    isBrowserSupported,
+    startListening,
+    stopListening,
+    resetSearch,
+  } = useVoiceSearch(); // Sin parámetros, obtiene token de localStorage
 
   // Cargar productos y categorías
   useEffect(() => {
@@ -65,19 +79,24 @@ const Shop = () => {
   };
 
   // Aplicar filtros
-  const filteredProducts = filterProducts(products, {
-    search: searchTerm,
-    category: selectedCategory ? parseInt(selectedCategory) : null,
-    inStock: showOnlyInStock,
-    sortBy
-  });
+  const filteredProducts = filterProducts(
+    voiceResults || products, // Usar resultados de voz si existen
+    {
+      search: searchTerm,
+      category: selectedCategory ? parseInt(selectedCategory) : null,
+      inStock: showOnlyInStock,
+      sortBy
+    }
+  );
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
+    resetSearch(); // Limpiar búsqueda por voz al escribir
   };
 
   const handleCategoryChange = (categoryId) => {
     setSelectedCategory(categoryId === selectedCategory ? '' : categoryId);
+    resetSearch();
   };
 
   const handleClearFilters = () => {
@@ -85,6 +104,16 @@ const Shop = () => {
     setSelectedCategory('');
     setSortBy('name-asc');
     setShowOnlyInStock(false);
+    resetSearch();
+  };
+
+  // Manejar botón de voz
+  const handleVoiceSearch = () => {
+    if (isListening) {
+      stopListening();
+    } else {
+      startListening();
+    }
   };
 
   if (loading) {
@@ -191,10 +220,62 @@ const Shop = () => {
       </div>
 
       <div className="shop-container">
+        {/* Interpretación de búsqueda por voz */}
+        {interpretation && (
+          <div className="voice-interpretation-card">
+            <div className="voice-interpretation-header">
+              <Mic size={18} />
+              <span>Búsqueda por voz</span>
+              <button 
+                onClick={resetSearch} 
+                className="voice-close-btn"
+                aria-label="Cerrar"
+              >
+                ×
+              </button>
+            </div>
+            <div className="voice-interpretation-body">
+              <p className="voice-said">
+                <strong>Dijiste:</strong> "{interpretation.original}"
+              </p>
+              <p className="voice-understood">
+                <strong>Entendí:</strong> {interpretation.understood}
+              </p>
+              <div className="voice-confidence">
+                <span className="voice-confidence-label">Confianza:</span>
+                <div className="voice-confidence-bar-container">
+                  <div 
+                    className="voice-confidence-bar" 
+                    style={{ 
+                      width: `${interpretation.confidence * 100}%`,
+                      backgroundColor: 
+                        interpretation.confidence >= 0.7 ? '#10b981' :
+                        interpretation.confidence >= 0.4 ? '#f59e0b' :
+                        '#ef4444'
+                    }}
+                  ></div>
+                </div>
+                <span className="voice-confidence-value">
+                  {Math.round(interpretation.confidence * 100)}%
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Error de búsqueda por voz */}
+        {voiceError && (
+          <div className="voice-error-card">
+            <MicOff size={18} />
+            <span>{voiceError}</span>
+            <button onClick={resetSearch} className="voice-error-close">×</button>
+          </div>
+        )}
+
         {/* Filtros Horizontales */}
         <div className="filters-horizontal">
-          {/* Búsqueda */}
-          <div className="filter-item">
+          {/* Búsqueda con botón de voz */}
+          <div className="filter-item filter-search-with-voice">
             <input
               type="text"
               value={searchTerm}
@@ -202,6 +283,22 @@ const Shop = () => {
               placeholder="Buscar productos..."
               className="filter-input-horizontal"
             />
+            {isBrowserSupported && user && (
+              <button
+                onClick={handleVoiceSearch}
+                className={`voice-search-btn ${isListening ? 'listening' : ''} ${isProcessing ? 'processing' : ''}`}
+                disabled={isProcessing}
+                title={isListening ? 'Escuchando... (clic para detener)' : 'Buscar por voz'}
+              >
+                {isProcessing ? (
+                  <Loader size={20} className="voice-icon-spin" />
+                ) : isListening ? (
+                  <MicOff size={20} />
+                ) : (
+                  <Mic size={20} />
+                )}
+              </button>
+            )}
           </div>
 
           {/* Categorías */}
