@@ -670,7 +670,9 @@
   padding-top: 1rem;
   border-top: 1px solid #e5e7eb;
   display: flex;
+  gap: 1rem;
   justify-content: flex-end;
+  flex-wrap: wrap;
 }
 
 .order-history-page__download-button {
@@ -728,7 +730,8 @@
 /* Responsive para botón de descarga */
 @media (max-width: 768px) {
   .order-history-page__actions-bottom {
-    justify-content: center;
+    justify-content: stretch;
+    flex-direction: column;
   }
 
   .order-history-page__download-button {

@@ -17,6 +17,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import cartService from '../../services/cartService';
+import CreateClaimButton from '../../components/claims/CreateClaimButton';
 import './OrderHistoryPage.css';
 
 const OrderHistoryPage = () => {
@@ -410,7 +411,7 @@ const OrderHistoryPage = () => {
                       </>
                     )}
 
-                    {/* Botón de descarga de comprobante - Solo para órdenes COMPLETADAS */}
+                    {/* Botones de acción - Solo para órdenes COMPLETADAS */}
                     {order.status === 'COMPLETED' && (
                       <div className="order-history-page__actions-bottom">
                         <button
@@ -432,6 +433,9 @@ const OrderHistoryPage = () => {
                             </>
                           )}
                         </button>
+
+                        {/* Botón para crear reclamo */}
+                        <CreateClaimButton orderId={order.id} />
                       </div>
                     )}
                   </div>

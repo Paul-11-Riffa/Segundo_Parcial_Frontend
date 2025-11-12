@@ -206,6 +206,131 @@ const authService = {
   // ========== UTILIDADES ==========
 
   /**
+   * Obtiene la lista de usuarios administradores (solo para admins)
+   * NOTA: Solo retorna usuarios que el BACKEND reconoce como administradores
+   * @returns {Promise<Array>} - Lista de administradores
+   */
+  getAdminUsers: async () => {
+    try {
+      console.log('🔍 Solicitando administradores al backend...');
+      
+      // INTENTO 1: Usar endpoint específico si existe
+      try {
+        const responseAdmins = await api.get('/users/admins/');
+        console.log('✅ Endpoint /users/admins/ encontrado');
+        console.log('📥 Respuesta:', responseAdmins.data);
+        
+        let admins = responseAdmins.data;
+        if (admins?.results && Array.isArray(admins.results)) {
+          admins = admins.results;
+        }
+        
+        console.log('👑 Administradores del endpoint:', admins);
+        return Array.isArray(admins) ? admins : [];
+        
+      } catch (endpointError) {
+        console.log('⚠️ Endpoint /users/admins/ no existe, probando filtro...');
+        
+        // INTENTO 2: Filtrar por is_staff usando query param
+        try {
+          const staffResponse = await api.get('/users/?is_staff=true');
+          console.log('✅ Filtro is_staff=true funcionó');
+          console.log('📥 Respuesta:', staffResponse.data);
+          
+          let staffUsers = staffResponse.data;
+          if (staffUsers?.results && Array.isArray(staffUsers.results)) {
+            staffUsers = staffUsers.results;
+          }
+          
+          console.log('👑 Usuarios staff:', staffUsers);
+          return Array.isArray(staffUsers) ? staffUsers : [];
+          
+        } catch (staffError) {
+          console.log('⚠️ Filtro is_staff no funciona, obteniendo todos...');
+          
+          // INTENTO 3: Obtener todos y filtrar manualmente
+          const response = await api.get('/users/');
+          console.log('📥 Todos los usuarios:', response.data);
+          
+          let users = response.data;
+          
+          if (users?.results && Array.isArray(users.results)) {
+            users = users.results;
+          }
+          
+          if (!Array.isArray(users)) {
+            console.error('❌ Respuesta no es un array:', users);
+            return [];
+          }
+          
+          console.log('👥 Total de usuarios:', users.length);
+          console.log('📋 ESTRUCTURA COMPLETA DE PRIMER USUARIO:', users[0]);
+          
+          // Mostrar todos los usuarios con TODOS sus campos
+          users.forEach((user, index) => {
+            console.log(`\n━━━ Usuario ${index + 1}: ${user.username} ━━━`);
+            console.log('🆔 ID:', user.id);
+            console.log('👤 Username:', user.username);
+            console.log('📧 Email:', user.email);
+            console.log('🔧 is_staff:', user.is_staff, typeof user.is_staff);
+            console.log('⭐ is_superuser:', user.is_superuser, typeof user.is_superuser);
+            console.log('👔 profile:', user.profile);
+            console.log('📜 OBJETO COMPLETO:', user);
+          });
+          
+          // Filtrar con prioridad a is_staff/is_superuser
+          const adminUsers = users.filter(user => {
+            // Criterio 1: is_staff o is_superuser (Django native)
+            if (user.is_staff === true || user.is_superuser === true) {
+              console.log(`✅ ${user.username} es admin (Django): is_staff=${user.is_staff}, is_superuser=${user.is_superuser}`);
+              return true;
+            }
+            
+            // ⚠️ PROBLEMA DETECTADO: is_staff no se envía desde backend
+            if (user.is_staff === undefined && user.is_superuser === undefined) {
+              console.warn(`⚠️⚠️⚠️ BACKEND NO ENVÍA is_staff/is_superuser ⚠️⚠️⚠️`);
+              console.warn(`El serializer del backend debe incluir estos campos.`);
+              console.warn(`Por ahora, NO se puede filtrar correctamente.`);
+              console.warn(`Retornando VACÍO para evitar errores 400.`);
+              // NO retornar ningún usuario hasta que backend se arregle
+              return false;
+            }
+            
+            console.log(`❌ ${user.username} NO es admin`);
+            return false;
+          });
+          
+          console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━');
+          if (adminUsers.length === 0) {
+            console.error('🚨 NO HAY ADMINISTRADORES DISPONIBLES 🚨');
+            console.error('📛 CAUSA: El backend no envía is_staff/is_superuser');
+            console.error('🔧 SOLUCIÓN: Agregar estos campos al UserSerializer en Django');
+            console.error('📝 Código necesario:');
+            console.error(`
+              class UserSerializer(serializers.ModelSerializer):
+                  class Meta:
+                      model = User
+                      fields = [..., 'is_staff', 'is_superuser']
+            `);
+          } else {
+            console.log('✅ ADMINISTRADORES FINALES:', adminUsers.length);
+            adminUsers.forEach(admin => {
+              console.log(`  - ID ${admin.id}: ${admin.username} (is_staff: ${admin.is_staff})`);
+            });
+          }
+          console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+          
+          return adminUsers;
+        }
+      }
+    } catch (error) {
+      console.error('❌ ERROR FATAL al obtener administradores:', error);
+      console.error('📛 Error completo:', error.response || error);
+      throw error.response?.data || { message: 'Error al obtener administradores' };
+    }
+  },
+
+  /**
    * Verifica si hay un usuario autenticado
    * @returns {boolean} - true si hay token válido
    */

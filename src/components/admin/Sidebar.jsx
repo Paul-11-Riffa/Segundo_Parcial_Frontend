@@ -15,7 +15,8 @@ import {
   DocumentTextIcon,
   BellAlertIcon,
   ShieldCheckIcon,
-  ClipboardDocumentListIcon
+  ClipboardDocumentListIcon,
+  ChatBubbleLeftRightIcon
 } from '@heroicons/react/24/outline';
 import './Sidebar.css';
 
@@ -72,6 +73,12 @@ const Sidebar = ({ collapsed, onToggle }) => {
       label: 'Reportes por Voz',
       icon: MicrophoneIcon,
       path: '/admin/voice-reports',
+    },
+    {
+      id: 'claims',
+      label: 'Reclamos',
+      icon: ChatBubbleLeftRightIcon,
+      path: '/admin/claims',
     },
     {
       id: 'audit',

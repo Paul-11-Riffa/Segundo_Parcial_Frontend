@@ -66,6 +66,15 @@ import OrderSuccessPage from './pages/cart/OrderSuccessPage';
 import OrderCancelPage from './pages/cart/OrderCancelPage';
 import OrderHistoryPage from './pages/cart/OrderHistoryPage';
 
+// Claims Pages (Protected)
+import ClaimsPage from './pages/ClaimsPage';
+import CreateClaimPage from './pages/CreateClaimPage';
+import ClaimDetailPage from './pages/ClaimDetailPage';
+
+// Admin Claims Pages
+import AdminClaimsPage from './pages/admin/AdminClaimsPage';
+import AdminClaimDetailPage from './pages/admin/AdminClaimDetailPage';
+
 function App() {
   // ✅ Calentar base de datos al iniciar la aplicación
   useEffect(() => {
@@ -128,6 +137,18 @@ function App() {
           <Route path="/order/cancel" element={<ProtectedRoute><OrderCancelPage /></ProtectedRoute>} />
           <Route path="/my-orders" element={<ProtectedRoute><OrderHistoryPage /></ProtectedRoute>} />
 
+          {/* Claims Routes (Protected - Clientes) */}
+          <Route path="/claims" element={<ProtectedRoute><ClaimsPage /></ProtectedRoute>} />
+          <Route path="/claims/create" element={<ProtectedRoute><CreateClaimPage /></ProtectedRoute>} />
+          <Route path="/claims/create/:orderId" element={<ProtectedRoute><CreateClaimPage /></ProtectedRoute>} />
+          <Route path="/claims/:id" element={<ProtectedRoute><ClaimDetailPage /></ProtectedRoute>} />
+
+          {/* Claims Routes (Protected - Usuario debe estar logueado) */}
+          <Route path="/claims" element={<ProtectedRoute><ClaimsPage /></ProtectedRoute>} />
+          <Route path="/claims/create" element={<ProtectedRoute><CreateClaimPage /></ProtectedRoute>} />
+          <Route path="/claims/create/:orderId" element={<ProtectedRoute><CreateClaimPage /></ProtectedRoute>} />
+          <Route path="/claims/:id" element={<ProtectedRoute><ClaimDetailPage /></ProtectedRoute>} />
+
           {/* Admin Routes (Solo administradores) */}
           {/* New Admin Layout Routes with Sidebar */}
           <Route 
@@ -155,6 +176,10 @@ function App() {
             <Route path="audit/dashboard" element={<AuditDashboardPage />} />
             <Route path="audit/logs" element={<AuditLogs />} />
             <Route path="audit/security" element={<SecurityAlerts />} />
+            
+            {/* Claims Routes (Admin) */}
+            <Route path="claims" element={<AdminClaimsPage />} />
+            <Route path="claims/:id" element={<AdminClaimDetailPage />} />
             
             {/* Notifications Route */}
             <Route path="notifications/send" element={<SendNotification />} />

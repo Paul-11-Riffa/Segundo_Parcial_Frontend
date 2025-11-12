@@ -1,0 +1,248 @@
+/* ========================================
+   ADMIN CLAIM UPDATE - BLACK & WHITE
+   ======================================== */
+
+/* Form Styles */
+.admin-claim-update-form {
+  width: 100%;
+}
+
+.admin-claim-form-section {
+  margin-bottom: 1.5rem;
+}
+
+.admin-claim-form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Form Fields */
+.admin-claim-form-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-claim-form-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-black, #000);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.admin-claim-form-select,
+.admin-claim-form-textarea {
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  border: 2px solid var(--color-black, #000);
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  background-color: var(--color-white, #fff);
+}
+
+.admin-claim-form-select:focus,
+.admin-claim-form-textarea:focus {
+  outline: none;
+  border-color: var(--color-black, #000);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+.admin-claim-form-textarea {
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.5;
+}
+
+.admin-claim-form-hint {
+  font-size: 0.75rem;
+  color: var(--color-gray-600, #666);
+  margin-top: 0.375rem;
+  display: flex;
+  align-items: center;
+}
+
+.admin-claim-form-hint-icon {
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.375rem;
+  flex-shrink: 0;
+}
+
+/* Info Boxes */
+.admin-claim-info-box {
+  padding: 1rem;
+  border-radius: 0.375rem;
+  margin-bottom: 1.5rem;
+  border-left: 4px solid;
+}
+
+.admin-claim-info-box-blue {
+  background-color: #eff6ff;
+  border-color: #3b82f6;
+}
+
+.admin-claim-info-box-green {
+  background-color: #f0fdf4;
+  border-color: #22c55e;
+}
+
+.admin-claim-info-box-orange {
+  background-color: #fff7ed;
+  border-color: #f97316;
+}
+
+.admin-claim-info-box-content {
+  display: flex;
+  align-items: flex-start;
+}
+
+.admin-claim-info-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-right: 0.75rem;
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.admin-claim-info-icon-blue {
+  color: #3b82f6;
+}
+
+.admin-claim-info-icon-green {
+  color: #22c55e;
+}
+
+.admin-claim-info-icon-orange {
+  color: #f97316;
+}
+
+.admin-claim-info-text-wrapper {
+  flex: 1;
+}
+
+.admin-claim-info-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+}
+
+.admin-claim-info-title-blue {
+  color: #1e40af;
+}
+
+.admin-claim-info-title-green {
+  color: #166534;
+}
+
+.admin-claim-info-title-orange {
+  color: #9a3412;
+}
+
+.admin-claim-info-text {
+  font-size: 0.75rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.admin-claim-info-text-blue {
+  color: #1e40af;
+}
+
+.admin-claim-info-text-green {
+  color: #166534;
+}
+
+.admin-claim-info-text-orange {
+  color: #9a3412;
+}
+
+/* Error Message */
+.admin-claim-error-message {
+  padding: 1rem;
+  background-color: #fef2f2;
+  border-left: 4px solid #dc2626;
+  border-radius: 0.375rem;
+  margin-bottom: 1.5rem;
+}
+
+.admin-claim-error-text {
+  font-size: 0.875rem;
+  color: #991b1b;
+  margin: 0;
+}
+
+/* Submit Button */
+.admin-claim-submit-wrapper {
+  padding-top: 1rem;
+  border-top: 2px solid var(--color-gray-200, #e5e5e5);
+}
+
+.admin-claim-submit-button {
+  width: 100%;
+  padding: 0.875rem 1.5rem;
+  background-color: var(--color-black, #000);
+  color: var(--color-white, #fff);
+  border: 2px solid var(--color-black, #000);
+  border-radius: 0.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.admin-claim-submit-button:hover:not(:disabled) {
+  background-color: var(--color-white, #fff);
+  color: var(--color-black, #000);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.admin-claim-submit-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.admin-claim-submit-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Loading State */
+.admin-claim-button-loading {
+  display: inline-block;
+  margin-right: 0.5rem;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .admin-claim-form-grid {
+    gap: 1rem;
+  }
+  
+  .admin-claim-form-section {
+    margin-bottom: 1.25rem;
+  }
+  
+  .admin-claim-submit-button {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.875rem;
+  }
+}

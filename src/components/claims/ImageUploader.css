@@ -1,0 +1,450 @@
+/* ============================================
+   IMAGE UPLOADER - BLACK & WHITE DESIGN
+   Componente de carga de imágenes - Diseño Minimalista
+   ============================================ */
+
+/* Variables de Color - Blanco y Negro */
+:root {
+  --color-black: #000000;
+  --color-white: #ffffff;
+  --color-gray-50: #fafafa;
+  --color-gray-100: #f5f5f5;
+  --color-gray-200: #e5e5e5;
+  --color-gray-300: #d4d4d4;
+  --color-gray-400: #a3a3a3;
+  --color-gray-500: #737373;
+  --color-gray-600: #525252;
+  --color-gray-700: #404040;
+  --color-gray-800: #262626;
+  --color-gray-900: #171717;
+}
+
+/* ============================================
+   CONTENEDOR PRINCIPAL
+   ============================================ */
+
+.image-uploader {
+  width: 100%;
+  max-width: 100%; /* ← Previene overflow */
+  overflow: hidden; /* ← Evita que el contenido se salga */
+}
+
+/* ============================================
+   INPUT DE ARCHIVO
+   ============================================ */
+
+.image-uploader-input-wrapper {
+  margin-bottom: 1.5rem;
+}
+
+.image-uploader-input {
+  display: none;
+}
+
+.image-uploader-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+  background-color: var(--color-white);
+  border: 2px dashed var(--color-gray-400);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 0.75rem;
+}
+
+.image-uploader-label:hover {
+  border-color: var(--color-black);
+  background-color: var(--color-gray-50);
+  transform: translateY(-2px);
+}
+
+.image-uploader-label:active {
+  transform: translateY(0);
+}
+
+.image-uploader-label-disabled {
+  background-color: var(--color-gray-100);
+  border-color: var(--color-gray-300);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.image-uploader-label-disabled:hover {
+  transform: none;
+  border-color: var(--color-gray-300);
+  background-color: var(--color-gray-100);
+}
+
+.image-uploader-icon {
+  font-size: 2rem;
+}
+
+.image-uploader-text {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-black);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.image-uploader-help {
+  font-size: 0.875rem;
+  color: var(--color-gray-600);
+  text-align: center;
+  line-height: 1.5;
+}
+
+/* ============================================
+   ERROR
+   ============================================ */
+
+.image-uploader-error {
+  background-color: var(--color-white);
+  border: 2px solid var(--color-black);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  animation: shake 0.5s ease-out;
+}
+
+.image-uploader-error-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.image-uploader-error-message {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-black);
+  line-height: 1.5;
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+/* ============================================
+   GRID DE IMÁGENES
+   ============================================ */
+
+.image-uploader-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  width: 100%; /* ← Asegura que ocupe todo el ancho disponible */
+}
+
+@media (min-width: 640px) {
+  .image-uploader-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .image-uploader-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ============================================
+   PREVIEW DE IMAGEN
+   ============================================ */
+
+.image-uploader-preview {
+  position: relative;
+  border: 2px solid var(--color-gray-300);
+  background-color: var(--color-white);
+  transition: all 0.3s ease;
+  animation: fadeInScale 0.3s ease-out;
+  overflow: hidden; /* ← Evita que la imagen se salga */
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.image-uploader-preview:hover {
+  border-color: var(--color-black);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.image-uploader-preview-img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover; /* ← Mantiene la proporción y recorta si es necesario */
+  display: block;
+  background-color: var(--color-gray-100); /* ← Fondo mientras carga */
+}
+
+.image-uploader-preview-name {
+  padding: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--color-gray-600);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background-color: var(--color-gray-50);
+  border-top: 1px solid var(--color-gray-200);
+  max-width: 100%; /* ← Asegura que no se salga */
+}
+
+/* ============================================
+   BOTÓN DE ELIMINAR
+   ============================================ */
+
+.image-uploader-remove-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 2rem;
+  height: 2rem;
+  background-color: var(--color-black);
+  color: var(--color-white);
+  border: 2px solid var(--color-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.125rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+.image-uploader-preview:hover .image-uploader-remove-btn {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.image-uploader-remove-btn:hover {
+  background-color: var(--color-white);
+  color: var(--color-black);
+  border-color: var(--color-black);
+  transform: scale(1.1);
+}
+
+.image-uploader-remove-btn:active {
+  transform: scale(0.95);
+}
+
+/* ============================================
+   CONTADOR
+   ============================================ */
+
+.image-uploader-counter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background-color: var(--color-gray-100);
+  border: 2px solid var(--color-gray-300);
+  font-weight: 700;
+}
+
+.image-uploader-counter-current {
+  font-size: 1.5rem;
+  color: var(--color-black);
+}
+
+.image-uploader-counter-separator {
+  font-size: 1.25rem;
+  color: var(--color-gray-400);
+}
+
+.image-uploader-counter-max {
+  font-size: 1.25rem;
+  color: var(--color-gray-600);
+}
+
+.image-uploader-counter-text {
+  font-size: 0.875rem;
+  color: var(--color-gray-700);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-left: 0.5rem;
+}
+
+/* ============================================
+   ESTADOS ESPECIALES
+   ============================================ */
+
+/* Cuando se alcanza el máximo */
+.image-uploader-label-disabled .image-uploader-icon {
+  filter: grayscale(100%);
+}
+
+.image-uploader-label-disabled .image-uploader-text {
+  color: var(--color-gray-500);
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 640px) {
+  .image-uploader-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .image-uploader-preview-img {
+    height: 120px;
+  }
+
+  .image-uploader-preview-name {
+    font-size: 0.6875rem;
+    padding: 0.375rem;
+  }
+
+  .image-uploader-label {
+    padding: 1.25rem 1.5rem;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .image-uploader-icon {
+    font-size: 1.75rem;
+  }
+
+  .image-uploader-text {
+    font-size: 0.875rem;
+    text-align: center;
+  }
+
+  .image-uploader-counter {
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    padding: 0.75rem;
+  }
+
+  .image-uploader-counter-current {
+    font-size: 1.25rem;
+  }
+
+  .image-uploader-counter-max {
+    font-size: 1rem;
+  }
+
+  .image-uploader-counter-text {
+    width: 100%;
+    text-align: center;
+    margin-left: 0;
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
+  }
+
+  /* Ajuste para evitar desbordamiento en pantallas muy pequeñas */
+  .image-uploader {
+    padding: 0;
+  }
+
+  .image-uploader-preview {
+    min-width: 0; /* Permite que flex/grid reduzca el elemento si es necesario */
+  }
+}
+
+/* Para pantallas muy pequeñas (menos de 400px) */
+@media (max-width: 400px) {
+  .image-uploader-grid {
+    grid-template-columns: 1fr; /* Una sola columna en pantallas muy pequeñas */
+    gap: 0.5rem;
+  }
+
+  .image-uploader-preview-img {
+    height: 180px; /* Más alto cuando es una sola columna */
+  }
+}
+
+/* ============================================
+   ANIMACIONES ADICIONALES
+   ============================================ */
+
+/* Animación de "drop" para el área de carga */
+.image-uploader-label::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    45deg,
+    transparent 48%,
+    var(--color-gray-200) 49%,
+    var(--color-gray-200) 51%,
+    transparent 52%
+  );
+  background-size: 10px 10px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.image-uploader-label:hover::before {
+  opacity: 0.3;
+}
+
+/* Efecto de pulso para el botón cuando no hay imágenes */
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+  }
+}
+
+.image-uploader-label:not(.image-uploader-label-disabled) {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* ============================================
+   ACCESIBILIDAD
+   ============================================ */
+
+.image-uploader-label:focus-within {
+  outline: 3px solid var(--color-black);
+  outline-offset: 2px;
+}
+
+.image-uploader-remove-btn:focus-visible {
+  outline: 2px solid var(--color-white);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   MODO DE ARRASTRAR Y SOLTAR (OPCIONAL)
+   ============================================ */
+
+.image-uploader-label.drag-over {
+  border-color: var(--color-black);
+  background-color: var(--color-gray-100);
+  border-style: solid;
+}
+
+.image-uploader-label.drag-over::before {
+  opacity: 0.5;
+}

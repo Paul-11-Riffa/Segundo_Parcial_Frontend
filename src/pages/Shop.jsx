@@ -12,7 +12,7 @@ import StockBadge from '../components/shop/StockBadge';
 import Button from '../components/ui/Button';
 import { NotificationIcon } from '../components/notifications';
 import CartIcon from '../components/cart/CartIcon';
-import { Package, Mic, MicOff, Loader } from 'lucide-react';
+import { Package, Mic, MicOff, Loader, MessageSquare } from 'lucide-react';
 import { useVoiceSearch } from '../hooks/useVoiceSearch';
 import './Shop.css';
 
@@ -168,6 +168,14 @@ const Shop = () => {
                   <NotificationIcon />
                   <CartIcon />
                 </div>
+
+                {/* Reclamos */}
+                <Link to="/claims">
+                  <button className="icon-button" style={{ gap: '6px', paddingLeft: '12px', paddingRight: '12px' }}>
+                    <MessageSquare size={20} strokeWidth={2} />
+                    <span className="hidden md:inline text-sm font-medium">Reclamos</span>
+                  </button>
+                </Link>
 
                 {/* Mis Órdenes */}
                 <Link to="/my-orders">
