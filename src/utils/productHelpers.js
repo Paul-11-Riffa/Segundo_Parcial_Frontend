@@ -35,7 +35,20 @@ export const isProductAvailable = (product) => {
  * @returns {string} URL de la imagen
  */
 export const getProductImage = (product) => {
-  if (!product) return '/placeholder-product.jpg';
+  if (!product) {
+    console.warn('[getProductImage] Product is null/undefined');
+    return '/placeholder-product.jpg';
+  }
+
+  // 🔍 DEBUG: Log del producto
+  console.log('[getProductImage] Processing product:', {
+    id: product.id,
+    name: product.name,
+    hasImages: !!product.images,
+    imagesLength: product.images?.length,
+    hasPrimaryImage: !!product.primary_image,
+    hasImage: !!product.image
+  });
 
   // ✅ PRIORIDAD 1: Buscar imagen principal en el array de imágenes (nuevo sistema)
   if (product.images && Array.isArray(product.images) && product.images.length > 0) {
@@ -43,38 +56,54 @@ export const getProductImage = (product) => {
     // ✅ CORREGIDO: El backend devuelve "image", no "image_url"
     const imageUrl = primaryImage?.image || product.images[0]?.image;
 
+    console.log('[getProductImage] From images array:', imageUrl);
+
     if (imageUrl) {
       // Si es una URL completa
       if (imageUrl.startsWith('http')) {
+        console.log('[getProductImage] ✅ Returning full URL from images:', imageUrl);
         return imageUrl;
       }
       // Si es una ruta relativa, agregar base URL del backend
       const baseURL = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || 'http://localhost:8000';
-      return `${baseURL}${imageUrl}`;
+      const fullUrl = `${baseURL}${imageUrl}`;
+      console.log('[getProductImage] ✅ Returning relative URL from images:', fullUrl);
+      return fullUrl;
     }
   }
 
   // ✅ FALLBACK 2: primary_image directo
   if (product.primary_image?.image) {
+    console.log('[getProductImage] From primary_image:', product.primary_image.image);
+    
     if (product.primary_image.image.startsWith('http')) {
+      console.log('[getProductImage] ✅ Returning full URL from primary_image');
       return product.primary_image.image;
     }
     const baseURL = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || 'http://localhost:8000';
-    return `${baseURL}${product.primary_image.image}`;
+    const fullUrl = `${baseURL}${product.primary_image.image}`;
+    console.log('[getProductImage] ✅ Returning relative URL from primary_image:', fullUrl);
+    return fullUrl;
   }
 
   // ✅ FALLBACK 3: Sistema antiguo de imagen única
   if (product.image) {
+    console.log('[getProductImage] From product.image:', product.image);
+    
     // Si es una URL completa
     if (product.image.startsWith('http')) {
+      console.log('[getProductImage] ✅ Returning full URL from product.image');
       return product.image;
     }
     // Si es una ruta relativa, agregar base URL del backend
     const baseURL = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || 'http://localhost:8000';
-    return `${baseURL}${product.image}`;
+    const fullUrl = `${baseURL}${product.image}`;
+    console.log('[getProductImage] ✅ Returning relative URL from product.image:', fullUrl);
+    return fullUrl;
   }
 
   // Imagen por defecto
+  console.warn('[getProductImage] ❌ No image found, returning placeholder');
   return '/placeholder-product.jpg';
 };
 
