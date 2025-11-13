@@ -35,15 +35,16 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
     // Prioridad 1: Buscar imagen principal en el array de imágenes
     if (product.images && Array.isArray(product.images) && product.images.length > 0) {
       const primaryImage = product.images.find(img => img.is_primary);
-      imageUrl = primaryImage?.image_url || product.images[0]?.image_url;
+      // ✅ CORREGIDO: El backend devuelve "image", no "image_url"
+      imageUrl = primaryImage?.image || product.images[0]?.image;
     }
-    // Fallback 2: Sistema antiguo de imagen única
+    // Fallback 2: primary_image directo
+    else if (product.primary_image?.image) {
+      imageUrl = product.primary_image.image;
+    }
+    // Fallback 3: Sistema antiguo de imagen única
     else if (product.image) {
       imageUrl = product.image;
-    }
-    // Fallback 3: image_url
-    else if (product.image_url) {
-      imageUrl = product.image_url;
     }
 
     // ✅ CORREGIDO: Convertir URL relativa a absoluta usando variable de entorno

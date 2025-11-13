@@ -40,7 +40,8 @@ export const getProductImage = (product) => {
   // ✅ PRIORIDAD 1: Buscar imagen principal en el array de imágenes (nuevo sistema)
   if (product.images && Array.isArray(product.images) && product.images.length > 0) {
     const primaryImage = product.images.find(img => img.is_primary);
-    const imageUrl = primaryImage?.image_url || product.images[0]?.image_url;
+    // ✅ CORREGIDO: El backend devuelve "image", no "image_url"
+    const imageUrl = primaryImage?.image || product.images[0]?.image;
 
     if (imageUrl) {
       // Si es una URL completa
@@ -48,19 +49,28 @@ export const getProductImage = (product) => {
         return imageUrl;
       }
       // Si es una ruta relativa, agregar base URL del backend
-      const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+      const baseURL = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || 'http://localhost:8000';
       return `${baseURL}${imageUrl}`;
     }
   }
 
-  // ✅ FALLBACK: Sistema antiguo de imagen única
+  // ✅ FALLBACK 2: primary_image directo
+  if (product.primary_image?.image) {
+    if (product.primary_image.image.startsWith('http')) {
+      return product.primary_image.image;
+    }
+    const baseURL = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || 'http://localhost:8000';
+    return `${baseURL}${product.primary_image.image}`;
+  }
+
+  // ✅ FALLBACK 3: Sistema antiguo de imagen única
   if (product.image) {
     // Si es una URL completa
     if (product.image.startsWith('http')) {
       return product.image;
     }
     // Si es una ruta relativa, agregar base URL del backend
-    const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+    const baseURL = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || 'http://localhost:8000';
     return `${baseURL}${product.image}`;
   }
 
