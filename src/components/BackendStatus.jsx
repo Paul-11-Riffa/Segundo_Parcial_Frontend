@@ -8,8 +8,9 @@ const BackendStatus = () => {
   useEffect(() => {
     const checkBackend = async () => {
       try {
-        // Simplemente verificar que el servidor responda sin hacer una petición compleja
-        await axios.get('http://localhost:8000/', {
+        // ✅ CORREGIDO: Verificar usando variable de entorno
+        const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+        await axios.get(backendUrl, {
           timeout: 2000,
           validateStatus: (status) => status < 500 // Aceptar cualquier respuesta que no sea error de servidor
         });

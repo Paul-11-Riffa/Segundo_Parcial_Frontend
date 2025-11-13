@@ -5,8 +5,10 @@
 
 import axios from 'axios';
 
-// Base URL de la API
-const API_BASE_URL = 'http://localhost:8000/api';
+// Base URL de la API - Se obtiene de las variables de entorno
+const API_BASE_URL = import.meta.env.VITE_API_URL 
+  ? `${import.meta.env.VITE_API_URL}/api`
+  : 'http://localhost:8000/api';
 
 // Crear instancia de axios
 const api = axios.create({

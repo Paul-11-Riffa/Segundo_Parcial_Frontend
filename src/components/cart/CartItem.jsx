@@ -46,9 +46,9 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
       imageUrl = product.image_url;
     }
 
-    // ✅ IMPORTANTE: Convertir URL relativa a absoluta
+    // ✅ CORREGIDO: Convertir URL relativa a absoluta usando variable de entorno
     if (imageUrl && !imageUrl.startsWith('http')) {
-      const baseURL = 'http://localhost:8000';
+      const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
       imageUrl = `${baseURL}${imageUrl}`;
     }
 

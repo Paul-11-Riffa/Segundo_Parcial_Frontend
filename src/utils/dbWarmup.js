@@ -12,7 +12,10 @@
 
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8000/api';
+// ✅ CORREGIDO: Usar variable de entorno para producción
+const API_BASE_URL = import.meta.env.VITE_API_URL 
+  ? `${import.meta.env.VITE_API_URL}/api`
+  : 'http://localhost:8000/api';
 
 /**
  * Intenta despertar la base de datos con una petición ligera

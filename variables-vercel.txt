@@ -1,0 +1,25 @@
+// ==========================================
+// COPIAR Y PEGAR EN VERCEL
+// ==========================================
+// Ve a: https://vercel.com/dashboard
+// Settings → Environment Variables
+// Copia cada variable una por una
+// ==========================================
+
+VITE_API_URL=https://segundoparcial-backend.onrender.com
+VITE_API_BASE_URL=https://segundoparcial-backend.onrender.com
+VITE_FIREBASE_API_KEY=AIzaSyDk-EtyNkHhj82Xsp2eVDhgn9J8Sh1Echo
+VITE_FIREBASE_AUTH_DOMAIN=smartsales365-5a743.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=smartsales365-5a743
+VITE_FIREBASE_STORAGE_BUCKET=smartsales365-5a743.firebasestorage.app
+VITE_FIREBASE_MESSAGING_SENDER_ID=630478604123
+VITE_FIREBASE_APP_ID=1:630478604123:web:16583ae35eb7208f607c7e
+VITE_FIREBASE_VAPID_KEY=BGiGqybeeOmMFSoToLUhT-FV_zMbZOJbcwomuSTH4VwYQ-0h3dsNxjgesUuaKzOKJ7k9YROLnhCO3LPPn00ywQU
+
+// ==========================================
+// IMPORTANTE: 
+// Para CADA variable, marca los 3 ambientes:
+// ✅ Production
+// ✅ Preview  
+// ✅ Development
+// ==========================================

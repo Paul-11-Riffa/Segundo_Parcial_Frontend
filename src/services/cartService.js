@@ -7,8 +7,10 @@
 
 import axios from 'axios';
 
-// Base URL específica para el módulo de ventas/carrito
-const SALES_API_BASE_URL = 'http://localhost:8000/api/sales';
+// ✅ CORREGIDO: Base URL específica para el módulo de ventas/carrito
+const SALES_API_BASE_URL = import.meta.env.VITE_API_URL 
+  ? `${import.meta.env.VITE_API_URL}/api/sales`
+  : 'http://localhost:8000/api/sales';
 
 /**
  * Obtiene los headers de autenticación con formato Token (Django REST Framework)
