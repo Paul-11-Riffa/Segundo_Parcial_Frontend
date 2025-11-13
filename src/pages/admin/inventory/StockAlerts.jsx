@@ -83,9 +83,9 @@ const StockAlerts = () => {
       <tr key={product.id}>
         {/* Imagen */}
         <td>
-          {product.image_url ? (
+          {product.image_url || product.image || (product.images && product.images[0]?.image) ? (
             <img
-              src={product.image_url}
+              src={product.image || product.images?.[0]?.image || product.image_url}
               alt={product.name}
               className="stock-alerts-table-image"
             />

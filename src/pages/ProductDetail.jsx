@@ -35,7 +35,7 @@ const ProductDetail = () => {
     if (product.image) {
       return [{
         id: 1,
-        image_url: product.image,
+        image: product.image, // ✅ CORREGIDO: usar 'image' en lugar de 'image_url'
         alt_text: product.name,
         order: 0,
         is_primary: true

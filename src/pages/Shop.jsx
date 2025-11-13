@@ -393,6 +393,10 @@ const Shop = () => {
                           src={getProductImage(product)}
                           alt={product.name}
                           className="product-image"
+                          onError={(e) => {
+                            console.warn(`Failed to load image for product ${product.id}`);
+                            e.target.src = '/placeholder-product.svg';
+                          }}
                         />
                       </div>
                     </Link>

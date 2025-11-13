@@ -407,7 +407,8 @@ const ProductsList = () => {
                         {(() => {
                           // Buscar imagen principal en el array de imágenes
                           const primaryImage = product.images?.find(img => img.is_primary);
-                          let imageUrl = primaryImage?.image_url || product.image_url || product.image;
+                          // ✅ CORREGIDO: El backend devuelve "image", no "image_url"
+                          let imageUrl = primaryImage?.image || product.images?.[0]?.image || product.image;
 
                           // ✅ Cache-busting: Usar timestamp de la imagen o created_at para forzar recarga
                           // Esto evita parpadeos constantes pero fuerza recarga cuando la imagen cambia

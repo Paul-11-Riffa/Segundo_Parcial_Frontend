@@ -416,6 +416,10 @@ const Home = () => {
                           src={getProductImage(product)}
                           alt={product.name}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          onError={(e) => {
+                            console.warn(`Failed to load image for product ${product.id}`);
+                            e.target.src = '/placeholder-product.svg';
+                          }}
                         />
                         <div className="absolute top-2 right-2">
                           <StockBadge stock={product.stock} />

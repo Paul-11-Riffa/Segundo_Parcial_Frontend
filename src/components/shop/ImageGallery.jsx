@@ -9,10 +9,12 @@ import './ImageGallery.css';
 const ImageGallery = ({ images = [], productName = '' }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  // ✅ Normalizar imágenes: soportar tanto objetos {image_url, alt_text} como strings
+  // ✅ CORREGIDO: Normalizar imágenes: el backend devuelve "image", no "image_url"
   const normalizeImage = (img) => {
     if (typeof img === 'string') return img;
-    if (typeof img === 'object' && img.image_url) return img.image_url;
+    // ✅ CAMBIO: Buscar 'image' en lugar de 'image_url'
+    if (typeof img === 'object' && img.image) return img.image;
+    if (typeof img === 'object' && img.image_url) return img.image_url; // Fallback por compatibilidad
     return '/placeholder-product.jpg';
   };
 
@@ -36,11 +38,15 @@ const ImageGallery = ({ images = [], productName = '' }) => {
     <div className="image-gallery">
       {/* Imagen principal */}
       <div className="image-gallery__main">
-        <div className="image-gallery__main-wrapper">
+        <div className="image-gallery__main">
           <img
             src={currentImage}
             alt={getAltText(selectedIndex)}
             className="image-gallery__main-image"
+            onError={(e) => {
+              console.warn(`Failed to load gallery image: ${currentImage}`);
+              e.target.src = '/placeholder-product.svg';
+            }}
           />
         </div>
       </div>
@@ -60,6 +66,9 @@ const ImageGallery = ({ images = [], productName = '' }) => {
                 src={image}
                 alt={`${productName} - Miniatura ${index + 1}`}
                 className="image-gallery__thumbnail-image"
+                onError={(e) => {
+                  e.target.src = '/placeholder-product.svg';
+                }}
               />
             </button>
           ))}
