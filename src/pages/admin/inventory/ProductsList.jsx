@@ -407,8 +407,10 @@ const ProductsList = () => {
                         {(() => {
                           // Buscar imagen principal en el array de imágenes
                           const primaryImage = product.images?.find(img => img.is_primary);
-                          // ✅ CORREGIDO: El backend devuelve "image", no "image_url"
-                          let imageUrl = primaryImage?.image || product.images?.[0]?.image || product.image;
+                          // ✅ CORREGIDO: Priorizar image_url (Cloudinary) sobre image (local)
+                          let imageUrl = primaryImage?.image_url || primaryImage?.cloudinary_url || primaryImage?.image ||
+                                        product.images?.[0]?.image_url || product.images?.[0]?.cloudinary_url || product.images?.[0]?.image ||
+                                        product.image_url || product.image;
 
                           // ✅ Cache-busting: Usar timestamp de la imagen o created_at para forzar recarga
                           // Esto evita parpadeos constantes pero fuerza recarga cuando la imagen cambia

@@ -32,10 +32,10 @@ const ProductDetail = () => {
     }
     
     // Fallback to legacy single image
-    if (product.image) {
+    if (product.image_url || product.image) {
       return [{
         id: 1,
-        image: product.image, // ✅ CORREGIDO: usar 'image' en lugar de 'image_url'
+        image_url: product.image_url || product.image, // ✅ CORREGIDO: Priorizar image_url (Cloudinary)
         alt_text: product.name,
         order: 0,
         is_primary: true

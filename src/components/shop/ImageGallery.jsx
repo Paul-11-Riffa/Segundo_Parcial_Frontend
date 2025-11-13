@@ -9,13 +9,14 @@ import './ImageGallery.css';
 const ImageGallery = ({ images = [], productName = '' }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  // ✅ CORREGIDO: Normalizar imágenes: el backend devuelve "image", no "image_url"
+  // ✅ CORREGIDO: Normalizar imágenes: priorizar image_url (Cloudinary) sobre image (local)
   const normalizeImage = (img) => {
     if (typeof img === 'string') return img;
-    // ✅ CAMBIO: Buscar 'image' en lugar de 'image_url'
-    if (typeof img === 'object' && img.image) return img.image;
-    if (typeof img === 'object' && img.image_url) return img.image_url; // Fallback por compatibilidad
-    return '/placeholder-product.jpg';
+    // ✅ PRIORIDAD: image_url (Cloudinary) > cloudinary_url > image (fallback)
+    if (typeof img === 'object') {
+      return img.image_url || img.cloudinary_url || img.image || '/placeholder-product.svg';
+    }
+    return '/placeholder-product.svg';
   };
 
   // Si no hay imágenes, usar placeholder

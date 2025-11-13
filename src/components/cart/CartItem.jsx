@@ -35,16 +35,17 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
     // Prioridad 1: Buscar imagen principal en el array de imágenes
     if (product.images && Array.isArray(product.images) && product.images.length > 0) {
       const primaryImage = product.images.find(img => img.is_primary);
-      // ✅ CORREGIDO: El backend devuelve "image", no "image_url"
-      imageUrl = primaryImage?.image || product.images[0]?.image;
+      // ✅ CORREGIDO: Priorizar image_url (Cloudinary) sobre image (local)
+      imageUrl = primaryImage?.image_url || primaryImage?.cloudinary_url || primaryImage?.image ||
+                 product.images[0]?.image_url || product.images[0]?.cloudinary_url || product.images[0]?.image;
     }
     // Fallback 2: primary_image directo
-    else if (product.primary_image?.image) {
-      imageUrl = product.primary_image.image;
+    else if (product.primary_image) {
+      imageUrl = product.primary_image.image_url || product.primary_image.cloudinary_url || product.primary_image.image;
     }
     // Fallback 3: Sistema antiguo de imagen única
-    else if (product.image) {
-      imageUrl = product.image;
+    else if (product.image_url || product.image) {
+      imageUrl = product.image_url || product.image;
     }
 
     // ✅ CORREGIDO: Convertir URL relativa a absoluta usando variable de entorno
