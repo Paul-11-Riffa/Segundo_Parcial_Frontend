@@ -39,7 +39,7 @@ const ImageGallery = ({ images = [], productName = '' }) => {
     <div className="image-gallery">
       {/* Imagen principal */}
       <div className="image-gallery__main">
-        <div className="image-gallery__main">
+        <div className="image-gallery__main-wrapper">
           <img
             src={currentImage}
             alt={getAltText(selectedIndex)}
